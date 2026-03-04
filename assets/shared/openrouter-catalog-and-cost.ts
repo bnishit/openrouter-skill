@@ -155,6 +155,13 @@ export async function listFreeModels(options: OpenRouterFetchOptions) {
   return models.filter(isFreeModel);
 }
 
+export async function listImageGenerationModels(options: OpenRouterFetchOptions) {
+  const models = await listModels(options);
+  return models.filter((model) =>
+    model.architecture?.output_modalities?.includes("image")
+  );
+}
+
 export async function getGeneration(
   generationId: string,
   options: OpenRouterFetchOptions

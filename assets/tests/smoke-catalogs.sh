@@ -8,6 +8,7 @@ Usage:
   smoke-catalogs.sh user-models
   smoke-catalogs.sh providers
   smoke-catalogs.sh free-models
+  smoke-catalogs.sh image-models
   smoke-catalogs.sh generation <generation-id>
 
 Environment:
@@ -73,11 +74,11 @@ case "$CASE" in
     ;;
   free-models)
     json=$(curl_json "https://openrouter.ai/api/v1/models")
-    printf "%s" "$json" | python3 - <<'PY'
+    OPENROUTER_MODELS_JSON="$json" python3 - <<'PY'
 import json
-import sys
+import os
 
-payload = json.load(sys.stdin)
+payload = json.loads(os.environ["OPENROUTER_MODELS_JSON"])
 data = payload.get("data", [])
 free_models = []
 
@@ -97,6 +98,33 @@ for item in data:
         )
 
 print(json.dumps({"data": free_models}, indent=2))
+PY
+    ;;
+  image-models)
+    json=$(curl_json "https://openrouter.ai/api/v1/models")
+    OPENROUTER_MODELS_JSON="$json" python3 - <<'PY'
+import json
+import os
+
+payload = json.loads(os.environ["OPENROUTER_MODELS_JSON"])
+data = payload.get("data", [])
+image_models = []
+
+for item in data:
+    architecture = item.get("architecture") or {}
+    output_modalities = architecture.get("output_modalities") or []
+    if "image" not in output_modalities:
+        continue
+    image_models.append(
+        {
+            "id": item.get("id"),
+            "name": item.get("name"),
+            "output_modalities": output_modalities,
+            "pricing": item.get("pricing") or {},
+        }
+    )
+
+print(json.dumps({"data": image_models}, indent=2))
 PY
     ;;
   generation)

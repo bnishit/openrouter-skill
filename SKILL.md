@@ -1,6 +1,6 @@
 ---
 name: "openrouter-integration"
-description: "Integrate apps with OpenRouter's OpenAI-compatible API, including model discovery, provider discovery, free-model filtering, chat completions, image generation, generation cost lookup, structured JSON responses, multimodal inputs such as images and PDFs, tool and function calling, shared parsing helpers, test fixtures, streaming chat UI examples, and routing or fallback policies across models and providers. Use when an agent needs to add or debug OpenRouter usage, build a model picker, proxy `/api/v1/models`, `/api/v1/models/user`, `/api/v1/providers`, or `/api/v1/generation`, send image or PDF content to `/api/v1/chat/completions`, generate images through OpenRouter, parse OpenRouter responses, inspect generation cost after the fact, add Next.js or Express server routes, validate structured outputs, run smoke tests, verify current docs against OpenRouter before coding, or wire model or provider fallbacks into a server or UI."
+description: "Integrate apps with OpenRouter's OpenAI-compatible API, including model discovery, provider discovery, free-model filtering, chat completions, image generation, generation cost lookup, structured JSON responses, multimodal inputs such as images and PDFs, tool and function calling, shared parsing helpers, test fixtures, image asset best practices, streaming chat UI examples, and routing or fallback policies across models and providers. Use when an agent needs to add or debug OpenRouter usage, build a model picker, proxy `/api/v1/models`, `/api/v1/models/user`, `/api/v1/providers`, or `/api/v1/generation`, send image or PDF content to `/api/v1/chat/completions`, generate images through OpenRouter, build icon or OG image flows, parse OpenRouter responses, inspect generation cost after the fact, add Next.js or Express server routes, validate structured outputs, run smoke tests, verify current docs against OpenRouter before coding, or wire model or provider fallbacks into a server or UI."
 ---
 
 # OpenRouter Skill
@@ -194,6 +194,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
    - Catalog, providers, free-model filters, or generation cost lookup: read `references/catalogs-and-costs.md`.
    - Model catalog or picker: read `references/models-and-ui.md`.
    - Text, image analysis, image generation, or PDF inference: read `references/requests-and-responses.md`.
+   - End-to-end image asset workflows such as icons, OG images, preview, and storage: read `references/image-generation-best-practices.md`.
    - Tool calling or an agentic loop: read `references/tools-and-function-calling.md`.
    - Routing and failover policy: read `references/routing-and-fallbacks.md`.
    - Common failures: read `references/troubleshooting.md`.
@@ -232,7 +233,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 
 9. Verify the integration.
    - Run `assets/tests/smoke-curl.sh` for text, structured JSON, tools, image analysis, image generation, and PDF cases.
-   - Run `assets/tests/smoke-catalogs.sh` for models, user models, providers, free-model filtering, and generation cost lookup.
+   - Run `assets/tests/smoke-catalogs.sh` for models, user models, providers, free-model filtering, image-output model discovery, and generation cost lookup.
    - Check both successful responses and non-2xx OpenRouter errors.
    - Log returned `usage`, `cost`, finish reason, resolved model id, and generation id for debugging.
    - Fetch `GET /api/v1/generation?id=...` when exact post-hoc cost or token accounting matters.
@@ -246,7 +247,10 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - Shared TypeScript helpers: `assets/shared/`
 - Smoke tests and fixtures: `assets/tests/`
 - Catalog and cost helper: `assets/shared/openrouter-catalog-and-cost.ts`
+- Image asset helper: `assets/shared/openrouter-generated-image-assets.ts`
+- Node image persistence helper: `assets/shared/openrouter-generated-image-assets-node.ts`
 - Catalogs, providers, free-model filters, and generation cost lookup: `references/catalogs-and-costs.md`
+- Image generation usage, preview, storage, icons, and OG workflows: `references/image-generation-best-practices.md`
 
 ## Quality Rules
 
@@ -267,6 +271,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 
 - Model discovery, caching, and picker UX: `references/models-and-ui.md`
 - Catalogs, providers, free-model filters, and generation cost lookup: `references/catalogs-and-costs.md`
+- Image generation usage, preview, storage, icons, and OG workflows: `references/image-generation-best-practices.md`
 - Text, image analysis, image generation, and PDF request patterns plus response handling: `references/requests-and-responses.md`
 - Tool calling and agentic loops: `references/tools-and-function-calling.md`
 - Model routing, provider routing, and fallbacks: `references/routing-and-fallbacks.md`

@@ -1,4 +1,4 @@
 interface:
   display_name: "OpenRouter Skill"
-  short_description: "OpenRouter models, providers, image generation, generation cost lookup, tools, and routing"
-  default_prompt: "Use $openrouter-integration to add OpenRouter model discovery, provider discovery, free-model filtering, image generation, generation cost lookup, chat completions, multimodal support, and routing to this project."
+  short_description: "OpenRouter models, providers, image assets, generation cost lookup, tools, and routing"
+  default_prompt: "Use $openrouter-integration to add OpenRouter model discovery, provider discovery, free-model filtering, image generation, generated asset workflows, generation cost lookup, chat completions, multimodal support, and routing to this project."

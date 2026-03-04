@@ -34,6 +34,7 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 - free-model filtering from the live catalog
 - generation cost lookup and post-hoc billing inspection
 - image generation through OpenRouter's chat-completions flow
+- end-to-end generated asset workflows for icons, OG images, and social media visuals
 - chat completions and streaming
 - structured JSON responses
 - multimodal requests with images and PDFs
@@ -47,12 +48,14 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 - `Use $openrouter-integration to add provider and free-model filters to this OpenRouter model catalog.`
 - `Use $openrouter-integration to fetch a completed OpenRouter generation and show its exact cost.`
 - `Use $openrouter-integration to add image generation plus image and PDF chat support through an OpenRouter server route.`
+- `Use $openrouter-integration to generate OG images and app icons through OpenRouter, preview them, and store the approved assets cleanly.`
 - `Use $openrouter-integration to wire tool calling and provider fallback handling into this project.`
 
 ## When It Helps
 
 - when a new model or modality shows up and the agent should adapt without rewriting the whole integration
 - when a team wants to add image generation quickly without switching to a separate provider-specific SDK
+- when the app needs generated icons, OG images, or social visuals without rebuilding prompt, preview, and storage logic again
 - when the app needs provider-aware routing or low-cost / free-model views instead of a single fixed model
 - when someone asks why a generation cost what it did and the answer needs exact lookup, not rough estimates
 - when a developer wants a working proxy, helper layer, and starter routes instead of another one-off OpenRouter rewrite
@@ -92,18 +95,23 @@ Agent using this skill: "I can look up the completed generation by id and show e
 - `SKILL.md`: trigger metadata plus the core OpenRouter workflow
 - `agents/openai.yaml`: UI-facing metadata for supported agent skill systems
 - `references/`: targeted reference material for image generation, requests, routing, troubleshooting, and docs checks
+- `references/image-generation-best-practices.md`: concrete icon, OG image, social asset, preview, and storage rules
 - `scripts/`: helper scripts for documentation checks and starter installation
 - `assets/`: reusable templates, shared helpers, and smoke-test fixtures
 - `docs/`: static landing page and search-facing metadata for GitHub Pages
 
 ## Included Templates and Helpers
 
-- `assets/nextjs-template/`: API routes and UI components for model browsing, streaming chat, provider catalogs, free-model views, image generation, and generation-cost lookup
+- `assets/nextjs-template/`: API routes and UI components for model browsing, streaming chat, provider catalogs, free-model views, image generation, generated-asset workflows, and generation-cost lookup
 - `assets/express-template/`: route handlers and a minimal example server with `/providers`, `/free-models`, `/generation/:id`, and a chat proxy that passes image-generation fields
-- `assets/shared/`: TypeScript helpers for response parsing, generated-image extraction, structured output validation, and SSE streaming
+- `assets/shared/`: TypeScript helpers for response parsing, generated-image extraction, image asset persistence, structured output validation, and SSE streaming
 - `assets/tests/`: curl-based smoke tests and fixtures for text, JSON, tools, image analysis, image generation, and PDFs
 - `assets/shared/openrouter-catalog-and-cost.ts`: reusable helper for models, providers, free models, and generation cost lookup
-- `assets/tests/smoke-catalogs.sh`: smoke script for `/models`, `/models/user`, `/providers`, free-model filtering, and `/generation`
+- `assets/shared/openrouter-generated-image-assets.ts`: image-generation request presets plus generated-asset extraction for icon, OG image, social, story, and banner flows
+- `assets/shared/openrouter-generated-image-assets-node.ts`: Node helper for writing approved generated images to disk in local or server-backed flows
+- `assets/nextjs-template/components/openrouter-image-workbench.tsx`: starter UI for generating, previewing, and downloading image assets
+- `assets/nextjs-template/app/openrouter-image-lab/page.tsx`: sample page for image generation after install
+- `assets/tests/smoke-catalogs.sh`: smoke script for `/models`, `/models/user`, `/providers`, free-model filtering, image-output model discovery, and `/generation`
 
 ## FAQ
 

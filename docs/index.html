@@ -6,7 +6,7 @@
     <title>OpenRouter Skill for AI Agents | Models, Image Generation, Multimodal Chat</title>
     <meta
       name="description"
-      content="OpenRouter Skill is a reusable OpenRouter agent skill for AI agents that need one practical layer for fast-changing models, providers, image generation, multimodal workflows, free-model filtering, generation cost lookup, and production starter templates."
+      content="OpenRouter Skill is a reusable OpenRouter agent skill for AI agents that need one practical layer for fast-changing models, providers, image generation, generated asset workflows, multimodal workflows, free-model filtering, generation cost lookup, and production starter templates."
     />
     <link rel="canonical" href="https://bnishit.github.io/openrouter-skill/" />
     <meta name="theme-color" content="#0f1728" />
@@ -15,7 +15,7 @@
     <meta property="og:title" content="OpenRouter Skill for AI Agents" />
     <meta
       property="og:description"
-      content="Installable OpenRouter agent skill for AI agents that need model discovery, provider routing, image generation, generation cost lookup, multimodal support, and production starter templates."
+      content="Installable OpenRouter agent skill for AI agents that need model discovery, provider routing, image generation, icon and OG image workflows, generation cost lookup, multimodal support, and production starter templates."
     />
     <meta property="og:url" content="https://bnishit.github.io/openrouter-skill/" />
     <meta property="og:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
@@ -24,7 +24,7 @@
     <meta name="twitter:title" content="OpenRouter Skill for AI Agents" />
     <meta
       name="twitter:description"
-      content="Reusable OpenRouter agent skill for fast-changing model catalogs, providers, image generation, multimodal chat, generation cost lookup, routing, and tool calling."
+      content="Reusable OpenRouter agent skill for fast-changing model catalogs, providers, image generation, icon and OG image workflows, multimodal chat, generation cost lookup, routing, and tool calling."
     />
     <meta name="twitter:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
 
@@ -37,7 +37,7 @@
         "name": "OpenRouter Skill",
         "codeRepository": "https://github.com/bnishit/openrouter-skill",
         "url": "https://bnishit.github.io/openrouter-skill/",
-        "description": "OpenRouter agent skill for AI agents that need one reusable layer for models, providers, image generation, multimodal flows, generation cost lookup, routing, and starter templates.",
+        "description": "OpenRouter agent skill for AI agents that need one reusable layer for models, providers, image generation, icon and OG image workflows, multimodal flows, generation cost lookup, routing, and starter templates.",
         "programmingLanguage": ["Markdown", "TypeScript", "JavaScript", "Python", "Shell"],
         "license": "https://github.com/bnishit/openrouter-skill/blob/main/LICENSE",
         "keywords": ["OpenRouter skill", "OpenRouter agent skill", "OpenRouter integration skill", "multimodal chat", "tool calling"]
@@ -53,7 +53,7 @@
             "name": "What is OpenRouter Skill?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "OpenRouter Skill is a reusable skill for AI agents that need one practical OpenRouter layer for model discovery, provider discovery, free-model filtering, image generation, generation cost lookup, multimodal chat, tool calling, routing, and starter templates."
+              "text": "OpenRouter Skill is a reusable skill for AI agents that need one practical OpenRouter layer for model discovery, provider discovery, free-model filtering, image generation, generated asset workflows such as icons and OG images, generation cost lookup, multimodal chat, tool calling, routing, and starter templates."
             }
           },
           {
@@ -85,8 +85,8 @@
           <p class="lede">
             When models, providers, modalities, and prices keep changing, agents need more than a
             chat endpoint. This skill gives them one reusable layer for discovery, routing,
-            free-model filtering, image generation, generation cost lookup, multimodal flows, and
-            production starter templates.
+            free-model filtering, image generation, icon and OG image workflows, generation cost
+            lookup, multimodal flows, and production starter templates.
           </p>
           <div class="cta-row">
             <a class="button primary" href="https://github.com/bnishit/openrouter-skill">View GitHub Repo</a>
@@ -193,6 +193,10 @@
             <article class="capability-card">
               <h3>Image Generation</h3>
               <p>OpenRouter chat-completions patterns for generated images, output modalities, and image response parsing.</p>
+            </article>
+            <article class="capability-card">
+              <h3>Asset Workflows</h3>
+              <p>Starter patterns for icons, OG images, social visuals, preview flows, and persistent asset metadata.</p>
             </article>
             <article class="capability-card">
               <h3>Generation Costs</h3>
@@ -314,6 +318,28 @@
                 Useful when the win is operational simplicity, not just one successful request.
               </div>
             </article>
+
+            <article class="chat-card">
+              <div class="chat-meta">Scenario 5 · Icons and OG images without another custom workflow</div>
+              <div class="chat-bubble user">
+                <strong>Developer</strong>
+                <p>
+                  “I need app icons and OG images, but I do not want to rebuild prompts, preview
+                  handling, file naming, and asset metadata every time.”
+                </p>
+              </div>
+              <div class="chat-bubble agent">
+                <strong>Agent Using This Skill</strong>
+                <p>
+                  “I can use the shipped image-asset presets, preview the returned image data
+                  immediately, and persist the approved asset with generation id, model, and prompt
+                  metadata for later audit.”
+                </p>
+              </div>
+              <div class="chat-takeaway">
+                Useful when image generation is part of a product workflow, not just a one-off demo.
+              </div>
+            </article>
           </div>
         </section>
 
@@ -325,16 +351,17 @@
           <div class="narrative-grid">
             <p>
               Teams usually redo the same OpenRouter integration steps every time: choosing a
-              model, comparing providers, checking free options, adding image generation,
-              auditing generation cost, proxying requests, deciding on routing behavior,
-              validating JSON, and wiring up multimodal inputs. OpenRouter Skill bundles those
-              recurring patterns into one installable agent skill.
+              model, comparing providers, checking free options, adding image generation, handling
+              preview and storage for generated assets, auditing generation cost, proxying
+              requests, deciding on routing behavior, validating JSON, and wiring up multimodal
+              inputs. OpenRouter Skill bundles those recurring patterns into one installable agent
+              skill.
             </p>
             <p>
               The point is not just to “support OpenRouter.” The point is to let an agent reason
-              about fast-moving model choices, provider tradeoffs, image generation, multimodal
-              requests, and cost inspection without rebuilding the same layer from scratch every
-              time a new need shows up.
+              about fast-moving model choices, provider tradeoffs, image generation, icon and OG
+              image workflows, multimodal requests, and cost inspection without rebuilding the same
+              layer from scratch every time a new need shows up.
             </p>
           </div>
         </section>
@@ -360,6 +387,10 @@
             <article class="use-case-card">
               <h3>Image Generation</h3>
               <p>Add generated-image workflows through the same OpenRouter chat-completions layer instead of adopting a separate image-only integration.</p>
+            </article>
+            <article class="use-case-card">
+              <h3>Icons And OG Images</h3>
+              <p>Generate product icons, blog or social preview art, and other reusable assets with preview plus storage-ready metadata instead of ad hoc scripts.</p>
             </article>
             <article class="use-case-card">
               <h3>Generation Cost Audit</h3>
