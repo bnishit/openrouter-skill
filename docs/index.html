@@ -488,19 +488,31 @@
 
       // Auto-scrolling carousel
       (function() {
+        var wrapper = document.querySelector('.carousel-wrapper');
         var track = document.querySelector('.carousel-track');
-        var cards = track.querySelectorAll('.scenario-card');
+        var cards = Array.from(track.querySelectorAll('.scenario-card'));
         var dotsContainer = document.querySelector('.carousel-dots');
         var totalCards = cards.length;
         var currentIndex = 0;
         var autoplayInterval;
-        var visibleCards = 3;
+        var gap = 16;
 
         function getVisibleCards() {
           var w = window.innerWidth;
           if (w <= 768) return 1;
           if (w <= 1024) return 2;
           return 3;
+        }
+
+        function sizeCards() {
+          var visible = getVisibleCards();
+          var wrapperWidth = wrapper.offsetWidth;
+          var cardWidth = (wrapperWidth - gap * (visible - 1)) / visible;
+          cards.forEach(function(card) {
+            card.style.width = cardWidth + 'px';
+            card.style.minWidth = cardWidth + 'px';
+          });
+          return cardWidth;
         }
 
         function getTotalPages() {
@@ -529,10 +541,9 @@
           if (index < 0) index = pages - 1;
           currentIndex = index;
 
-          var card = cards[0];
-          var gap = 16;
-          var cardWidth = card.offsetWidth + gap;
-          track.style.transform = 'translateX(-' + (currentIndex * cardWidth) + 'px)';
+          var cardWidth = cards[0].offsetWidth;
+          var offset = currentIndex * (cardWidth + gap);
+          track.style.transform = 'translateX(-' + offset + 'px)';
 
           dotsContainer.querySelectorAll('.carousel-dot').forEach(function(d, i) {
             d.classList.toggle('active', i === currentIndex);
@@ -557,11 +568,16 @@
         });
 
         // Handle resize
+        var resizeTimer;
         window.addEventListener('resize', function() {
-          var pages = getTotalPages();
-          if (currentIndex >= pages) currentIndex = pages - 1;
-          buildDots();
-          goTo(currentIndex);
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function() {
+            sizeCards();
+            var pages = getTotalPages();
+            if (currentIndex >= pages) currentIndex = pages - 1;
+            buildDots();
+            goTo(currentIndex);
+          }, 100);
         });
 
         // Arrow buttons
@@ -574,6 +590,7 @@
           resetAutoplay();
         });
 
+        sizeCards();
         buildDots();
         goTo(0);
         resetAutoplay();

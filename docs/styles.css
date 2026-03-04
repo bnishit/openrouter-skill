@@ -466,8 +466,8 @@ a { color: inherit; }
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-width: calc(33.333% - 11px);
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  /* Width set by JS based on wrapper size */
 }
 
 .scenario-num {
@@ -632,9 +632,6 @@ a { color: inherit; }
   .cap-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .scenario-card {
-    min-width: calc(50% - 8px);
-  }
 }
 
 @media (max-width: 768px) {
@@ -653,10 +650,6 @@ a { color: inherit; }
 
   .install-methods {
     grid-template-columns: 1fr;
-  }
-
-  .scenario-card {
-    min-width: calc(100% - 0px);
   }
 
   .container {
