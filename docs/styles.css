@@ -226,7 +226,8 @@ li {
 
 .install-grid,
 .capability-grid,
-.use-case-grid {
+.use-case-grid,
+.directory-grid {
   display: grid;
   gap: 16px;
 }
@@ -236,13 +237,15 @@ li {
 }
 
 .capability-grid,
-.use-case-grid {
+.use-case-grid,
+.directory-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .install-card,
 .capability-card,
-.use-case-card {
+.use-case-card,
+.directory-card {
   padding: 20px;
   border-radius: 24px;
   border: 1px solid var(--line);
@@ -290,6 +293,27 @@ code {
   padding-top: 0;
 }
 
+.directory-section p,
+.directory-card p {
+  color: var(--muted);
+}
+
+.directory-card {
+  display: grid;
+  gap: 12px;
+}
+
+.directory-card a {
+  width: fit-content;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--teal);
+}
+
+.directory-card a:hover {
+  color: var(--gold);
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -321,6 +345,7 @@ a {
   .install-grid,
   .capability-grid,
   .use-case-grid,
+  .directory-grid,
   .narrative-grid {
     grid-template-columns: 1fr;
   }
