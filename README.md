@@ -1,6 +1,6 @@
 # OpenRouter Skill
 
-OpenRouter Skill is an installable skill for AI agents that need reliable OpenRouter integration patterns: model discovery, multimodal chat, tool calling, structured output, routing, and starter templates.
+OpenRouter Skill is an installable agent skill for AI agents that need reliable OpenRouter integration patterns: model discovery, multimodal chat, tool calling, structured output, routing, and starter templates.
 
 Landing page: `https://bnishit.github.io/openrouter-skill/`
 
@@ -9,9 +9,7 @@ Landing page: `https://bnishit.github.io/openrouter-skill/`
 Install with the `skills` CLI for the agent you use:
 
 ```bash
-npx skills add bnishit/openrouter-skill --agent codex
-npx skills add bnishit/openrouter-skill --agent claude
-npx skills add bnishit/openrouter-skill --agent gemini
+npx skills add bnishit/openrouter-skill --agent <your-agent>
 ```
 
 If your agent runtime supports the `skills` install flow, this repository is intended to work as a reusable OpenRouter skill there as well.
@@ -20,7 +18,7 @@ If your agent runtime supports the `skills` install flow, this repository is int
 
 The public repository name is `openrouter-skill`, but the installed skill trigger remains `openrouter-integration` for compatibility with existing prompts and local setups.
 
-Direct git install for Codex-compatible local skills still works:
+Direct git install still works:
 
 ```bash
 git clone https://github.com/bnishit/openrouter-skill.git \
@@ -71,9 +69,9 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 
 ## FAQ
 
-### Is this only for Codex?
+### Is this only for one assistant?
 
-No. The repository is packaged as a broad OpenRouter skill for AI agents. Codex is one supported install path, but the public naming and install flow are intentionally agent-agnostic.
+No. The repository is packaged as a broad OpenRouter skill for AI agents, and the public naming and install flow are intentionally agent-agnostic.
 
 ### Why is the trigger still `openrouter-integration`?
 
@@ -83,11 +81,9 @@ To avoid breaking existing prompts and local installations. The repo branding ch
 
 This project is optimized around the phrases `OpenRouter Skill`, `OpenRouter agent skill`, and `OpenRouter integration skill`.
 
-## Directory Listings
+## Directory Listing
 
 - agentskill.sh: `https://agentskill.sh/@bnishit/openrouter-integration`
-- YouWant.ai: `https://youwant.ai`
-- Submit AI Tools: `https://submitaitools.org/submit-your-ai-tool/`
 
 ## Maintenance
 

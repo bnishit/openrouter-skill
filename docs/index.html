@@ -6,7 +6,7 @@
     <title>OpenRouter Skill for AI Agents | Models, Multimodal Chat, Tool Calling</title>
     <meta
       name="description"
-      content="OpenRouter Skill is a reusable OpenRouter integration skill for AI agents, with model discovery, multimodal chat, tool calling, routing, structured output, and starter templates."
+      content="OpenRouter Skill is a reusable OpenRouter agent skill for AI agents, with model discovery, multimodal chat, tool calling, routing, structured output, and starter templates."
     />
     <link rel="canonical" href="https://bnishit.github.io/openrouter-skill/" />
     <meta name="theme-color" content="#0f1728" />
@@ -15,7 +15,7 @@
     <meta property="og:title" content="OpenRouter Skill for AI Agents" />
     <meta
       property="og:description"
-      content="Installable OpenRouter skill for AI agents with model discovery, multimodal chat, tool calling, routing, and starter templates."
+      content="Installable OpenRouter agent skill for AI agents with model discovery, multimodal chat, tool calling, routing, and starter templates."
     />
     <meta property="og:url" content="https://bnishit.github.io/openrouter-skill/" />
     <meta property="og:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
@@ -24,7 +24,7 @@
     <meta name="twitter:title" content="OpenRouter Skill for AI Agents" />
     <meta
       name="twitter:description"
-      content="Reusable OpenRouter integration skill for model discovery, multimodal chat, structured output, routing, and tool calling."
+      content="Reusable OpenRouter agent skill for model discovery, multimodal chat, structured output, routing, and tool calling."
     />
     <meta name="twitter:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
 
@@ -37,7 +37,7 @@
         "name": "OpenRouter Skill",
         "codeRepository": "https://github.com/bnishit/openrouter-skill",
         "url": "https://bnishit.github.io/openrouter-skill/",
-        "description": "OpenRouter skill for AI agents with model discovery, multimodal chat, tool calling, structured output, routing, and starter templates.",
+        "description": "OpenRouter agent skill for AI agents with model discovery, multimodal chat, tool calling, structured output, routing, and starter templates.",
         "programmingLanguage": ["Markdown", "TypeScript", "JavaScript", "Python", "Shell"],
         "license": "https://github.com/bnishit/openrouter-skill/blob/main/LICENSE",
         "keywords": ["OpenRouter skill", "OpenRouter agent skill", "OpenRouter integration skill", "multimodal chat", "tool calling"]
@@ -58,18 +58,18 @@
           },
           {
             "@type": "Question",
-            "name": "Does OpenRouter Skill work only with Codex?",
+            "name": "Does OpenRouter Skill work with different AI agents?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. The repository is packaged broadly for agents that support the skills install flow. Codex is one install path, but the public packaging is intentionally agent-agnostic."
+              "text": "Yes. The repository is packaged broadly for AI agents that support the skills install flow, with public copy intentionally written for general agent use instead of a single assistant."
             }
           },
           {
             "@type": "Question",
-            "name": "Why is the installed trigger still openrouter-integration?",
+            "name": "What makes this an agent skill?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The public repository was renamed for broader discovery, but the installed trigger remains openrouter-integration to preserve compatibility with existing prompts and local setups."
+              "text": "It packages reusable OpenRouter workflows, templates, references, and helper assets so an AI agent can apply them directly instead of rebuilding the same integration patterns from scratch."
             }
           }
         ]
@@ -113,25 +113,25 @@
         <section class="section" id="install">
           <div class="section-heading">
             <p class="eyebrow">Install</p>
-            <h2>Add the OpenRouter skill to the agent you already use.</h2>
+            <h2>Add the OpenRouter agent skill to the AI agent you already use.</h2>
           </div>
           <div class="install-grid">
             <article class="install-card">
-              <h3>Codex</h3>
-              <pre><code>npx skills add bnishit/openrouter-skill --agent codex</code></pre>
+              <h3>Skills CLI</h3>
+              <pre><code>npx skills add bnishit/openrouter-skill --agent &lt;your-agent&gt;</code></pre>
             </article>
             <article class="install-card">
-              <h3>Claude</h3>
-              <pre><code>npx skills add bnishit/openrouter-skill --agent claude</code></pre>
+              <h3>GitHub Repo</h3>
+              <pre><code>git clone https://github.com/bnishit/openrouter-skill.git</code></pre>
             </article>
             <article class="install-card">
-              <h3>Gemini</h3>
-              <pre><code>npx skills add bnishit/openrouter-skill --agent gemini</code></pre>
+              <h3>Agent Ready</h3>
+              <pre><code>Use the same repo with the compatible AI agent you already use.</code></pre>
             </article>
           </div>
           <p class="install-note">
-            The public repository is <strong>openrouter-skill</strong>. For compatibility, the
-            installed trigger remains <code>openrouter-integration</code>.
+            The public repository is <strong>openrouter-skill</strong>, and the public landing page
+            is written for general AI agent use.
           </p>
         </section>
 
@@ -178,7 +178,7 @@
               Teams usually redo the same OpenRouter integration steps every time: choosing a
               model, proxying requests, deciding on routing behavior, validating JSON, and wiring
               up multimodal inputs. OpenRouter Skill bundles those recurring patterns into one
-              installable asset.
+              installable agent skill.
             </p>
             <p>
               If someone searches for an <strong>OpenRouter skill</strong>, an
@@ -221,17 +221,19 @@
           </div>
           <div class="faq-list">
             <article>
-              <h3>Is this only for Codex?</h3>
+              <h3>Is this only for one assistant?</h3>
               <p>
                 No. The repository is packaged broadly for AI agents that support the skills
-                install flow. Codex is one supported path, not the only intended audience.
+                install flow, and the landing page is intentionally written for general AI agent
+                use.
               </p>
             </article>
             <article>
-              <h3>Why does the trigger still say <code>openrouter-integration</code>?</h3>
+              <h3>What makes this an agent skill?</h3>
               <p>
-                Keeping the trigger stable avoids breaking existing prompts and local setups while
-                the public repository branding becomes shorter and easier to discover.
+                It packages reusable OpenRouter workflows, templates, references, and helper
+                assets so an AI agent can apply them directly instead of rebuilding the same
+                integration patterns from scratch.
               </p>
             </article>
             <article>
@@ -244,34 +246,6 @@
           </div>
         </section>
 
-        <section class="section directory-section">
-          <div class="section-heading">
-            <p class="eyebrow">Directories</p>
-            <h2>Skill directories and backlink partners.</h2>
-          </div>
-          <div class="directory-grid">
-            <article class="directory-card">
-              <h3>agentskill.sh</h3>
-              <p>Live listing for the published OpenRouter skill profile and install entry.</p>
-              <a href="https://agentskill.sh/@bnishit/openrouter-integration">View listing</a>
-            </article>
-            <article class="directory-card">
-              <h3>YouWant.ai</h3>
-              <p>
-                Visible backlink for directory review and broader AI tool discovery.
-              </p>
-              <a href="https://youwant.ai">YouWant.ai</a>
-            </article>
-            <article class="directory-card">
-              <h3>Submit AI Tools</h3>
-              <p>
-                Submission target for broader directory coverage once the human-verification step
-                is completed.
-              </p>
-              <a href="https://submitaitools.org/submit-your-ai-tool/">Submit AI Tools</a>
-            </article>
-          </div>
-        </section>
       </main>
 
       <footer class="footer">
