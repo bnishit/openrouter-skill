@@ -1,6 +1,6 @@
 # OpenRouter Skill
 
-OpenRouter Skill is an installable agent skill for AI agents that need reliable OpenRouter integration patterns: model discovery, provider discovery, free-model filtering, image generation, generation cost lookup, multimodal chat, tool calling, structured output, routing, and starter templates.
+OpenRouter Skill is an installable agent skill for AI agents that need reliable OpenRouter integration patterns: model discovery, provider discovery, free-model filtering, image generation, generation cost lookup, multimodal chat, tool calling, structured output, routing, starter templates, and reusable best-practice playbooks.
 
 This is useful when the real problem is not “how do I call one model once,” but “how do I keep an agent effective while models, providers, modalities, and prices keep changing?”
 
@@ -35,6 +35,7 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 - generation cost lookup and post-hoc billing inspection
 - image generation through OpenRouter's chat-completions flow
 - end-to-end generated asset workflows for icons, OG images, and social media visuals
+- best-practice playbooks for catalogs, routing, tools, structured output, and observability
 - chat completions and streaming
 - structured JSON responses
 - multimodal requests with images and PDFs
@@ -49,6 +50,7 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 - `Use $openrouter-integration to fetch a completed OpenRouter generation and show its exact cost.`
 - `Use $openrouter-integration to add image generation plus image and PDF chat support through an OpenRouter server route.`
 - `Use $openrouter-integration to generate OG images and app icons through OpenRouter, preview them, and store the approved assets cleanly.`
+- `Use $openrouter-integration to make this OpenRouter workflow production-safe with the built-in best-practice playbooks for routing, tools, and observability.`
 - `Use $openrouter-integration to wire tool calling and provider fallback handling into this project.`
 
 ## When It Helps
@@ -59,6 +61,7 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 - when the app needs provider-aware routing or low-cost / free-model views instead of a single fixed model
 - when someone asks why a generation cost what it did and the answer needs exact lookup, not rough estimates
 - when a developer wants a working proxy, helper layer, and starter routes instead of another one-off OpenRouter rewrite
+- when the developer or agent should not have to rediscover the same production rules for routing, structured extraction, tool loops, and cost audit
 
 ## Simulated Chats
 
@@ -95,7 +98,10 @@ Agent using this skill: "I can look up the completed generation by id and show e
 - `SKILL.md`: trigger metadata plus the core OpenRouter workflow
 - `agents/openai.yaml`: UI-facing metadata for supported agent skill systems
 - `references/`: targeted reference material for image generation, requests, routing, troubleshooting, and docs checks
+- `references/catalog-routing-best-practices.md`: production rules for model catalogs, provider filters, and fallbacks
 - `references/image-generation-best-practices.md`: concrete icon, OG image, social asset, preview, and storage rules
+- `references/tool-calling-and-structured-output-best-practices.md`: production rules for tools, schemas, and validation loops
+- `references/operations-and-observability-best-practices.md`: logging, generation id, cost audit, and artifact-traceability rules
 - `scripts/`: helper scripts for documentation checks and starter installation
 - `assets/`: reusable templates, shared helpers, and smoke-test fixtures
 - `docs/`: static landing page and search-facing metadata for GitHub Pages
@@ -112,6 +118,13 @@ Agent using this skill: "I can look up the completed generation by id and show e
 - `assets/nextjs-template/components/openrouter-image-workbench.tsx`: starter UI for generating, previewing, and downloading image assets
 - `assets/nextjs-template/app/openrouter-image-lab/page.tsx`: sample page for image generation after install
 - `assets/tests/smoke-catalogs.sh`: smoke script for `/models`, `/models/user`, `/providers`, free-model filtering, image-output model discovery, and `/generation`
+
+## Best-Practice Playbooks
+
+- `catalog-routing-best-practices.md`: how to build searchable model pickers, provider-aware routing, and sane fallback behavior without stale hardcoded assumptions
+- `image-generation-best-practices.md`: how to generate icons, OG images, and social assets with preview plus storage-ready metadata
+- `tool-calling-and-structured-output-best-practices.md`: how to keep tool loops and JSON extraction reliable instead of fragile
+- `operations-and-observability-best-practices.md`: how to persist generation ids, log the right fields, and answer later cost/debug questions cleanly
 
 ## FAQ
 

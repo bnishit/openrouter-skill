@@ -6,7 +6,7 @@
     <title>OpenRouter Skill for AI Agents | Models, Image Generation, Multimodal Chat</title>
     <meta
       name="description"
-      content="OpenRouter Skill is a reusable OpenRouter agent skill for AI agents that need one practical layer for fast-changing models, providers, image generation, generated asset workflows, multimodal workflows, free-model filtering, generation cost lookup, and production starter templates."
+      content="OpenRouter Skill is a reusable OpenRouter agent skill for AI agents that need one practical layer for fast-changing models, providers, image generation, generated asset workflows, multimodal workflows, free-model filtering, generation cost lookup, production starter templates, and best-practice playbooks."
     />
     <link rel="canonical" href="https://bnishit.github.io/openrouter-skill/" />
     <meta name="theme-color" content="#0f1728" />
@@ -15,7 +15,7 @@
     <meta property="og:title" content="OpenRouter Skill for AI Agents" />
     <meta
       property="og:description"
-      content="Installable OpenRouter agent skill for AI agents that need model discovery, provider routing, image generation, icon and OG image workflows, generation cost lookup, multimodal support, and production starter templates."
+      content="Installable OpenRouter agent skill for AI agents that need model discovery, provider routing, image generation, icon and OG image workflows, generation cost lookup, multimodal support, production starter templates, and best-practice playbooks."
     />
     <meta property="og:url" content="https://bnishit.github.io/openrouter-skill/" />
     <meta property="og:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
@@ -24,7 +24,7 @@
     <meta name="twitter:title" content="OpenRouter Skill for AI Agents" />
     <meta
       name="twitter:description"
-      content="Reusable OpenRouter agent skill for fast-changing model catalogs, providers, image generation, icon and OG image workflows, multimodal chat, generation cost lookup, routing, and tool calling."
+      content="Reusable OpenRouter agent skill for fast-changing model catalogs, providers, image generation, icon and OG image workflows, multimodal chat, generation cost lookup, routing, tool calling, and best-practice playbooks."
     />
     <meta name="twitter:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
 
@@ -37,7 +37,7 @@
         "name": "OpenRouter Skill",
         "codeRepository": "https://github.com/bnishit/openrouter-skill",
         "url": "https://bnishit.github.io/openrouter-skill/",
-        "description": "OpenRouter agent skill for AI agents that need one reusable layer for models, providers, image generation, icon and OG image workflows, multimodal flows, generation cost lookup, routing, and starter templates.",
+        "description": "OpenRouter agent skill for AI agents that need one reusable layer for models, providers, image generation, icon and OG image workflows, multimodal flows, generation cost lookup, routing, starter templates, and best-practice playbooks.",
         "programmingLanguage": ["Markdown", "TypeScript", "JavaScript", "Python", "Shell"],
         "license": "https://github.com/bnishit/openrouter-skill/blob/main/LICENSE",
         "keywords": ["OpenRouter skill", "OpenRouter agent skill", "OpenRouter integration skill", "multimodal chat", "tool calling"]
@@ -53,7 +53,7 @@
             "name": "What is OpenRouter Skill?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "OpenRouter Skill is a reusable skill for AI agents that need one practical OpenRouter layer for model discovery, provider discovery, free-model filtering, image generation, generated asset workflows such as icons and OG images, generation cost lookup, multimodal chat, tool calling, routing, and starter templates."
+              "text": "OpenRouter Skill is a reusable skill for AI agents that need one practical OpenRouter layer for model discovery, provider discovery, free-model filtering, image generation, generated asset workflows such as icons and OG images, generation cost lookup, multimodal chat, tool calling, routing, starter templates, and best-practice playbooks."
             }
           },
           {
@@ -86,7 +86,7 @@
             When models, providers, modalities, and prices keep changing, agents need more than a
             chat endpoint. This skill gives them one reusable layer for discovery, routing,
             free-model filtering, image generation, icon and OG image workflows, generation cost
-            lookup, multimodal flows, and production starter templates.
+            lookup, multimodal flows, production starter templates, and best-practice playbooks.
           </p>
           <div class="cta-row">
             <a class="button primary" href="https://github.com/bnishit/openrouter-skill">View GitHub Repo</a>
@@ -218,6 +218,10 @@
               <h3>Verification</h3>
               <p>Smoke fixtures, docs checks, and shared helpers for safer OpenRouter integration changes.</p>
             </article>
+            <article class="capability-card">
+              <h3>Best-Practice Playbooks</h3>
+              <p>Built-in production rules for routing, catalogs, tool loops, structured output, logging, and generation audit.</p>
+            </article>
           </div>
         </section>
 
@@ -340,6 +344,28 @@
                 Useful when image generation is part of a product workflow, not just a one-off demo.
               </div>
             </article>
+
+            <article class="chat-card">
+              <div class="chat-meta">Scenario 6 · Production rules without rediscovering them</div>
+              <div class="chat-bubble user">
+                <strong>Developer</strong>
+                <p>
+                  “The feature is working, but I do not want to remember all the small rules for
+                  fallback behavior, tool loops, JSON validation, and cost logging every time.”
+                </p>
+              </div>
+              <div class="chat-bubble agent">
+                <strong>Agent Using This Skill</strong>
+                <p>
+                  “I can use the shipped best-practice playbooks, so the implementation does not
+                  stop at code that works once. It also covers the operational rules that teams
+                  usually learn the hard way.”
+                </p>
+              </div>
+              <div class="chat-takeaway">
+                Useful when the gap is not API syntax, but repeatable engineering judgment.
+              </div>
+            </article>
           </div>
         </section>
 
@@ -353,15 +379,15 @@
               Teams usually redo the same OpenRouter integration steps every time: choosing a
               model, comparing providers, checking free options, adding image generation, handling
               preview and storage for generated assets, auditing generation cost, proxying
-              requests, deciding on routing behavior, validating JSON, and wiring up multimodal
-              inputs. OpenRouter Skill bundles those recurring patterns into one installable agent
-              skill.
+              requests, deciding on routing behavior, validating JSON, handling tool loops, and
+              wiring up multimodal inputs. OpenRouter Skill bundles those recurring patterns into
+              one installable agent skill.
             </p>
             <p>
               The point is not just to “support OpenRouter.” The point is to let an agent reason
               about fast-moving model choices, provider tradeoffs, image generation, icon and OG
-              image workflows, multimodal requests, and cost inspection without rebuilding the same
-              layer from scratch every time a new need shows up.
+              image workflows, multimodal requests, tool reliability, and cost inspection without
+              rebuilding the same layer from scratch every time a new need shows up.
             </p>
           </div>
         </section>
@@ -404,6 +430,10 @@
               <h3>Ops Debug Console</h3>
               <p>Drop in the starter admin/debug surface to inspect providers, free models, and a generation id without inventing another internal page.</p>
             </article>
+            <article class="use-case-card">
+              <h3>Production Hardening</h3>
+              <p>Apply the shipped best-practice playbooks for routing, observability, structured output, and tool loops instead of rebuilding those rules from scratch.</p>
+            </article>
           </div>
         </section>
 
@@ -433,8 +463,9 @@
               <h3>What do I get besides docs?</h3>
               <p>
                 You get the skill prompt, metadata, starter templates, smoke fixtures, shared
-                helpers, and focused references for models, providers, free-model filtering, image
-                generation, and generation cost lookup that agents can use directly.
+                helpers, and focused references plus best-practice playbooks for models,
+                providers, free-model filtering, image generation, tool loops, and generation cost
+                lookup that agents can use directly.
               </p>
             </article>
           </div>
