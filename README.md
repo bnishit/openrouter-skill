@@ -14,6 +14,8 @@ npx skills add bnishit/openrouter-skill
 
 Works with any AI agent that supports the skills install flow.
 
+After install, invoke it as `$openrouter-integration`.
+
 ## Alternative Install
 
 Direct git clone:
@@ -22,7 +24,7 @@ Direct git clone:
 git clone https://github.com/bnishit/openrouter-skill.git
 ```
 
-The package/repo name is `openrouter-skill`. The installed skill trigger is `openrouter-integration`.
+Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
 
 ## Why This Exists
 
