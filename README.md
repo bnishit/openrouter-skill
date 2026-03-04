@@ -83,6 +83,12 @@ To avoid breaking existing prompts and local installations. The repo branding ch
 
 This project is optimized around the phrases `OpenRouter Skill`, `OpenRouter agent skill`, and `OpenRouter integration skill`.
 
+## Directory Listings
+
+- agentskill.sh: `https://agentskill.sh/@bnishit/openrouter-integration`
+- YouWant.ai: `https://youwant.ai`
+- Submit AI Tools: `https://submitaitools.org/submit-your-ai-tool/`
+
 ## Maintenance
 
 Treat official OpenRouter documentation as the source of truth for endpoints, parameters, and capability metadata.
