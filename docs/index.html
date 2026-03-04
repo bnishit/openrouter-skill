@@ -9,7 +9,7 @@
       content="OpenRouter Skill is a reusable OpenRouter agent skill for AI agents that need one practical layer for fast-changing models, providers, image generation, generated asset workflows, multimodal workflows, free-model filtering, generation cost lookup, production starter templates, and best-practice playbooks."
     />
     <link rel="canonical" href="https://bnishit.github.io/openrouter-skill/" />
-    <meta name="theme-color" content="#0f1728" />
+    <meta name="theme-color" content="#09090B" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="OpenRouter Skill for AI Agents" />
@@ -71,415 +71,510 @@
               "@type": "Answer",
               "text": "It packages reusable OpenRouter workflows, templates, references, and helper assets so an AI agent can apply them directly instead of rebuilding the same integration patterns from scratch."
             }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this replace the OpenRouter SDK?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. This skill complements the SDK. The SDK handles HTTP calls and auth. This skill handles the decision layer above it — which model to pick, how to route, what to do when things fail, and how to audit costs after the fact."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I keep the skill updated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Pull the latest from the repo or re-run the skills CLI install command. The skill is versioned in Git, so you can diff changes and decide when to update."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use this with my own prompts and templates?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The skill provides defaults and best-practice patterns, but everything is editable. Override templates, swap playbook rules, or extend the skill with your own workflows."
+            }
           }
         ]
       }
     </script>
   </head>
   <body>
-    <div class="page-shell">
-      <header class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">OpenRouter Skill</p>
-          <h1>The agent-ready layer for fast-moving OpenRouter work.</h1>
-          <p class="lede">
-            When models, providers, modalities, and prices keep changing, agents need more than a
-            chat endpoint. This skill gives them one reusable layer for discovery, routing,
-            free-model filtering, image generation, icon and OG image workflows, generation cost
-            lookup, multimodal flows, production starter templates, and best-practice playbooks.
-          </p>
-          <div class="cta-row">
-            <a class="button primary" href="https://github.com/bnishit/openrouter-skill">View GitHub Repo</a>
-            <a class="button secondary" href="#install">See Install Commands</a>
-          </div>
-          <ul class="signal-list">
-            <li>One skill for models, providers, and fast-changing capabilities</li>
-            <li>Use new text, vision, image-generation, file, and other modality-ready models faster</li>
-            <li>Track exact generation cost instead of guessing from pricing tables</li>
-          </ul>
-        </div>
-        <aside class="hero-panel">
-          <div class="panel-card">
-            <span class="panel-label">Why Teams Reach For It</span>
-            <strong>OpenRouter moves faster than app code usually does.</strong>
-            <p>New models appear quickly, providers differ, and pricing or capabilities shift underneath existing flows.</p>
-          </div>
-          <div class="panel-card accent">
-            <span class="panel-label">What This Skill Fixes</span>
-            <p>Catalog drift, provider confusion, cost blind spots, repetitive scaffolding, and weak multimodal defaults.</p>
-          </div>
-        </aside>
-      </header>
 
-      <main>
-        <section class="section">
-          <div class="section-heading">
-            <p class="eyebrow">First Principles</p>
-            <h2>Why this is useful before anyone even talks about prompts.</h2>
-          </div>
-          <div class="principle-grid">
-            <article class="principle-card">
-              <span class="principle-index">01</span>
+    <!-- ─── Hero ─── -->
+    <section class="hero">
+      <div class="container">
+        <p class="hero-eyebrow">OpenRouter Skill</p>
+        <h1>Ship OpenRouter work without rebuilding it.</h1>
+        <p class="hero-sub">
+          An installable skill that gives AI agents model discovery, image generation,
+          cost tracking, routing, and production playbooks — so you stop rewriting the
+          same OpenRouter patterns.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="https://github.com/bnishit/openrouter-skill">View on GitHub</a>
+          <a class="btn btn-secondary" href="#install">Install Now</a>
+        </div>
+        <ul class="hero-signals">
+          <li>One skill for models, providers, and fast-changing capabilities</li>
+          <li>Use new text, vision, and image-gen models faster</li>
+          <li>Track exact generation cost instead of guessing</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─── Why This Exists ─── -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Why This Exists</p>
+        <h2 class="section-title">OpenRouter moves faster than app code usually does.</h2>
+        <p class="why-text">
+          <strong>New models appear quickly, providers differ, and pricing shifts underneath existing flows.</strong>
+          Teams end up redoing the same integration steps every time — choosing a model, comparing providers,
+          checking free options, adding image generation, auditing generation cost, handling tool loops, and
+          wiring up multimodal inputs. This skill bundles those recurring patterns into one installable layer
+          so agents can reason about model choices, provider tradeoffs, and cost inspection without rebuilding
+          from scratch.
+        </p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─── First Principles ─── -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">First Principles</p>
+        <h2 class="section-title">Why this matters before anyone talks about prompts.</h2>
+        <div class="principles-list">
+
+          <div class="principle-row">
+            <span class="principle-num">01</span>
+            <div class="principle-content">
               <h3>Model markets change quickly</h3>
-              <p>
-                If you care about using the newest useful model instead of hardcoding last month’s
-                choice, you need model discovery, provider awareness, and safe routing built into
-                the workflow.
-              </p>
-            </article>
-            <article class="principle-card">
-              <span class="principle-index">02</span>
+              <p>If you care about using the newest useful model instead of hardcoding last month's choice, you need model discovery, provider awareness, and safe routing built into the workflow.</p>
+            </div>
+          </div>
+
+          <div class="principle-row">
+            <span class="principle-num">02</span>
+            <div class="principle-content">
               <h3>Compatibility is the reason teams choose OpenRouter</h3>
-              <p>
-                One OpenAI-compatible layer makes it easier to add a new text, vision,
-                image-generation, file, or future modality-ready model without redesigning the
-                whole integration every time.
-              </p>
-            </article>
-            <article class="principle-card">
-              <span class="principle-index">03</span>
+              <p>One OpenAI-compatible layer makes it easier to add a new text, vision, image-generation, or file-ready model without redesigning the whole integration every time.</p>
+            </div>
+          </div>
+
+          <div class="principle-row">
+            <span class="principle-num">03</span>
+            <div class="principle-content">
               <h3>Cost matters after the request, not just before it</h3>
-              <p>
-                Estimating from pricing tables is not enough. Real teams need exact generation
-                lookup for billing, debugging, and “why was this expensive?” questions later.
-              </p>
-            </article>
+              <p>Estimating from pricing tables is not enough. Real teams need exact generation lookup for billing, debugging, and "why was this expensive?" questions later.</p>
+            </div>
           </div>
-        </section>
 
-        <section class="section" id="install">
-          <div class="section-heading">
-            <p class="eyebrow">Install</p>
-            <h2>Add the OpenRouter agent skill to the AI agent you already use.</h2>
+          <div class="principle-row">
+            <span class="principle-num">04</span>
+            <div class="principle-content">
+              <h3>Scaffolding should not be rebuilt every project</h3>
+              <p>Starter routes, proxy setup, streaming config, and multimodal request shapes are the same across projects. Rebuilding them is wasted engineering time.</p>
+            </div>
           </div>
-          <div class="install-grid">
-            <article class="install-card">
-              <h3>Skills CLI</h3>
-              <pre><code>npx skills add bnishit/openrouter-skill --agent &lt;your-agent&gt;</code></pre>
-            </article>
-            <article class="install-card">
-              <h3>GitHub Repo</h3>
-              <pre><code>git clone https://github.com/bnishit/openrouter-skill.git</code></pre>
-            </article>
-            <article class="install-card">
-              <h3>Agent Ready</h3>
-              <pre><code>Use the same repo with the compatible AI agent you already use.</code></pre>
-            </article>
+
+          <div class="principle-row">
+            <span class="principle-num">05</span>
+            <div class="principle-content">
+              <h3>Production rules are learned the hard way — once</h3>
+              <p>Fallback behavior, tool-loop safety, JSON validation, and cost logging are operational rules that teams discover through incidents. A skill should encode them upfront.</p>
+            </div>
           </div>
-          <p class="install-note">
-            The public repository is <strong>openrouter-skill</strong>, and the public landing page
-            is written for general AI agent use.
-          </p>
-        </section>
 
-        <section class="section">
-          <div class="section-heading">
-            <p class="eyebrow">Capabilities</p>
-            <h2>What this OpenRouter agent skill actually ships.</h2>
+          <div class="principle-row">
+            <span class="principle-num">06</span>
+            <div class="principle-content">
+              <h3>Agents need structured knowledge, not just API docs</h3>
+              <p>An API reference tells you what endpoints exist. A skill tells an agent when to use them, what tradeoffs to consider, and how to handle the edge cases that docs don't cover.</p>
+            </div>
           </div>
-          <div class="capability-grid">
-            <article class="capability-card">
-              <h3>Model Discovery</h3>
-              <p>Searchable model catalog patterns, filtering guidance, and picker-ready UI examples.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Providers And Free Models</h3>
-              <p>Provider catalog guidance, provider-aware filters, and zero-priced model discovery from the live catalog.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Multimodal Chat</h3>
-              <p>Text, image, and PDF request patterns with response parsing and streaming helpers.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Image Generation</h3>
-              <p>OpenRouter chat-completions patterns for generated images, output modalities, and image response parsing.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Asset Workflows</h3>
-              <p>Starter patterns for icons, OG images, social visuals, preview flows, and persistent asset metadata.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Generation Costs</h3>
-              <p>Exact post-hoc generation lookup for cost, provider, and token accounting instead of rough price guesses.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Tool Calling</h3>
-              <p>Loop-safe examples for tools, follow-up calls, and structured response handling.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Routing</h3>
-              <p>Provider routing, fallbacks, and parameter-aware request strategies for production use.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Starter Templates</h3>
-              <p>Reusable Next.js and Express starter routes plus a small ops/debug surface so agents do not retype boilerplate from scratch.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Verification</h3>
-              <p>Smoke fixtures, docs checks, and shared helpers for safer OpenRouter integration changes.</p>
-            </article>
-            <article class="capability-card">
-              <h3>Best-Practice Playbooks</h3>
-              <p>Built-in production rules for routing, catalogs, tool loops, structured output, logging, and generation audit.</p>
-            </article>
-          </div>
-        </section>
 
-        <section class="section">
-          <div class="section-heading">
-            <p class="eyebrow">Simulated Chats</p>
-            <h2>What the decision looks like when a developer or agent is evaluating it.</h2>
-          </div>
-          <div class="chat-scenarios">
-            <article class="chat-card">
-              <div class="chat-meta">Scenario 1 · Shipping fast on a new model</div>
-              <div class="chat-bubble user">
-                <strong>Developer</strong>
-                <p>
-                  “A new image-capable model just showed up. I want my agent to add image
-                  generation without rewriting the app or hardcoding another provider-specific
-                  path.”
-                </p>
-              </div>
-              <div class="chat-bubble agent">
-                <strong>Agent Using This Skill</strong>
-                <p>
-                  “I can fetch the live model catalog, filter by the right modalities and
-                  supported parameters, pass through image-generation fields, scaffold the route,
-                  and keep the integration OpenRouter compatible instead of pinning your app to one
-                  vendor shape.”
-                </p>
-              </div>
-              <div class="chat-takeaway">
-                Useful when the question is not “can I call a model?” but “can I keep adapting as
-                the model landscape changes?”
-              </div>
-            </article>
-
-            <article class="chat-card">
-              <div class="chat-meta">Scenario 2 · Cost clarity after the fact</div>
-              <div class="chat-bubble user">
-                <strong>Operator</strong>
-                <p>
-                  “Yesterday’s OCR flow cost more than expected. I don’t want estimates. I want to
-                  know which generation, which provider, and what the exact token accounting was.”
-                </p>
-              </div>
-              <div class="chat-bubble agent">
-                <strong>Agent Using This Skill</strong>
-                <p>
-                  “I can look up the completed generation by id, show exact cost and token fields,
-                  and wire that into your logs or admin UI instead of leaving pricing as guesswork.”
-                </p>
-              </div>
-              <div class="chat-takeaway">
-                Useful when cost is an operational question, not just an architecture slide.
-              </div>
-            </article>
-
-            <article class="chat-card">
-              <div class="chat-meta">Scenario 3 · Low-cost and fallback-conscious builds</div>
-              <div class="chat-bubble user">
-                <strong>Developer</strong>
-                <p>
-                  “I want a support or internal workflow that starts cheap, can use free models
-                  when possible, and still has provider-aware fallbacks when quality or uptime
-                  matters.”
-                </p>
-              </div>
-              <div class="chat-bubble agent">
-                <strong>Agent Using This Skill</strong>
-                <p>
-                  “I can filter zero-priced models, list providers, preserve routing controls, and
-                  scaffold the exact endpoints your app needs to make those tradeoffs explicit.”
-                </p>
-              </div>
-              <div class="chat-takeaway">
-                Useful when the real job is balancing capability, price, and fallback behavior at
-                the same time.
-              </div>
-            </article>
-
-            <article class="chat-card">
-              <div class="chat-meta">Scenario 4 · One path for text, vision, and generated images</div>
-              <div class="chat-bubble user">
-                <strong>Developer</strong>
-                <p>
-                  “I do not want one SDK for chat, another for images, and a third path for file
-                  workflows. I want one agent-friendly integration that can keep up when new models
-                  appear.”
-                </p>
-              </div>
-              <div class="chat-bubble agent">
-                <strong>Agent Using This Skill</strong>
-                <p>
-                  “I can keep the app on one OpenRouter-compatible layer, add image generation on
-                  the same chat-completions path, and reuse the same model discovery, routing, and
-                  cost-audit patterns across modes.”
-                </p>
-              </div>
-              <div class="chat-takeaway">
-                Useful when the win is operational simplicity, not just one successful request.
-              </div>
-            </article>
-
-            <article class="chat-card">
-              <div class="chat-meta">Scenario 5 · Icons and OG images without another custom workflow</div>
-              <div class="chat-bubble user">
-                <strong>Developer</strong>
-                <p>
-                  “I need app icons and OG images, but I do not want to rebuild prompts, preview
-                  handling, file naming, and asset metadata every time.”
-                </p>
-              </div>
-              <div class="chat-bubble agent">
-                <strong>Agent Using This Skill</strong>
-                <p>
-                  “I can use the shipped image-asset presets, preview the returned image data
-                  immediately, and persist the approved asset with generation id, model, and prompt
-                  metadata for later audit.”
-                </p>
-              </div>
-              <div class="chat-takeaway">
-                Useful when image generation is part of a product workflow, not just a one-off demo.
-              </div>
-            </article>
-
-            <article class="chat-card">
-              <div class="chat-meta">Scenario 6 · Production rules without rediscovering them</div>
-              <div class="chat-bubble user">
-                <strong>Developer</strong>
-                <p>
-                  “The feature is working, but I do not want to remember all the small rules for
-                  fallback behavior, tool loops, JSON validation, and cost logging every time.”
-                </p>
-              </div>
-              <div class="chat-bubble agent">
-                <strong>Agent Using This Skill</strong>
-                <p>
-                  “I can use the shipped best-practice playbooks, so the implementation does not
-                  stop at code that works once. It also covers the operational rules that teams
-                  usually learn the hard way.”
-                </p>
-              </div>
-              <div class="chat-takeaway">
-                Useful when the gap is not API syntax, but repeatable engineering judgment.
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="section narrative">
-          <div class="section-heading">
-            <p class="eyebrow">Why This Exists</p>
-            <h2>Most OpenRouter work is repetitive. This turns it into a reusable skill.</h2>
-          </div>
-          <div class="narrative-grid">
-            <p>
-              Teams usually redo the same OpenRouter integration steps every time: choosing a
-              model, comparing providers, checking free options, adding image generation, handling
-              preview and storage for generated assets, auditing generation cost, proxying
-              requests, deciding on routing behavior, validating JSON, handling tool loops, and
-              wiring up multimodal inputs. OpenRouter Skill bundles those recurring patterns into
-              one installable agent skill.
-            </p>
-            <p>
-              The point is not just to “support OpenRouter.” The point is to let an agent reason
-              about fast-moving model choices, provider tradeoffs, image generation, icon and OG
-              image workflows, multimodal requests, tool reliability, and cost inspection without
-              rebuilding the same layer from scratch every time a new need shows up.
-            </p>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="section-heading">
-            <p class="eyebrow">Use Cases</p>
-            <h2>Typical jobs agents use this skill for.</h2>
-          </div>
-          <div class="use-case-grid">
-            <article class="use-case-card">
-              <h3>Model Picker UI</h3>
-              <p>Build searchable OpenRouter model discovery UIs instead of hardcoding model lists.</p>
-            </article>
-            <article class="use-case-card">
-              <h3>Provider And Free Filters</h3>
-              <p>Add provider-aware filters and zero-priced model views without inventing custom catalog logic.</p>
-            </article>
-            <article class="use-case-card">
-              <h3>Image and PDF Flows</h3>
-              <p>Add image extraction, PDF parsing, and multimodal prompts through a server route.</p>
-            </article>
-            <article class="use-case-card">
-              <h3>Image Generation</h3>
-              <p>Add generated-image workflows through the same OpenRouter chat-completions layer instead of adopting a separate image-only integration.</p>
-            </article>
-            <article class="use-case-card">
-              <h3>Icons And OG Images</h3>
-              <p>Generate product icons, blog or social preview art, and other reusable assets with preview plus storage-ready metadata instead of ad hoc scripts.</p>
-            </article>
-            <article class="use-case-card">
-              <h3>Generation Cost Audit</h3>
-              <p>Fetch a completed generation later to show exact cost, provider, and token accounting in logs or admin tools.</p>
-            </article>
-            <article class="use-case-card">
-              <h3>Tool-Calling Loops</h3>
-              <p>Keep tools on each follow-up request and parse responses safely across providers.</p>
-            </article>
-            <article class="use-case-card">
-              <h3>Ops Debug Console</h3>
-              <p>Drop in the starter admin/debug surface to inspect providers, free models, and a generation id without inventing another internal page.</p>
-            </article>
-            <article class="use-case-card">
-              <h3>Production Hardening</h3>
-              <p>Apply the shipped best-practice playbooks for routing, observability, structured output, and tool loops instead of rebuilding those rules from scratch.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="section faq">
-          <div class="section-heading">
-            <p class="eyebrow">FAQ</p>
-            <h2>Common questions about this OpenRouter skill.</h2>
-          </div>
-          <div class="faq-list">
-            <article>
-              <h3>Is this only for one assistant?</h3>
-              <p>
-                No. The repository is packaged broadly for AI agents that support the skills
-                install flow, and the landing page is intentionally written for general AI agent
-                use.
-              </p>
-            </article>
-            <article>
-              <h3>What makes this an agent skill?</h3>
-              <p>
-                It packages reusable OpenRouter workflows, templates, references, and helper
-                assets so an AI agent can apply them directly instead of rebuilding the same
-                integration patterns from scratch.
-              </p>
-            </article>
-            <article>
-              <h3>What do I get besides docs?</h3>
-              <p>
-                You get the skill prompt, metadata, starter templates, smoke fixtures, shared
-                helpers, and focused references plus best-practice playbooks for models,
-                providers, free-model filtering, image generation, tool loops, and generation cost
-                lookup that agents can use directly.
-              </p>
-            </article>
-          </div>
-        </section>
-
-      </main>
-
-      <footer class="footer">
-        <p>OpenRouter Skill by Nishit Bhatt.</p>
-        <div class="footer-links">
-          <a href="https://github.com/bnishit/openrouter-skill">GitHub</a>
-          <a href="https://github.com/bnishit/openrouter-skill/blob/main/SKILL.md">SKILL.md</a>
         </div>
-      </footer>
-    </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─── Capabilities ─── -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Capabilities</p>
+        <h2 class="section-title">What this skill actually ships.</h2>
+        <div class="cap-grid">
+          <div class="cap-item">
+            <h3>Model Discovery</h3>
+            <p>Searchable catalog patterns, filtering guidance, and picker-ready UI examples.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Provider &amp; Free Models</h3>
+            <p>Provider-aware filters and zero-priced model discovery from the live catalog.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Multimodal Chat</h3>
+            <p>Text, image, and PDF request patterns with response parsing and streaming.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Image Generation</h3>
+            <p>Chat-completions patterns for generated images, output modalities, and response parsing.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Generation Costs</h3>
+            <p>Exact post-hoc lookup for cost, provider, and token accounting per generation.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Tool Calling</h3>
+            <p>Loop-safe examples for tools, follow-up calls, and structured response handling.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Routing &amp; Fallbacks</h3>
+            <p>Provider routing, fallback strategies, and parameter-aware request configuration.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Production Playbooks</h3>
+            <p>Built-in rules for routing, observability, structured output, logging, and audit.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Asset Workflows</h3>
+            <p>Starter patterns for icons, OG images, social visuals, and persistent asset metadata.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Starter Templates</h3>
+            <p>Reusable Next.js and Express routes plus a small ops/debug surface — no boilerplate from scratch.</p>
+          </div>
+          <div class="cap-item">
+            <h3>Verification</h3>
+            <p>Smoke fixtures, docs checks, and shared helpers for safer integration changes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─── Install ─── -->
+    <section class="section" id="install">
+      <div class="container">
+        <p class="section-label">Install</p>
+        <h2 class="section-title">Add it in one command.</h2>
+        <div class="install-methods">
+          <div class="install-block">
+            <div class="install-block-header">
+              <span class="install-block-label">Skills CLI</span>
+              <button class="copy-btn" data-copy="npx skills add bnishit/openrouter-skill">Copy</button>
+            </div>
+            <pre><code>npx skills add bnishit/openrouter-skill</code></pre>
+          </div>
+          <div class="install-block">
+            <div class="install-block-header">
+              <span class="install-block-label">Git Clone</span>
+              <button class="copy-btn" data-copy="git clone https://github.com/bnishit/openrouter-skill.git">Copy</button>
+            </div>
+            <pre><code>git clone https://github.com/bnishit/openrouter-skill.git</code></pre>
+          </div>
+        </div>
+        <p class="install-note">
+          The trigger name is <strong>openrouter-skill</strong>. Works with any AI agent that supports the skills install flow.
+        </p>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─── How It Works (Scenarios) ─── -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">How It Works</p>
+        <h2 class="section-title">Real situations, real outcomes.</h2>
+        <div class="carousel-wrapper">
+          <div class="carousel-track">
+
+            <article class="scenario-card">
+              <span class="scenario-num">01</span>
+              <h3>Shipping fast on a new model</h3>
+              <div class="scenario-situation">
+                A new image-capable model just appeared. You want image generation without rewriting the app or hardcoding another provider-specific path.
+              </div>
+              <div class="scenario-result">
+                The skill fetches the live catalog, filters by modality, scaffolds the route, and keeps the integration OpenRouter-compatible — no vendor lock-in.
+              </div>
+              <p class="scenario-takeaway">When the question is "can I keep adapting?" not just "can I call a model?"</p>
+            </article>
+
+            <article class="scenario-card">
+              <span class="scenario-num">02</span>
+              <h3>Cost clarity after the fact</h3>
+              <div class="scenario-situation">
+                Yesterday's OCR flow cost more than expected. You need exact token accounting, not estimates from pricing tables.
+              </div>
+              <div class="scenario-result">
+                The skill looks up the generation by ID, returns exact cost, provider, and token fields — wired into logs or admin UI.
+              </div>
+              <p class="scenario-takeaway">When cost is an operational question, not just an architecture slide.</p>
+            </article>
+
+            <article class="scenario-card">
+              <span class="scenario-num">03</span>
+              <h3>Low-cost and fallback-conscious builds</h3>
+              <div class="scenario-situation">
+                You want a workflow that starts cheap, can use free models when possible, and still has provider-aware fallbacks when quality matters.
+              </div>
+              <div class="scenario-result">
+                The skill filters zero-priced models, lists providers, preserves routing controls, and scaffolds the endpoints your app needs.
+              </div>
+              <p class="scenario-takeaway">When the real job is balancing capability, price, and fallback behavior at once.</p>
+            </article>
+
+            <article class="scenario-card">
+              <span class="scenario-num">04</span>
+              <h3>One path for text, vision, and images</h3>
+              <div class="scenario-situation">
+                You don't want one SDK for chat, another for images, and a third for file workflows. You want one integration that keeps up.
+              </div>
+              <div class="scenario-result">
+                The skill keeps the app on one OpenRouter-compatible layer across all modalities — same discovery, routing, and cost-audit patterns.
+              </div>
+              <p class="scenario-takeaway">When the win is operational simplicity, not just one successful request.</p>
+            </article>
+
+            <article class="scenario-card">
+              <span class="scenario-num">05</span>
+              <h3>Icons and OG images without custom workflows</h3>
+              <div class="scenario-situation">
+                You need app icons and OG images but don't want to rebuild prompts, preview handling, file naming, and asset metadata every time.
+              </div>
+              <div class="scenario-result">
+                The skill uses shipped image-asset presets, previews returned image data immediately, and persists with generation ID, model, and prompt metadata.
+              </div>
+              <p class="scenario-takeaway">When image generation is part of a product workflow, not just a one-off demo.</p>
+            </article>
+
+            <article class="scenario-card">
+              <span class="scenario-num">06</span>
+              <h3>Production rules without rediscovering them</h3>
+              <div class="scenario-situation">
+                The feature is working, but you don't want to remember all the small rules for fallbacks, tool loops, JSON validation, and cost logging every time.
+              </div>
+              <div class="scenario-result">
+                The skill applies shipped best-practice playbooks so implementation covers the operational rules teams usually learn the hard way.
+              </div>
+              <p class="scenario-takeaway">When the gap is not API syntax, but repeatable engineering judgment.</p>
+            </article>
+
+          </div>
+          <div class="carousel-nav">
+            <button class="carousel-arrow" id="carousel-prev" aria-label="Previous">&larr;</button>
+            <div class="carousel-dots"></div>
+            <button class="carousel-arrow" id="carousel-next" aria-label="Next">&rarr;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─── FAQ ─── -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">FAQ</p>
+        <h2 class="section-title">Common questions.</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-q">Is this only for one assistant?</button>
+            <div class="faq-a">
+              <p>No. The repository is packaged broadly for AI agents that support the skills install flow. The landing page is intentionally written for general agent use.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">What makes this an agent skill?</button>
+            <div class="faq-a">
+              <p>It packages reusable OpenRouter workflows, templates, references, and helper assets so an AI agent can apply them directly instead of rebuilding the same integration patterns from scratch.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">What do I get besides docs?</button>
+            <div class="faq-a">
+              <p>The skill prompt, metadata, starter templates, smoke fixtures, shared helpers, and focused references plus best-practice playbooks for models, providers, image generation, tool loops, and generation cost lookup.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">Does this replace the OpenRouter SDK?</button>
+            <div class="faq-a">
+              <p>No. This skill complements it. The SDK handles HTTP calls and auth. This skill handles the decision layer above it — which model to pick, how to route, what to do when things fail, and how to audit costs after the fact.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">How do I keep the skill updated?</button>
+            <div class="faq-a">
+              <p>Pull the latest from the repo or re-run the skills CLI install command. The skill is versioned in Git, so you can diff changes and decide when to update.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q">Can I use this with my own prompts and templates?</button>
+            <div class="faq-a">
+              <p>Yes. The skill provides defaults and best-practice patterns, but everything is editable. Override templates, swap playbook rules, or extend the skill with your own workflows.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ─── Footer ─── -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <p class="footer-name">OpenRouter Skill</p>
+            <p class="footer-tagline">Built by Nishit Bhatt. Open source and maintained.</p>
+          </div>
+          <div class="footer-links">
+            <a href="https://github.com/bnishit/openrouter-skill">GitHub</a>
+            <a href="https://github.com/bnishit/openrouter-skill/blob/main/SKILL.md">SKILL.md</a>
+            <a href="https://github.com/bnishit/openrouter-skill/blob/main/LICENSE">License</a>
+            <a href="https://github.com/bnishit/openrouter-skill/issues">Issues</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>Static HTML. No frameworks. No tracking. No cookies.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ─── Inline JS: copy buttons + FAQ accordion + carousel ─── -->
+    <script>
+      // Copy to clipboard
+      document.querySelectorAll('.copy-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var text = this.getAttribute('data-copy');
+          navigator.clipboard.writeText(text).then(function() {
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(function() {
+              btn.textContent = 'Copy';
+              btn.classList.remove('copied');
+            }, 2000);
+          });
+        });
+      });
+
+      // FAQ accordion
+      document.querySelectorAll('.faq-q').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var item = this.parentElement;
+          var isOpen = item.classList.contains('open');
+          document.querySelectorAll('.faq-item').forEach(function(el) {
+            el.classList.remove('open');
+          });
+          if (!isOpen) {
+            item.classList.add('open');
+          }
+        });
+      });
+
+      // Auto-scrolling carousel
+      (function() {
+        var track = document.querySelector('.carousel-track');
+        var cards = track.querySelectorAll('.scenario-card');
+        var dotsContainer = document.querySelector('.carousel-dots');
+        var totalCards = cards.length;
+        var currentIndex = 0;
+        var autoplayInterval;
+        var visibleCards = 3;
+
+        function getVisibleCards() {
+          var w = window.innerWidth;
+          if (w <= 768) return 1;
+          if (w <= 1024) return 2;
+          return 3;
+        }
+
+        function getTotalPages() {
+          return totalCards - getVisibleCards() + 1;
+        }
+
+        function buildDots() {
+          dotsContainer.innerHTML = '';
+          var pages = getTotalPages();
+          for (var i = 0; i < pages; i++) {
+            var dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === currentIndex ? ' active' : '');
+            dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+            dot.dataset.index = i;
+            dot.addEventListener('click', function() {
+              goTo(parseInt(this.dataset.index));
+              resetAutoplay();
+            });
+            dotsContainer.appendChild(dot);
+          }
+        }
+
+        function goTo(index) {
+          var pages = getTotalPages();
+          if (index >= pages) index = 0;
+          if (index < 0) index = pages - 1;
+          currentIndex = index;
+
+          var card = cards[0];
+          var gap = 16;
+          var cardWidth = card.offsetWidth + gap;
+          track.style.transform = 'translateX(-' + (currentIndex * cardWidth) + 'px)';
+
+          dotsContainer.querySelectorAll('.carousel-dot').forEach(function(d, i) {
+            d.classList.toggle('active', i === currentIndex);
+          });
+        }
+
+        function next() {
+          goTo(currentIndex + 1);
+        }
+
+        function resetAutoplay() {
+          clearInterval(autoplayInterval);
+          autoplayInterval = setInterval(next, 4000);
+        }
+
+        // Pause on hover
+        track.addEventListener('mouseenter', function() {
+          clearInterval(autoplayInterval);
+        });
+        track.addEventListener('mouseleave', function() {
+          resetAutoplay();
+        });
+
+        // Handle resize
+        window.addEventListener('resize', function() {
+          var pages = getTotalPages();
+          if (currentIndex >= pages) currentIndex = pages - 1;
+          buildDots();
+          goTo(currentIndex);
+        });
+
+        // Arrow buttons
+        document.getElementById('carousel-prev').addEventListener('click', function() {
+          goTo(currentIndex - 1);
+          resetAutoplay();
+        });
+        document.getElementById('carousel-next').addEventListener('click', function() {
+          goTo(currentIndex + 1);
+          resetAutoplay();
+        });
+
+        buildDots();
+        goTo(0);
+        resetAutoplay();
+      })();
+    </script>
+
   </body>
 </html>

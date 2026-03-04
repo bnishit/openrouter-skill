@@ -1,47 +1,46 @@
 # OpenRouter Skill
 
-OpenRouter Skill is an installable agent skill for AI agents that need reliable OpenRouter integration patterns: model discovery, provider discovery, free-model filtering, image generation, generation cost lookup, multimodal chat, tool calling, structured output, routing, starter templates, and reusable best-practice playbooks.
+Ship OpenRouter work without rebuilding it.
 
-This is useful when the real problem is not “how do I call one model once,” but “how do I keep an agent effective while models, providers, modalities, and prices keep changing?”
+An installable skill that gives AI agents model discovery, image generation, cost tracking, routing, and production playbooks — so you stop rewriting the same OpenRouter patterns.
 
-Landing page: `https://bnishit.github.io/openrouter-skill/`
+Landing page: [bnishit.github.io/openrouter-skill](https://bnishit.github.io/openrouter-skill/)
 
 ## Install
 
-Install with the `skills` CLI for the agent you use:
-
 ```bash
-npx skills add bnishit/openrouter-skill --agent <your-agent>
+npx skills add bnishit/openrouter-skill
 ```
 
-If your agent runtime supports the `skills` install flow, this repository is intended to work as a reusable OpenRouter skill there as well.
+Works with any AI agent that supports the skills install flow.
 
-## Compatibility
+## Alternative Install
 
-The public repository name is `openrouter-skill`, but the installed skill trigger remains `openrouter-integration` for compatibility with existing prompts and local setups.
-
-Direct git install still works:
+Direct git clone:
 
 ```bash
-git clone https://github.com/bnishit/openrouter-skill.git \
-  ~/.codex/skills/openrouter-integration
+git clone https://github.com/bnishit/openrouter-skill.git
 ```
 
-## What It Covers
+The trigger name is `openrouter-skill`. The installed skill trigger remains `openrouter-integration` for compatibility with existing prompts and local setups.
 
-- model discovery and searchable model pickers
-- provider discovery and provider-aware routing
-- free-model filtering from the live catalog
-- generation cost lookup and post-hoc billing inspection
-- image generation through OpenRouter's chat-completions flow
-- end-to-end generated asset workflows for icons, OG images, and social media visuals
-- best-practice playbooks for catalogs, routing, tools, structured output, and observability
-- chat completions and streaming
-- structured JSON responses
-- multimodal requests with images and PDFs
-- tool calling and multi-step agent loops
-- model routing and provider fallback policies
-- reusable Next.js and Express starter templates
+## Why This Exists
+
+OpenRouter moves faster than app code usually does. New models appear quickly, providers differ, and pricing shifts underneath existing flows. Teams end up redoing the same integration steps every time. This skill bundles those recurring patterns into one installable layer.
+
+## Capabilities
+
+- **Model Discovery** — searchable catalog patterns, filtering guidance, and picker-ready UI examples
+- **Provider & Free Models** — provider-aware filters and zero-priced model discovery from the live catalog
+- **Multimodal Chat** — text, image, and PDF request patterns with response parsing and streaming
+- **Image Generation** — chat-completions patterns for generated images, output modalities, and response parsing
+- **Generation Costs** — exact post-hoc lookup for cost, provider, and token accounting per generation
+- **Tool Calling** — loop-safe examples for tools, follow-up calls, and structured response handling
+- **Routing & Fallbacks** — provider routing, fallback strategies, and parameter-aware request configuration
+- **Production Playbooks** — built-in rules for routing, observability, structured output, logging, and audit
+- **Asset Workflows** — starter patterns for icons, OG images, social visuals, and persistent asset metadata
+- **Starter Templates** — reusable Next.js and Express routes plus a small ops/debug surface
+- **Verification** — smoke fixtures, docs checks, and shared helpers for safer integration changes
 
 ## Example Prompts
 
@@ -53,35 +52,40 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 - `Use $openrouter-integration to make this OpenRouter workflow production-safe with the built-in best-practice playbooks for routing, tools, and observability.`
 - `Use $openrouter-integration to wire tool calling and provider fallback handling into this project.`
 
-## When It Helps
+## First Principles
 
-- when a new model or modality shows up and the agent should adapt without rewriting the whole integration
-- when a team wants to add image generation quickly without switching to a separate provider-specific SDK
-- when the app needs generated icons, OG images, or social visuals without rebuilding prompt, preview, and storage logic again
-- when the app needs provider-aware routing or low-cost / free-model views instead of a single fixed model
-- when someone asks why a generation cost what it did and the answer needs exact lookup, not rough estimates
-- when a developer wants a working proxy, helper layer, and starter routes instead of another one-off OpenRouter rewrite
-- when the developer or agent should not have to rediscover the same production rules for routing, structured extraction, tool loops, and cost audit
+1. **Model markets change quickly** — you need discovery, provider awareness, and safe routing built in
+2. **Compatibility is the reason teams choose OpenRouter** — one layer for text, vision, image-gen, and files
+3. **Cost matters after the request, not just before it** — exact generation lookup for billing and debugging
+4. **Scaffolding should not be rebuilt every project** — starter routes and request shapes are the same across projects
+5. **Production rules are learned the hard way — once** — fallbacks, tool-loop safety, and cost logging should be encoded upfront
+6. **Agents need structured knowledge, not just API docs** — a skill tells an agent when to use endpoints and how to handle edge cases
 
-## Simulated Chats
+## How It Works
 
-### Scenario 1: shipping a new model fast
+### 01 — Shipping fast on a new model
 
-Developer: "A new image-capable model just showed up. I want my agent to add image generation without rewriting the app."
+A new image-capable model just appeared. The skill fetches the live catalog, filters by modality, scaffolds the route, and keeps the integration OpenRouter-compatible — no vendor lock-in.
 
-Agent using this skill: "I can fetch the live model catalog, filter by the right modalities and supported parameters, and keep the integration on the same OpenRouter-compatible path."
+### 02 — Cost clarity after the fact
 
-### Scenario 2: one path for text, vision, and generated images
+Yesterday's OCR flow cost more than expected. The skill looks up the generation by ID, returns exact cost, provider, and token fields — wired into logs or admin UI.
 
-Developer: "I do not want one SDK for chat, another for images, and a third path for file workflows."
+### 03 — Low-cost and fallback-conscious builds
 
-Agent using this skill: "I can keep text, image analysis, image generation, and PDF flows on the same OpenRouter chat-completions layer and reuse the same routing and cost-audit patterns."
+You want a workflow that starts cheap and uses free models when possible. The skill filters zero-priced models, lists providers, preserves routing controls, and scaffolds the endpoints your app needs.
 
-### Scenario 3: cost questions after the request
+### 04 — One path for text, vision, and images
 
-Operator: "Yesterday's workflow cost more than expected. I want the exact generation, provider, and token accounting."
+You don't want one SDK for chat, another for images, and a third for file workflows. The skill keeps the app on one OpenRouter-compatible layer across all modalities.
 
-Agent using this skill: "I can look up the completed generation by id and show exact post-hoc cost instead of relying on estimates."
+### 05 — Icons and OG images without custom workflows
+
+You need app icons and OG images but don't want to rebuild prompts, preview handling, and asset metadata every time. The skill uses shipped presets and persists with generation metadata.
+
+### 06 — Production rules without rediscovering them
+
+The feature is working, but you don't want to remember all the small rules for fallbacks, tool loops, and cost logging. The skill applies shipped best-practice playbooks so implementation covers the operational rules teams usually learn the hard way.
 
 ## Repository Layout
 
@@ -130,15 +134,27 @@ Agent using this skill: "I can look up the completed generation by id and show e
 
 ### Is this only for one assistant?
 
-No. The repository is packaged as a broad OpenRouter skill for AI agents, and the public naming and install flow are intentionally agent-agnostic.
+No. The repository is packaged broadly for AI agents that support the skills install flow. The landing page is intentionally written for general agent use.
 
-### Why is the trigger still `openrouter-integration`?
+### What makes this an agent skill?
 
-To avoid breaking existing prompts and local installations. The repo branding changed; the skill trigger did not.
+It packages reusable OpenRouter workflows, templates, references, and helper assets so an AI agent can apply them directly instead of rebuilding the same integration patterns from scratch.
 
-### What should I search for?
+### What do I get besides docs?
 
-This project is optimized around the phrases `OpenRouter Skill`, `OpenRouter agent skill`, and `OpenRouter integration skill`.
+The skill prompt, metadata, starter templates, smoke fixtures, shared helpers, and focused references plus best-practice playbooks for models, providers, image generation, tool loops, and generation cost lookup.
+
+### Does this replace the OpenRouter SDK?
+
+No. This skill complements it. The SDK handles HTTP calls and auth. This skill handles the decision layer above it — which model to pick, how to route, what to do when things fail, and how to audit costs after the fact.
+
+### How do I keep the skill updated?
+
+Pull the latest from the repo or re-run `npx skills add bnishit/openrouter-skill`. The skill is versioned in Git, so you can diff changes and decide when to update.
+
+### Can I use this with my own prompts and templates?
+
+Yes. The skill provides defaults and best-practice patterns, but everything is editable. Override templates, swap playbook rules, or extend the skill with your own workflows.
 
 ## Directory Listing
 
