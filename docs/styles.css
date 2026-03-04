@@ -150,6 +150,60 @@ a { color: inherit; }
   background: rgba(255,255,255,0.03);
 }
 
+/* ── Hero trust badges ── */
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 32px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: #71717A;
+  letter-spacing: 0.02em;
+}
+
+.hero-badges span {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.hero-badges .badge-sep {
+  border: none;
+  background: none;
+  padding: 0 2px;
+  color: #3F3F46;
+}
+
+/* ── Hero code example ── */
+.hero-code {
+  margin-bottom: 32px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  max-width: 560px;
+  overflow-x: auto;
+}
+
+.hero-code code {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.hero-code .code-prompt {
+  color: var(--accent);
+  user-select: none;
+}
+
+.hero-code .code-command {
+  color: var(--text);
+}
+
 .hero-signals {
   display: flex;
   flex-wrap: wrap;
@@ -180,6 +234,22 @@ a { color: inherit; }
   padding: 80px 0;
 }
 
+.section--tight {
+  padding: 60px 0;
+}
+
+.section--spacious {
+  padding: 100px 0 80px;
+}
+
+.section--compact {
+  padding: 48px 0;
+}
+
+.section--dark {
+  background: var(--bg-card);
+}
+
 .divider {
   border: none;
   height: 1px;
@@ -194,7 +264,7 @@ a { color: inherit; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .section-title {
@@ -203,7 +273,7 @@ a { color: inherit; }
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
   max-width: 20ch;
 }
 
@@ -213,11 +283,17 @@ a { color: inherit; }
   line-height: 1.7;
   color: var(--muted);
   max-width: 640px;
+  border-left: 3px solid var(--accent);
+  padding-left: 24px;
 }
 
 .why-text strong {
+  display: block;
+  font-size: 1.3rem;
+  line-height: 1.4;
   color: var(--text);
   font-weight: 600;
+  margin-bottom: 16px;
 }
 
 /* ── First Principles ── */
@@ -231,9 +307,16 @@ a { color: inherit; }
 .principle-row {
   display: flex;
   gap: 24px;
-  padding: 24px 0;
+  padding: 24px 8px;
   border-bottom: 1px solid var(--border);
   align-items: baseline;
+  transition: background 200ms ease;
+  border-radius: 4px;
+  margin: 0 -8px;
+}
+
+.principle-row:hover {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .principle-row:first-child {
@@ -279,11 +362,22 @@ a { color: inherit; }
 .cap-item {
   padding: 28px 24px;
   background: var(--bg-card);
-  transition: background 200ms ease;
+  transition: all 200ms ease;
+  border-left: 2px solid transparent;
 }
 
 .cap-item:hover {
   background: #18181B;
+  border-left-color: var(--accent);
+  box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.04);
+}
+
+.cap-item--featured {
+  padding: 36px 28px;
+}
+
+.cap-item--featured h3 {
+  font-size: 1.1rem;
 }
 
 .cap-item h3 {
@@ -467,6 +561,7 @@ a { color: inherit; }
   flex-direction: column;
   gap: 16px;
   flex: 0 0 auto;
+  min-height: 340px;
   /* Width set by JS based on wrapper size */
 }
 
@@ -517,7 +612,7 @@ a { color: inherit; }
 /* ── FAQ ── */
 .faq-list {
   margin-top: 32px;
-  max-width: 640px;
+  max-width: 780px;
 }
 
 .faq-item {
@@ -623,8 +718,20 @@ a { color: inherit; }
 
 .footer-bottom {
   padding-top: 16px;
-  font-size: 0.78rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.footer-badge {
+  font-family: var(--mono);
+  font-size: 0.7rem;
   color: #52525B;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  letter-spacing: 0.02em;
 }
 
 /* ── Responsive ── */
@@ -648,12 +755,28 @@ a { color: inherit; }
     grid-template-columns: 1fr;
   }
 
+  .cap-item--featured {
+    padding: 28px 24px;
+  }
+
+  .cap-item--featured h3 {
+    font-size: 1rem;
+  }
+
   .install-methods {
     grid-template-columns: 1fr;
   }
 
   .container {
     width: min(1120px, 100% - 32px);
+  }
+
+  .scenario-card {
+    min-height: auto;
+  }
+
+  .why-text strong {
+    font-size: 1.15rem;
   }
 }
 
