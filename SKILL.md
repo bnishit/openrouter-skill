@@ -201,6 +201,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 
 9. Verify the integration.
    - Run `assets/tests/smoke-curl.sh` for text, structured JSON, tools, image, and PDF cases.
+   - Run `assets/tests/smoke-catalogs.sh` for models, user models, providers, free-model filtering, and generation cost lookup.
    - Check both successful responses and non-2xx OpenRouter errors.
    - Log returned `usage`, `cost`, finish reason, resolved model id, and generation id for debugging.
    - Fetch `GET /api/v1/generation?id=...` when exact post-hoc cost or token accounting matters.
@@ -213,6 +214,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - Express starter: `assets/express-template/`
 - Shared TypeScript helpers: `assets/shared/`
 - Smoke tests and fixtures: `assets/tests/`
+- Catalog and cost helper: `assets/shared/openrouter-catalog-and-cost.ts`
 - Catalogs, providers, free-model filters, and generation cost lookup: `references/catalogs-and-costs.md`
 
 ## Quality Rules
@@ -222,6 +224,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - Use `architecture.input_modalities` and `architecture.output_modalities` as the primary capability signals.
 - Treat pricing fields as strings from the API; convert explicitly if you need numeric math.
 - Persist generation ids anywhere later cost inspection matters.
+- Prefer exact generation lookup over estimated UI-only price math when a completed request id exists.
 - Include the organization prefix in model ids such as `openai/gpt-4o-mini`.
 - Expect `choices` to always be an array.
 - For streaming, expect SSE comment lines and ignore them.

@@ -71,6 +71,8 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 - `assets/express-template/`: route handlers and a minimal example server
 - `assets/shared/`: TypeScript helpers for response parsing, structured output validation, and SSE streaming
 - `assets/tests/`: curl-based smoke tests and fixtures for text, JSON, tools, images, and PDFs
+- `assets/shared/openrouter-catalog-and-cost.ts`: reusable helper for models, providers, free models, and generation cost lookup
+- `assets/tests/smoke-catalogs.sh`: smoke script for `/models`, `/models/user`, `/providers`, free-model filtering, and `/generation`
 
 ## FAQ
 
