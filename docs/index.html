@@ -117,7 +117,10 @@
           <a class="btn btn-secondary" href="#scenarios">See It In Action</a>
         </div>
         <div class="hero-code">
-          <code><span class="code-prompt">&rarr; </span><span class="code-command">npx skills add bnishit/openrouter-skill</span></code>
+          <div class="hero-code-inner">
+            <code><span class="code-prompt">&rarr; </span><span class="code-command">npx skills add bnishit/openrouter-skill</span></code>
+          </div>
+          <button class="copy-btn" data-copy="npx skills add bnishit/openrouter-skill">Copy</button>
         </div>
         <ul class="hero-signals">
           <li>Add any AI model to your app without rewriting your integration</li>
@@ -239,24 +242,37 @@
             <span class="step-num">1</span>
             <h3>Install</h3>
             <div class="step-code">
-              <code>npx skills add bnishit/openrouter-skill</code>
+              <div class="step-code-inner"><code>npx skills add bnishit/openrouter-skill</code></div>
+              <button class="copy-btn" data-copy="npx skills add bnishit/openrouter-skill">Copy</button>
             </div>
-            <p>One command installs the skill, templates, helpers, tests, and playbooks.</p>
+            <p>One command installs the skill, templates, helpers, tests, and playbooks. Open your terminal and run it.</p>
           </div>
 
           <div class="step-card">
             <span class="step-num">2</span>
             <h3>Invoke</h3>
-            <div class="step-code">
-              <code>Use $openrouter-integration to add image generation to this app.</code>
+            <p>Talk to your AI agent. Mention the skill and say what you need:</p>
+            <div class="step-examples">
+              <code>Use the OpenRouter skill to add image generation to this app.</code>
+              <code>Use the OpenRouter skill to build an agentic tool-calling loop.</code>
+              <code>Use the OpenRouter skill to add a model picker with free-model filtering.</code>
+              <code>Use the OpenRouter skill to look up exact cost per generation.</code>
+              <code>Use the OpenRouter skill to set up provider routing with fallbacks.</code>
+              <code>Use the OpenRouter skill to add PDF and image chat support.</code>
             </div>
-            <p>Tell your AI agent what you need. The skill gives it structured knowledge about every OpenRouter pattern.</p>
           </div>
 
           <div class="step-card">
             <span class="step-num">3</span>
             <h3>Ship</h3>
-            <p>Your agent scaffolds production-ready routes, handles edge cases from playbooks, and wires up the integration. You review, test, deploy.</p>
+            <p>Your agent scaffolds production-ready code using the skill's knowledge:</p>
+            <ul class="step-checklist">
+              <li>Routes and API handlers from starter templates</li>
+              <li>Edge cases covered by production playbooks</li>
+              <li>Cost tracking and logging wired in</li>
+              <li>Fallback and routing configured</li>
+              <li>You review, test, deploy</li>
+            </ul>
           </div>
 
         </div>
@@ -269,7 +285,7 @@
     <section class="section section--spacious" id="capabilities">
       <div class="container">
         <p class="section-label">Everything Included</p>
-        <h2 class="section-title">The full toolkit. Click any card to see it in action.</h2>
+        <h2 class="section-title">The full toolkit. Every card shows you how.</h2>
 
         <!-- Primary capability cards (clickable, open modals) -->
         <div class="cap-grid cap-grid--primary">
@@ -305,31 +321,37 @@
           </div>
         </div>
 
-        <!-- Secondary capability cards (smaller, no modal) -->
+        <!-- Secondary capability cards (clickable, open modals) -->
         <div class="cap-grid cap-grid--secondary">
-          <div class="cap-item">
+          <div class="cap-item cap-item--clickable" data-modal="provider-free">
             <h3>Provider &amp; Free Models</h3>
             <p>Filter by provider. Find zero-cost models automatically.</p>
+            <span class="cap-item-cta">See how &rarr;</span>
           </div>
-          <div class="cap-item">
+          <div class="cap-item cap-item--clickable" data-modal="starter-templates">
             <h3>Starter Templates</h3>
             <p>Next.js and Express routes. Copy, not configure.</p>
+            <span class="cap-item-cta">See how &rarr;</span>
           </div>
-          <div class="cap-item">
+          <div class="cap-item cap-item--clickable" data-modal="asset-workflows">
             <h3>Asset Workflows</h3>
             <p>Icons, OG images, banners. Generate, preview, persist.</p>
+            <span class="cap-item-cta">See how &rarr;</span>
           </div>
-          <div class="cap-item">
+          <div class="cap-item cap-item--clickable" data-modal="production-playbooks">
             <h3>Production Playbooks</h3>
             <p>Fallback rules, logging, audit trails. Encoded, not remembered.</p>
+            <span class="cap-item-cta">See how &rarr;</span>
           </div>
-          <div class="cap-item">
+          <div class="cap-item cap-item--clickable" data-modal="safer-defaults">
             <h3>Safer Defaults</h3>
             <p>Proxies block untrusted URLs. Allowlist what you trust.</p>
+            <span class="cap-item-cta">See how &rarr;</span>
           </div>
-          <div class="cap-item">
+          <div class="cap-item cap-item--clickable" data-modal="verification">
             <h3>Verification</h3>
             <p>Smoke tests and doc-check scripts. Know when OpenRouter changes.</p>
+            <span class="cap-item-cta">See how &rarr;</span>
           </div>
         </div>
       </div>
@@ -338,7 +360,7 @@
     <hr class="divider" />
 
     <!-- ─── Install ─── -->
-    <section class="section section--compact" id="install">
+    <section class="section" id="install">
       <div class="container">
         <p class="section-label">Get Started</p>
         <h2 class="section-title">Install in one command. Build in minutes.</h2>
@@ -659,6 +681,42 @@
             situation: 'You need an agentic loop where the model calls multiple tools, but you want safety limits on iterations and validated structured output.',
             action: 'The skill provides loop-safe tool calling patterns with configurable iteration limits, Zod schema validation, and structured output extraction.',
             code: '// Tool calling with safety limits\nlet messages = [{ role: "user", content: query }];\nconst MAX_TOOL_ROUNDS = 5;\n\nfor (let round = 0; round < MAX_TOOL_ROUNDS; round++) {\n  const res = await callOpenRouter({\n    model: "openai/gpt-4o",\n    messages,\n    tools: toolDefinitions\n  });\n\n  const choice = res.choices[0];\n  if (choice.finish_reason !== "tool_calls") break;\n\n  messages.push(choice.message);\n  for (const call of choice.message.tool_calls) {\n    const result = await executeTool(call);\n    messages.push({\n      role: "tool",\n      tool_call_id: call.id,\n      content: JSON.stringify(result)\n    });\n  }\n}'
+          },
+          'provider-free': {
+            title: 'Provider & Free Models',
+            situation: 'You want to let users pick providers or automatically route to free models for low-stakes tasks.',
+            action: 'The skill filters the live catalog for zero-priced models and provides provider-aware routing so you can offer free tiers without a separate integration.',
+            code: '// Filter free models from the catalog\nconst res = await fetch("/api/openrouter/models");\nconst models = await res.json();\n\nconst freeModels = models.filter(m => {\n  const p = m.pricing ?? {};\n  return ["prompt", "completion", "request", "image"]\n    .every(k => p[k] == null || p[k] === "0");\n});\n\n// Get providers list\nconst providers = await fetch("/api/openrouter/providers")\n  .then(r => r.json());'
+          },
+          'starter-templates': {
+            title: 'Starter Templates',
+            situation: 'You need API routes for OpenRouter but don\'t want to set up auth headers, proxy config, and streaming from scratch.',
+            action: 'The skill includes ready-to-copy Next.js and Express templates with model routes, chat proxy, image generation, cost lookup, and streaming — all pre-configured.',
+            code: '# Install Next.js template\nscripts/install_template.sh --template nextjs\n\n# Or Express template\nscripts/install_template.sh --template express\n\n# You get:\n# - /api/openrouter/models     (model catalog)\n# - /api/openrouter/chat        (chat proxy)\n# - /api/openrouter/generation  (cost lookup)\n# - Streaming chat UI component\n# - Shared TypeScript helpers'
+          },
+          'asset-workflows': {
+            title: 'Asset Workflows',
+            situation: 'You need to generate app icons, OG images, and social banners — with the right sizes, metadata, and a preview-before-save flow.',
+            action: 'The skill ships presets for common asset types (icon, OG, social, story, banner) with size configs, generation prompts, preview rendering, and disk persistence with metadata.',
+            code: '// Generate an OG image with preset\nimport { OG_IMAGE_PRESET } from "./openrouter-generated-image-assets";\n\nconst res = await fetch("/api/openrouter/chat", {\n  method: "POST",\n  body: JSON.stringify({\n    model: "google/gemini-3.1-flash-image-preview",\n    messages: [{ role: "user", content: OG_IMAGE_PRESET.prompt }],\n    modalities: ["image", "text"],\n    image_config: { size: OG_IMAGE_PRESET.size }\n  })\n});\n\n// Preview, then persist with metadata\nawait saveGeneratedAsset(image, { type: "og", generationId });'
+          },
+          'production-playbooks': {
+            title: 'Production Playbooks',
+            situation: 'Your feature works in dev. You need it to survive production — with proper fallbacks, logging, cost audit, and structured output validation.',
+            action: 'The skill encodes production rules extracted from real incidents: tool-loop limits, Zod validation, generation-ID persistence, provider fallback ordering, and cost logging.',
+            code: '// Production playbook patterns encoded in the skill:\n\n// 1. Tool-call loop limit (prevent infinite loops)\nconst MAX_TOOL_ROUNDS = 5;\n\n// 2. Structured output validation with Zod\nconst parsed = schema.safeParse(JSON.parse(content));\nif (!parsed.success) { /* retry or fallback */ }\n\n// 3. Generation ID persistence for cost audit\nconst genId = response.headers.get("x-generation-id");\nawait db.insert({ genId, model, timestamp });\n\n// 4. Provider fallback ordering\nprovider: { order: ["DeepSeek", "Together"], allow_fallbacks: true }'
+          },
+          'safer-defaults': {
+            title: 'Safer Defaults',
+            situation: 'You need to proxy images and PDFs to OpenRouter but don\'t want to forward arbitrary user-supplied URLs that could be malicious.',
+            action: 'The skill\'s proxy templates block remote http(s) URLs by default. Only data: URLs and explicitly allowlisted hosts pass through.',
+            code: '// Default: block remote URLs, allow data: URLs\n// Set allowed hosts via environment variable:\n// OPENROUTER_ALLOWED_REMOTE_ASSET_HOSTS=cdn.example.com,assets.myapp.io\n\nfunction isAllowedAssetUrl(url: string): boolean {\n  if (url.startsWith("data:")) return true;\n\n  const allowed = process.env.OPENROUTER_ALLOWED_REMOTE_ASSET_HOSTS\n    ?.split(",")\n    .map(h => h.trim()) ?? [];\n\n  try {\n    const host = new URL(url).hostname;\n    return allowed.includes(host);\n  } catch {\n    return false;\n  }\n}'
+          },
+          'verification': {
+            title: 'Verification',
+            situation: 'OpenRouter ships API changes. You need to know when your integration is out of date before users hit errors.',
+            action: 'The skill includes smoke tests for every endpoint and a docs-check script that detects API drift by comparing your templates against current OpenRouter documentation.',
+            code: '# Run smoke tests against live API\nbash assets/tests/smoke-curl.sh\nbash assets/tests/smoke-catalogs.sh\n\n# Check for API drift against OpenRouter docs\npython3 scripts/check_openrouter_docs.py --quick\n\n# Output:\n# [OK] /api/v1/models — schema matches\n# [OK] /api/v1/chat/completions — parameters current\n# [WARN] /api/v1/generation — new field "usage_details" found\n# Action: update references/catalogs-and-costs.md'
           }
         };
 

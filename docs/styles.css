@@ -158,6 +158,13 @@ a { color: inherit; }
   border: 1px solid var(--border);
   border-radius: 8px;
   max-width: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hero-code-inner {
   overflow-x: auto;
 }
 
@@ -166,6 +173,7 @@ a { color: inherit; }
   font-size: 0.85rem;
   color: var(--muted);
   line-height: 1.5;
+  white-space: nowrap;
 }
 
 .hero-code .code-prompt {
@@ -283,6 +291,7 @@ a { color: inherit; }
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin-top: 40px;
+  align-items: stretch;
 }
 
 .step-card {
@@ -321,6 +330,13 @@ a { color: inherit; }
   background: rgba(255,255,255,0.03);
   border: 1px solid var(--border);
   border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.step-code-inner {
   overflow-x: auto;
 }
 
@@ -335,6 +351,52 @@ a { color: inherit; }
   font-size: 0.9rem;
   color: var(--muted);
   line-height: 1.55;
+}
+
+/* Invoke examples list */
+.step-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-examples code {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  white-space: normal;
+}
+
+/* Ship checklist */
+.step-checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.step-checklist li {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.step-checklist li::before {
+  content: '\2713';
+  color: var(--accent);
+  font-family: var(--mono);
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
 /* ── Capabilities Grid ── */
@@ -360,7 +422,7 @@ a { color: inherit; }
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
-  margin-top: 16px;
+  margin-top: 2px;
 }
 
 .cap-item {
