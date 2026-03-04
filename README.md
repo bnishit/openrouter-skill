@@ -2,6 +2,12 @@
 
 `openrouter-integration` is a Codex skill for adding and debugging OpenRouter integrations in application codebases.
 
+Install with:
+
+```bash
+npx skills add bnishit/openrouter-integration-skill --agent codex
+```
+
 It packages a reusable `SKILL.md`, agent metadata, implementation references, starter templates, shared parsing helpers, and smoke-test fixtures for common OpenRouter work:
 
 - model discovery and searchable model pickers
@@ -14,7 +20,13 @@ It packages a reusable `SKILL.md`, agent metadata, implementation references, st
 
 ## Install
 
-Clone this repository into your Codex skills directory using the installed skill name:
+Preferred install via the `skills` CLI:
+
+```bash
+npx skills add bnishit/openrouter-integration-skill --agent codex
+```
+
+Direct git install for Codex also works. Clone this repository into your Codex skills directory using the installed skill name:
 
 ```bash
 git clone https://github.com/bnishit/openrouter-integration-skill.git \
