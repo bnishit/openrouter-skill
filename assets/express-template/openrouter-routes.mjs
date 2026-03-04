@@ -3,7 +3,8 @@ import express from "express";
 export const openrouterRouter = express.Router();
 
 const CACHE_MS = 60 * 60 * 1000;
-let cache = null;
+let modelsCache = null;
+let providersCache = null;
 
 function providerFromId(id) {
   return id.split("/")[0] || "unknown";
@@ -26,6 +27,16 @@ function mapModel(model) {
       request: model.pricing?.request || "0",
     },
   };
+}
+
+function parsePrice(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : Number.NaN;
+}
+
+function isFreeModel(model) {
+  const values = Object.values(model.pricing || {});
+  return values.length > 0 && values.every((value) => parsePrice(value) === 0);
 }
 
 function buildHeaders() {
@@ -55,10 +66,10 @@ openrouterRouter.get("/models", async (req, res) => {
     const scope = req.query.scope === "user" ? "user" : "all";
     const visionOnly = req.query.visionOnly !== "false";
 
-    if (cache && Date.now() - cache.at < CACHE_MS) {
+    if (modelsCache && Date.now() - modelsCache.at < CACHE_MS) {
       const models = visionOnly
-        ? cache.models.filter((model) => model.inputModalities.includes("image"))
-        : cache.models;
+        ? modelsCache.models.filter((model) => model.inputModalities.includes("image"))
+        : modelsCache.models;
       return res.json({ models, cached: true });
     }
 
@@ -77,7 +88,7 @@ openrouterRouter.get("/models", async (req, res) => {
       .map(mapModel)
       .sort((a, b) => a.provider.localeCompare(b.provider) || a.name.localeCompare(b.name));
 
-    cache = { at: Date.now(), models };
+    modelsCache = { at: Date.now(), models };
 
     return res.json({
       models: visionOnly ? models.filter((model) => model.inputModalities.includes("image")) : models,
@@ -86,6 +97,102 @@ openrouterRouter.get("/models", async (req, res) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return res.status(500).json({ error: message, models: [] });
+  }
+});
+
+openrouterRouter.get("/providers", async (_req, res) => {
+  try {
+    if (!process.env.OPENROUTER_API_KEY) {
+      return res.status(500).json({ error: "Missing OPENROUTER_API_KEY" });
+    }
+
+    if (providersCache && Date.now() - providersCache.at < CACHE_MS) {
+      return res.json({ providers: providersCache.providers, cached: true });
+    }
+
+    const upstream = await fetch("https://openrouter.ai/api/v1/providers", {
+      headers: buildHeaders(),
+    });
+    const json = await upstream.json();
+
+    if (!upstream.ok) {
+      return res.status(upstream.status).json({ error: json?.error || `OpenRouter error ${upstream.status}` });
+    }
+
+    const providers = (json.data || []).sort((a, b) => {
+      const left = a.display_name || a.name || a.slug || "";
+      const right = b.display_name || b.name || b.slug || "";
+      return left.localeCompare(right);
+    });
+
+    providersCache = { at: Date.now(), providers };
+    return res.json({ providers, cached: false });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return res.status(500).json({ error: message, providers: [] });
+  }
+});
+
+openrouterRouter.get("/free-models", async (_req, res) => {
+  try {
+    if (!process.env.OPENROUTER_API_KEY) {
+      return res.status(500).json({ error: "Missing OPENROUTER_API_KEY" });
+    }
+
+    if (!modelsCache || Date.now() - modelsCache.at >= CACHE_MS) {
+      const upstream = await fetch("https://openrouter.ai/api/v1/models", {
+        headers: buildHeaders(),
+      });
+      const json = await upstream.json();
+
+      if (!upstream.ok) {
+        return res.status(upstream.status).json({ error: json?.error || `OpenRouter error ${upstream.status}` });
+      }
+
+      const models = (json.data || [])
+        .map(mapModel)
+        .sort((a, b) => a.provider.localeCompare(b.provider) || a.name.localeCompare(b.name));
+
+      modelsCache = { at: Date.now(), models };
+    }
+
+    return res.json({
+      models: modelsCache.models.filter(isFreeModel),
+      cached: true,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return res.status(500).json({ error: message, models: [] });
+  }
+});
+
+openrouterRouter.get("/generation/:id", async (req, res) => {
+  try {
+    if (!process.env.OPENROUTER_API_KEY) {
+      return res.status(500).json({ error: "Missing OPENROUTER_API_KEY" });
+    }
+
+    const generationId = req.params.id;
+    if (!generationId) {
+      return res.status(400).json({ error: "generation id is required" });
+    }
+
+    const params = new URLSearchParams({ id: generationId });
+    const upstream = await fetch(`https://openrouter.ai/api/v1/generation?${params.toString()}`, {
+      headers: buildHeaders(),
+    });
+    const json = await upstream.json();
+
+    if (!upstream.ok) {
+      return res.status(upstream.status).json({ error: json?.error || `OpenRouter error ${upstream.status}` });
+    }
+
+    return res.json({
+      generation: json.data || json,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return res.status(500).json({ error: message });
   }
 });
 

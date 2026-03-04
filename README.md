@@ -67,8 +67,8 @@ git clone https://github.com/bnishit/openrouter-skill.git \
 
 ## Included Templates and Helpers
 
-- `assets/nextjs-template/`: API routes and UI components for model browsing and streaming chat
-- `assets/express-template/`: route handlers and a minimal example server
+- `assets/nextjs-template/`: API routes and UI components for model browsing, streaming chat, provider catalogs, free-model views, and generation-cost lookup
+- `assets/express-template/`: route handlers and a minimal example server with `/providers`, `/free-models`, and `/generation/:id`
 - `assets/shared/`: TypeScript helpers for response parsing, structured output validation, and SSE streaming
 - `assets/tests/`: curl-based smoke tests and fixtures for text, JSON, tools, images, and PDFs
 - `assets/shared/openrouter-catalog-and-cost.ts`: reusable helper for models, providers, free models, and generation cost lookup

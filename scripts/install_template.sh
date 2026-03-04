@@ -131,8 +131,12 @@ install_nextjs() {
   route_root="$app_root/${BASE_PATH#/}"
 
   copy_file "$template_root/app/api/openrouter/models/route.ts" "$route_root/models/route.ts"
+  copy_file "$template_root/app/api/openrouter/providers/route.ts" "$route_root/providers/route.ts"
+  copy_file "$template_root/app/api/openrouter/free-models/route.ts" "$route_root/free-models/route.ts"
+  copy_file "$template_root/app/api/openrouter/generation/[id]/route.ts" "$route_root/generation/[id]/route.ts"
   copy_file "$template_root/app/api/openrouter/chat/route.ts" "$route_root/chat/route.ts"
   copy_file "$template_root/components/openrouter-model-picker.tsx" "$components_root/openrouter-model-picker.tsx"
+  copy_file "$template_root/components/openrouter-ops-console.tsx" "$components_root/openrouter-ops-console.tsx"
   copy_file "$template_root/components/openrouter-streaming-chat.tsx" "$components_root/openrouter-streaming-chat.tsx"
   copy_file "$template_root/.env.example" "$TARGET/.env.openrouter.example"
 
@@ -168,6 +172,7 @@ case "$TEMPLATE" in
 esac
 
 chmod +x "$TARGET/openrouter-tests/smoke-curl.sh" 2>/dev/null || true
+chmod +x "$TARGET/openrouter-tests/smoke-catalogs.sh" 2>/dev/null || true
 
 echo
 echo "Installed OpenRouter $TEMPLATE template into $TARGET"
