@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenRouter Skill for AI Agents | Models, Multimodal Chat, Tool Calling</title>
+    <meta
+      name="description"
+      content="OpenRouter Skill is a reusable OpenRouter integration skill for AI agents, with model discovery, multimodal chat, tool calling, routing, structured output, and starter templates."
+    />
+    <link rel="canonical" href="https://bnishit.github.io/openrouter-skill/" />
+    <meta name="theme-color" content="#0f1728" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="OpenRouter Skill for AI Agents" />
+    <meta
+      property="og:description"
+      content="Installable OpenRouter skill for AI agents with model discovery, multimodal chat, tool calling, routing, and starter templates."
+    />
+    <meta property="og:url" content="https://bnishit.github.io/openrouter-skill/" />
+    <meta property="og:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="OpenRouter Skill for AI Agents" />
+    <meta
+      name="twitter:description"
+      content="Reusable OpenRouter integration skill for model discovery, multimodal chat, structured output, routing, and tool calling."
+    />
+    <meta name="twitter:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
+
+    <link rel="stylesheet" href="./styles.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "OpenRouter Skill",
+        "codeRepository": "https://github.com/bnishit/openrouter-skill",
+        "url": "https://bnishit.github.io/openrouter-skill/",
+        "description": "OpenRouter skill for AI agents with model discovery, multimodal chat, tool calling, structured output, routing, and starter templates.",
+        "programmingLanguage": ["Markdown", "TypeScript", "JavaScript", "Python", "Shell"],
+        "license": "https://github.com/bnishit/openrouter-skill/blob/main/LICENSE",
+        "keywords": ["OpenRouter skill", "OpenRouter agent skill", "OpenRouter integration skill", "multimodal chat", "tool calling"]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is OpenRouter Skill?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "OpenRouter Skill is a reusable skill for AI agents that need OpenRouter integration patterns such as model discovery, multimodal chat, tool calling, routing, and starter templates."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does OpenRouter Skill work only with Codex?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The repository is packaged broadly for agents that support the skills install flow. Codex is one install path, but the public packaging is intentionally agent-agnostic."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is the installed trigger still openrouter-integration?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The public repository was renamed for broader discovery, but the installed trigger remains openrouter-integration to preserve compatibility with existing prompts and local setups."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">OpenRouter Skill</p>
+          <h1>OpenRouter integration patterns for AI agents.</h1>
+          <p class="lede">
+            Install one reusable OpenRouter skill for model discovery, multimodal chat, tool
+            calling, routing, structured output, and production starter templates.
+          </p>
+          <div class="cta-row">
+            <a class="button primary" href="https://github.com/bnishit/openrouter-skill">View GitHub Repo</a>
+            <a class="button secondary" href="#install">See Install Commands</a>
+          </div>
+          <ul class="signal-list">
+            <li>OpenRouter skill for AI agents</li>
+            <li>Searchable model catalogs and routing helpers</li>
+            <li>Next.js and Express starter templates</li>
+          </ul>
+        </div>
+        <aside class="hero-panel">
+          <div class="panel-card">
+            <span class="panel-label">Primary Query</span>
+            <strong>OpenRouter Skill</strong>
+            <p>Broad, installable, multi-agent positioning for search and reuse.</p>
+          </div>
+          <div class="panel-card accent">
+            <span class="panel-label">Includes</span>
+            <p>Models, multimodal chat, PDFs, tool calling, routing, structured output.</p>
+          </div>
+        </aside>
+      </header>
+
+      <main>
+        <section class="section" id="install">
+          <div class="section-heading">
+            <p class="eyebrow">Install</p>
+            <h2>Add the OpenRouter skill to the agent you already use.</h2>
+          </div>
+          <div class="install-grid">
+            <article class="install-card">
+              <h3>Codex</h3>
+              <pre><code>npx skills add bnishit/openrouter-skill --agent codex</code></pre>
+            </article>
+            <article class="install-card">
+              <h3>Claude</h3>
+              <pre><code>npx skills add bnishit/openrouter-skill --agent claude</code></pre>
+            </article>
+            <article class="install-card">
+              <h3>Gemini</h3>
+              <pre><code>npx skills add bnishit/openrouter-skill --agent gemini</code></pre>
+            </article>
+          </div>
+          <p class="install-note">
+            The public repository is <strong>openrouter-skill</strong>. For compatibility, the
+            installed trigger remains <code>openrouter-integration</code>.
+          </p>
+        </section>
+
+        <section class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Capabilities</p>
+            <h2>What this OpenRouter agent skill actually ships.</h2>
+          </div>
+          <div class="capability-grid">
+            <article class="capability-card">
+              <h3>Model Discovery</h3>
+              <p>Searchable model catalog patterns, filtering guidance, and picker-ready UI examples.</p>
+            </article>
+            <article class="capability-card">
+              <h3>Multimodal Chat</h3>
+              <p>Text, image, and PDF request patterns with response parsing and streaming helpers.</p>
+            </article>
+            <article class="capability-card">
+              <h3>Tool Calling</h3>
+              <p>Loop-safe examples for tools, follow-up calls, and structured response handling.</p>
+            </article>
+            <article class="capability-card">
+              <h3>Routing</h3>
+              <p>Provider routing, fallbacks, and parameter-aware request strategies for production use.</p>
+            </article>
+            <article class="capability-card">
+              <h3>Starter Templates</h3>
+              <p>Reusable Next.js and Express starter routes so agents do not retype boilerplate from scratch.</p>
+            </article>
+            <article class="capability-card">
+              <h3>Verification</h3>
+              <p>Smoke fixtures, docs checks, and shared helpers for safer OpenRouter integration changes.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section narrative">
+          <div class="section-heading">
+            <p class="eyebrow">Why This Exists</p>
+            <h2>Most OpenRouter work is repetitive. This turns it into a reusable skill.</h2>
+          </div>
+          <div class="narrative-grid">
+            <p>
+              Teams usually redo the same OpenRouter integration steps every time: choosing a
+              model, proxying requests, deciding on routing behavior, validating JSON, and wiring
+              up multimodal inputs. OpenRouter Skill bundles those recurring patterns into one
+              installable asset.
+            </p>
+            <p>
+              If someone searches for an <strong>OpenRouter skill</strong>, an
+              <strong>OpenRouter agent skill</strong>, or an <strong>OpenRouter integration
+              skill</strong>, this repository is designed to be the page that actually answers the
+              question with working assets and concrete install commands.
+            </p>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Use Cases</p>
+            <h2>Typical jobs agents use this skill for.</h2>
+          </div>
+          <div class="use-case-grid">
+            <article class="use-case-card">
+              <h3>Model Picker UI</h3>
+              <p>Build searchable OpenRouter model discovery UIs instead of hardcoding model lists.</p>
+            </article>
+            <article class="use-case-card">
+              <h3>Image and PDF Flows</h3>
+              <p>Add image extraction, PDF parsing, and multimodal prompts through a server route.</p>
+            </article>
+            <article class="use-case-card">
+              <h3>Tool-Calling Loops</h3>
+              <p>Keep tools on each follow-up request and parse responses safely across providers.</p>
+            </article>
+            <article class="use-case-card">
+              <h3>Routing and Fallbacks</h3>
+              <p>Use provider-aware routing when parameters, availability, or cost controls matter.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section faq">
+          <div class="section-heading">
+            <p class="eyebrow">FAQ</p>
+            <h2>Common questions about this OpenRouter skill.</h2>
+          </div>
+          <div class="faq-list">
+            <article>
+              <h3>Is this only for Codex?</h3>
+              <p>
+                No. The repository is packaged broadly for AI agents that support the skills
+                install flow. Codex is one supported path, not the only intended audience.
+              </p>
+            </article>
+            <article>
+              <h3>Why does the trigger still say <code>openrouter-integration</code>?</h3>
+              <p>
+                Keeping the trigger stable avoids breaking existing prompts and local setups while
+                the public repository branding becomes shorter and easier to discover.
+              </p>
+            </article>
+            <article>
+              <h3>What do I get besides docs?</h3>
+              <p>
+                You get the skill prompt, metadata, starter templates, smoke fixtures, shared
+                helpers, and focused references that agents can use directly.
+              </p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>OpenRouter Skill by Nishit Bhatt.</p>
+        <div class="footer-links">
+          <a href="https://github.com/bnishit/openrouter-skill">GitHub</a>
+          <a href="https://github.com/bnishit/openrouter-skill/blob/main/SKILL.md">SKILL.md</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

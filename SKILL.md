@@ -1,9 +1,9 @@
 ---
 name: "openrouter-integration"
-description: "Integrate apps with OpenRouter's OpenAI-compatible API, including model discovery, chat completions, structured JSON responses, multimodal inputs such as images and PDFs, tool and function calling, shared parsing helpers, test fixtures, streaming chat UI examples, and routing or fallback policies across models and providers. Use when Codex needs to add or debug OpenRouter usage, build a model picker, proxy `/api/v1/models` or `/api/v1/models/user`, send image or PDF content to `/api/v1/chat/completions`, parse OpenRouter responses, add Next.js or Express server routes, validate structured outputs, run smoke tests, verify current docs against OpenRouter before coding, or wire model or provider fallbacks into a server or UI."
+description: "Integrate apps with OpenRouter's OpenAI-compatible API, including model discovery, chat completions, structured JSON responses, multimodal inputs such as images and PDFs, tool and function calling, shared parsing helpers, test fixtures, streaming chat UI examples, and routing or fallback policies across models and providers. Use when an agent needs to add or debug OpenRouter usage, build a model picker, proxy `/api/v1/models` or `/api/v1/models/user`, send image or PDF content to `/api/v1/chat/completions`, parse OpenRouter responses, add Next.js or Express server routes, validate structured outputs, run smoke tests, verify current docs against OpenRouter before coding, or wire model or provider fallbacks into a server or UI."
 ---
 
-# OpenRouter Integration
+# OpenRouter Skill
 
 Use official OpenRouter docs as the source of truth for current endpoints, parameters, and capability metadata. Prefer `openrouter.ai/docs`, `openrouter.ai/openapi.json`, and the API reference pages under `openrouter.ai/docs/api-reference`.
 

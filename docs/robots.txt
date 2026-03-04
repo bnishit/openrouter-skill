@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bnishit.github.io/openrouter-skill/sitemap.xml
