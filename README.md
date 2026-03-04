@@ -1,8 +1,8 @@
 # OpenRouter Skill
 
-Ship OpenRouter work without rebuilding it.
+One API. Every AI model. Production-ready.
 
-An installable skill that gives AI agents model discovery, image generation, cost tracking, routing, and production playbooks — so you stop rewriting the same OpenRouter patterns.
+An installable AI agent skill for integrating OpenRouter — 300+ models, image generation, cost tracking, provider routing, and production playbooks. Install once, stop rebuilding the same patterns.
 
 Landing page: [bnishit.github.io/openrouter-skill](https://bnishit.github.io/openrouter-skill/)
 
@@ -26,24 +26,20 @@ git clone https://github.com/bnishit/openrouter-skill.git
 
 Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
 
-## Why This Exists
-
-OpenRouter moves faster than app code usually does. New models appear quickly, providers differ, and pricing shifts underneath existing flows. Teams end up redoing the same integration steps every time. This skill bundles those recurring patterns into one installable layer.
-
 ## Capabilities
 
-- **Model Discovery** — searchable catalog patterns, filtering guidance, and picker-ready UI examples
-- **Provider & Free Models** — provider-aware filters and zero-priced model discovery from the live catalog
-- **Multimodal Chat** — text, image, and PDF request patterns with response parsing and streaming
-- **Image Generation** — chat-completions patterns for generated images, output modalities, and response parsing
-- **Generation Costs** — exact post-hoc lookup for cost, provider, and token accounting per generation
-- **Tool Calling** — loop-safe examples for tools, follow-up calls, and structured response handling
-- **Routing & Fallbacks** — provider routing, fallback strategies, and parameter-aware request configuration
-- **Production Playbooks** — built-in rules for routing, observability, structured output, logging, and audit
-- **Asset Workflows** — starter patterns for icons, OG images, social visuals, and persistent asset metadata
-- **Starter Templates** — reusable Next.js and Express routes plus a small ops/debug surface
-- **Safer Defaults** — starter proxies reject arbitrary remote image/PDF URLs unless you explicitly allowlist trusted hosts
-- **Verification** — smoke fixtures, docs checks, and shared helpers for safer integration changes
+- **Model Discovery** — search 300+ models by capability, price, or provider and build a picker in minutes
+- **Image Generation** — generate images via chat completions with presets for icons, OG images, and social assets
+- **Multimodal Chat** — send text, images, and PDFs in the same conversation and parse any response type
+- **Cost Tracking** — look up exact cost per generation with real billing data, not estimates
+- **Routing & Fallbacks** — route to cheapest provider and fall back automatically when one goes down
+- **Tool Calling** — agentic loops with safety limits and structured output with Zod validation
+- **Provider & Free Models** — filter by provider and find zero-cost models automatically
+- **Starter Templates** — Next.js and Express routes ready to copy, not configure
+- **Asset Workflows** — icons, OG images, banners — generate, preview, and persist with metadata
+- **Production Playbooks** — fallback rules, logging, audit trails — encoded, not remembered
+- **Safer Defaults** — proxies block untrusted URLs unless you explicitly allowlist trusted hosts
+- **Verification** — smoke tests and doc-check scripts that detect when OpenRouter changes
 
 ## Example Prompts
 
@@ -54,41 +50,6 @@ OpenRouter moves faster than app code usually does. New models appear quickly, p
 - `Use $openrouter-integration to generate OG images and app icons through OpenRouter, preview them, and store the approved assets cleanly.`
 - `Use $openrouter-integration to make this OpenRouter workflow production-safe with the built-in best-practice playbooks for routing, tools, and observability.`
 - `Use $openrouter-integration to wire tool calling and provider fallback handling into this project.`
-
-## First Principles
-
-1. **Model markets change quickly** — you need discovery, provider awareness, and safe routing built in
-2. **Compatibility is the reason teams choose OpenRouter** — one layer for text, vision, image-gen, and files
-3. **Cost matters after the request, not just before it** — exact generation lookup for billing and debugging
-4. **Scaffolding should not be rebuilt every project** — starter routes and request shapes are the same across projects
-5. **Production rules are learned the hard way — once** — fallbacks, tool-loop safety, and cost logging should be encoded upfront
-6. **Agents need structured knowledge, not just API docs** — a skill tells an agent when to use endpoints and how to handle edge cases
-
-## How It Works
-
-### 01 — Shipping fast on a new model
-
-A new image-capable model just appeared. The skill fetches the live catalog, filters by modality, scaffolds the route, and keeps the integration OpenRouter-compatible — no vendor lock-in.
-
-### 02 — Cost clarity after the fact
-
-Yesterday's OCR flow cost more than expected. The skill looks up the generation by ID, returns exact cost, provider, and token fields — wired into logs or admin UI.
-
-### 03 — Low-cost and fallback-conscious builds
-
-You want a workflow that starts cheap and uses free models when possible. The skill filters zero-priced models, lists providers, preserves routing controls, and scaffolds the endpoints your app needs.
-
-### 04 — One path for text, vision, and images
-
-You don't want one SDK for chat, another for images, and a third for file workflows. The skill keeps the app on one OpenRouter-compatible layer across all modalities.
-
-### 05 — Icons and OG images without custom workflows
-
-You need app icons and OG images but don't want to rebuild prompts, preview handling, and asset metadata every time. The skill uses shipped presets and persists with generation metadata.
-
-### 06 — Production rules without rediscovering them
-
-The feature is working, but you don't want to remember all the small rules for fallbacks, tool loops, and cost logging. The skill applies shipped best-practice playbooks so implementation covers the operational rules teams usually learn the hard way.
 
 ## Repository Layout
 
@@ -137,29 +98,29 @@ The starter proxies default to `data:` URLs for uploaded assets and block arbitr
 
 ## FAQ
 
-### Is this only for one assistant?
+### I already use the OpenRouter SDK. Why do I need this too?
 
-No. The repository is packaged broadly for AI agents that support the skills install flow. The landing page is intentionally written for general agent use.
+The SDK is the transport layer — HTTP calls and auth. This skill is the decision layer — which model to pick, how to route, what to do on failure, how to audit costs. They complement each other.
 
-### What makes this an agent skill?
+### Does this lock me into a specific agent or framework?
 
-It packages reusable OpenRouter workflows, templates, references, and helper assets so an AI agent can apply them directly instead of rebuilding the same integration patterns from scratch.
+No. Works with any agent supporting skills install. Templates produce standard Next.js/Express code. Stop using the skill, keep all generated code.
 
-### What do I get besides docs?
+### How current is the model data?
 
-The skill prompt, metadata, starter templates, smoke fixtures, shared helpers, and focused references plus best-practice playbooks for models, providers, image generation, tool loops, and generation cost lookup.
+The skill fetches catalogs live from the OpenRouter API — it never ships hardcoded model lists. Run `check_openrouter_docs.py --quick` to detect API drift.
 
-### Does this replace the OpenRouter SDK?
+### What about rate limits and API keys?
 
-No. This skill complements it. The SDK handles HTTP calls and auth. This skill handles the decision layer above it — which model to pick, how to route, what to do when things fail, and how to audit costs after the fact.
+The skill enforces server-side key management. Proxy route templates handle auth headers plus OpenRouter attribution headers. Keys never touch the browser.
 
-### How do I keep the skill updated?
+### Can I use only parts of this?
 
-Pull the latest from the repo or re-run `npx skills add bnishit/openrouter-skill`. The skill is versioned in Git, so you can diff changes and decide when to update.
+Yes. Every capability is modular. Use just image generation, or just cost tracking, or just routing playbooks. Pick what you need.
 
-### Can I use this with my own prompts and templates?
+### How do I know the production playbooks are actually good?
 
-Yes. The skill provides defaults and best-practice patterns, but everything is editable. Override templates, swap playbook rules, or extend the skill with your own workflows.
+They encode specific patterns: tool-call loop limits, Zod schema validation, generation-ID persistence, provider fallback ordering, remote-asset URL allowlisting. Extracted from real production incidents, not theoretical best practices.
 
 ## Directory Listing
 
