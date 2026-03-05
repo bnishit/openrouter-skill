@@ -1,8 +1,8 @@
 # OpenRouter Skill
 
-One API. Every AI model. Production-ready.
+Stop rebuilding the same OpenRouter integration every project.
 
-An installable AI agent skill for integrating OpenRouter — 300+ models, image generation, cost tracking, provider routing, and production playbooks. Install once, stop rebuilding the same patterns.
+A reusable skill that gives your AI coding agent ready-made patterns for model discovery, image generation, cost lookup, routing, and production playbooks — so the agent writes better OpenRouter code instead of starting from scratch.
 
 Landing page: [bnishit.github.io/openrouter-skill](https://bnishit.github.io/openrouter-skill/)
 
@@ -44,12 +44,8 @@ Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
 ## Example Prompts
 
 - `Use $openrouter-integration to add an OpenRouter model picker to this app.`
-- `Use $openrouter-integration to add provider and free-model filters to this OpenRouter model catalog.`
-- `Use $openrouter-integration to fetch a completed OpenRouter generation and show its exact cost.`
 - `Use $openrouter-integration to add image generation plus image and PDF chat support through an OpenRouter server route.`
-- `Use $openrouter-integration to generate OG images and app icons through OpenRouter, preview them, and store the approved assets cleanly.`
 - `Use $openrouter-integration to make this OpenRouter workflow production-safe with the built-in best-practice playbooks for routing, tools, and observability.`
-- `Use $openrouter-integration to wire tool calling and provider fallback handling into this project.`
 
 ## Repository Layout
 
@@ -76,16 +72,9 @@ Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
 
 ## Included Templates and Helpers
 
-- `assets/nextjs-template/`: API routes and UI components for model browsing, streaming chat, provider catalogs, free-model views, image generation, generated-asset workflows, and generation-cost lookup
-- `assets/express-template/`: route handlers and a minimal example server with `/providers`, `/free-models`, `/generation/:id`, and a chat proxy that passes image-generation fields
-- `assets/shared/`: TypeScript helpers for response parsing, generated-image extraction, image asset persistence, structured output validation, and SSE streaming
-- `assets/tests/`: curl-based smoke tests and fixtures for text, JSON, tools, image analysis, image generation, and PDFs
-- `assets/shared/openrouter-catalog-and-cost.ts`: reusable helper for models, providers, free models, and generation cost lookup
-- `assets/shared/openrouter-generated-image-assets.ts`: image-generation request presets plus generated-asset extraction for icon, OG image, social, story, and banner flows
-- `assets/shared/openrouter-generated-image-assets-node.ts`: Node helper for writing approved generated images to disk in local or server-backed flows
-- `assets/nextjs-template/components/openrouter-image-workbench.tsx`: starter UI for generating, previewing, and downloading image assets
-- `assets/nextjs-template/app/openrouter-image-lab/page.tsx`: sample page for image generation after install
-- `assets/tests/smoke-catalogs.sh`: smoke script for `/models`, `/models/user`, `/providers`, free-model filtering, image-output model discovery, and `/generation`
+- **Templates**: Next.js and Express starter routes for models, chat, image generation, and cost lookup — plus UI components like a model picker and image workbench
+- **Shared helpers**: TypeScript utilities for streaming (SSE), response parsing, generated-image extraction, asset persistence, and structured output validation
+- **Tests**: Curl-based smoke tests and fixtures covering text, JSON, tools, image analysis, image generation, and PDFs
 
 The starter proxies default to `data:` URLs for uploaded assets and block arbitrary remote `http(s)` image/PDF URLs unless you set `OPENROUTER_ALLOWED_REMOTE_ASSET_HOSTS`.
 
@@ -122,9 +111,9 @@ Yes. Every capability is modular. Use just image generation, or just cost tracki
 
 They encode specific patterns: tool-call loop limits, Zod schema validation, generation-ID persistence, provider fallback ordering, remote-asset URL allowlisting. Extracted from real production incidents, not theoretical best practices.
 
-## Directory Listing
+### Why not just read OpenRouter's docs?
 
-- agentskill.sh: `https://agentskill.sh/@bnishit/openrouter-integration`
+You can, and you should for reference. The skill exists because reading docs doesn't prevent you from rebuilding the same integration scaffolding every project. It encodes the patterns that worked — model filtering, provider fallbacks, cost lookup, streaming setup, multimodal request shapes — so your agent applies them directly instead of translating docs into code from scratch each time.
 
 ## Maintenance
 

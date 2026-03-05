@@ -3,28 +3,28 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>OpenRouter Skill — One API for 300+ AI Models | Install and Ship</title>
+    <title>OpenRouter Skill — Stop Rebuilding the Same Integration Every Project</title>
     <meta
       name="description"
-      content="Connect your app to 300+ AI models through one OpenRouter integration. Model discovery, image generation, cost tracking, routing, tool calling, and production playbooks — installable in one command."
+      content="A reusable skill that gives AI coding agents ready-made OpenRouter patterns — model discovery, image generation, cost lookup, routing, and production playbooks — so you stop rebuilding the same integration from scratch."
     />
     <link rel="canonical" href="https://bnishit.github.io/openrouter-skill/" />
     <meta name="theme-color" content="#09090B" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="One API. Every AI model. Ship today." />
+    <meta property="og:title" content="OpenRouter Skill — Stop Rebuilding the Same Integration Every Project" />
     <meta
       property="og:description"
-      content="An installable skill for integrating OpenRouter — models, images, PDFs, costs, routing, and production playbooks."
+      content="A reusable skill that gives AI coding agents ready-made OpenRouter patterns — model discovery, image generation, cost lookup, routing, and production playbooks."
     />
     <meta property="og:url" content="https://bnishit.github.io/openrouter-skill/" />
     <meta property="og:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="One API. Every AI model. Ship today." />
+    <meta name="twitter:title" content="OpenRouter Skill — Stop Rebuilding the Same Integration Every Project" />
     <meta
       name="twitter:description"
-      content="An installable skill for integrating OpenRouter — models, images, PDFs, costs, routing, and production playbooks."
+      content="A reusable skill that gives AI coding agents ready-made OpenRouter patterns — model discovery, image generation, cost lookup, routing, and production playbooks."
     />
     <meta name="twitter:image" content="https://bnishit.github.io/openrouter-skill/og-preview.png" />
 
@@ -37,7 +37,7 @@
         "name": "OpenRouter Skill",
         "codeRepository": "https://github.com/bnishit/openrouter-skill",
         "url": "https://bnishit.github.io/openrouter-skill/",
-        "description": "Connect your app to 300+ AI models through one OpenRouter integration. Model discovery, image generation, cost tracking, routing, tool calling, and production playbooks.",
+        "description": "A reusable skill that gives AI coding agents ready-made OpenRouter patterns — model discovery, image generation, cost lookup, routing, and production playbooks.",
         "programmingLanguage": ["Markdown", "TypeScript", "JavaScript", "Python", "Shell"],
         "license": "https://github.com/bnishit/openrouter-skill/blob/main/LICENSE",
         "keywords": ["OpenRouter skill", "OpenRouter agent skill", "OpenRouter integration skill", "multimodal chat", "tool calling", "AI models", "cost tracking"]
@@ -95,6 +95,14 @@
               "@type": "Answer",
               "text": "They encode specific patterns: tool-call loop limits, Zod schema validation, generation-ID persistence, provider fallback ordering, remote-asset URL allowlisting. Extracted from real production incidents."
             }
+          },
+          {
+            "@type": "Question",
+            "name": "Why not just read OpenRouter's docs?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You can, and you should for reference. The skill exists because reading docs doesn't prevent you from rebuilding the same integration scaffolding every project. It encodes the patterns that worked — model filtering, provider fallbacks, cost lookup, streaming setup, multimodal request shapes — so your agent applies them directly instead of translating docs into code from scratch each time."
+            }
           }
         ]
       }
@@ -106,11 +114,14 @@
     <section class="hero">
       <div class="container">
         <p class="hero-eyebrow">OpenRouter Skill</p>
-        <h1>One API. Every AI model. Ship&nbsp;today.</h1>
+        <h1>Stop rebuilding the same OpenRouter integration every&nbsp;project.</h1>
         <p class="hero-sub">
-          Connect your app to 300+ AI models through OpenRouter — text, images, PDFs,
-          tool calling, agents — with provider routing, cost tracking, and production
-          playbooks built in.
+          A reusable skill that gives your AI coding agent ready-made patterns for
+          model discovery, image generation, cost lookup, routing, and production
+          playbooks — so the agent writes better OpenRouter code instead of starting from scratch.
+        </p>
+        <p class="hero-skill-note" style="font-size:0.85rem;color:#a1a1aa;max-width:38rem;margin:0.75rem auto 0;">
+          A <strong style="color:#d4d4d8;">skill</strong> is a knowledge pack your AI coding agent loads to write better integration code — templates, playbooks, and structured references it applies instead of starting from scratch.
         </p>
         <div class="hero-ctas">
           <a class="btn btn-primary" href="#install">Install Now</a>
@@ -123,9 +134,9 @@
           <button class="copy-btn" data-copy="npx skills add bnishit/openrouter-skill">Copy</button>
         </div>
         <ul class="hero-signals">
-          <li>Add any AI model to your app without rewriting your integration</li>
-          <li>Know exactly what every generation costs — after the fact, not estimated</li>
-          <li>Ship with production fallbacks, not demo-grade hope</li>
+          <li>Reusable patterns for models, providers, and fast-changing capabilities</li>
+          <li>Starter templates for text, vision, and image-gen routes</li>
+          <li>Look up exact generation cost instead of guessing</li>
         </ul>
         <div class="hero-badges">
           <span>MIT Licensed</span>
@@ -161,26 +172,26 @@
 
             <article class="scenario-card">
               <span class="scenario-num">02</span>
-              <h3>Yesterday's AI bill was 3x what you expected.</h3>
+              <h3>Yesterday's OCR flow cost more than expected.</h3>
               <div class="scenario-situation">
-                Your OCR pipeline processed 2,000 invoices. The bill is 3x the estimate. You need to know exactly where the money went.
+                Your OCR pipeline processed 2,000 invoices. The bill is higher than expected. You need to look up exactly what one generation cost — not estimate from pricing tables.
               </div>
               <div class="scenario-result">
-                The skill looks up each generation by ID, returns exact cost, provider, and token fields — wired into logs or admin UI.
+                The skill scaffolds a generation-lookup route that fetches a single generation by ID and returns its exact cost, provider, and token breakdown.
               </div>
-              <p class="scenario-takeaway">Real billing data, not pricing-page estimates.</p>
+              <p class="scenario-takeaway">Post-hoc cost lookup per generation, not ongoing monitoring.</p>
             </article>
 
             <article class="scenario-card">
               <span class="scenario-num">03</span>
-              <h3>Free models where possible, paid where it matters.</h3>
+              <h3>Find free and cheap models without scanning the API.</h3>
               <div class="scenario-situation">
-                Casual use cases don't need the best model. Serious ones do. You need both paths without managing two integrations.
+                You want to find free or cheap models from the catalog and set up provider-aware fallbacks — without manually scanning the API.
               </div>
               <div class="scenario-result">
-                The skill filters zero-cost models, sets up fallback chains, and routes by value — one integration, smart routing.
+                The skill provides catalog-filtering helpers that surface zero-priced models and list providers, plus routing patterns for fallback configuration. It helps you discover and choose — not auto-route.
               </div>
-              <p class="scenario-takeaway">Match model quality to task value automatically.</p>
+              <p class="scenario-takeaway">Catalog filtering and fallback patterns, not an auto-routing engine.</p>
             </article>
 
             <article class="scenario-card">
@@ -468,6 +479,12 @@
               <p>They encode specific patterns: tool-call loop limits, Zod schema validation, generation-ID persistence, provider fallback ordering, remote-asset URL allowlisting. Extracted from real production incidents, not theoretical best practices.</p>
             </div>
           </div>
+          <div class="faq-item">
+            <button class="faq-q">Why not just read OpenRouter's docs?</button>
+            <div class="faq-a">
+              <p>You can, and you should for reference. The skill exists because reading docs doesn't prevent you from rebuilding the same integration scaffolding every project. It encodes the patterns that worked — model filtering, provider fallbacks, cost lookup, streaming setup, multimodal request shapes — so your agent applies them directly instead of translating docs into code from scratch each time.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -480,7 +497,7 @@
         <div class="footer-top">
           <div class="footer-brand">
             <p class="footer-name">OpenRouter Skill</p>
-            <p class="footer-tagline">One API. Every AI model. Built by Nishit Bhatt.</p>
+            <p class="footer-tagline">Built by Nishit Bhatt. Open source and maintained.</p>
           </div>
           <div class="footer-links">
             <a href="https://github.com/bnishit/openrouter-skill">GitHub</a>
@@ -490,9 +507,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <span class="footer-badge">Pure HTML &amp; CSS</span>
-          <span class="footer-badge">No frameworks</span>
-          <span class="footer-badge">No tracking</span>
+          <p>&copy; 2025 Nishit Bhatt</p>
         </div>
       </div>
     </footer>
