@@ -106,7 +106,24 @@ a { color: inherit; }
   line-height: 1.6;
   color: var(--muted);
   max-width: 560px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+}
+
+.hero-skill-note {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #71717A;
+  max-width: 560px;
+  margin-bottom: 32px;
+  padding: 10px 14px;
+  border-left: 2px solid var(--border);
+  border-radius: 0 6px 6px 0;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.hero-skill-note strong {
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .hero-ctas {
