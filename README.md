@@ -1,5 +1,14 @@
 # OpenRouter Skill
 
+> **This skill has moved.** It now lives in [bnishit/skills](https://github.com/bnishit/skills)
+> alongside my other skills. Install from there:
+>
+> ```bash
+> npx skills add bnishit/skills --skill openrouter-integration --global
+> ```
+>
+> This repo stays up so existing installs keep working, but new work happens in the new one.
+
 Stop rebuilding the same OpenRouter integration every project.
 
 A reusable skill that gives your AI coding agent ready-made patterns for model discovery, image generation, cost lookup, routing, and production playbooks — so the agent writes better OpenRouter code instead of starting from scratch.
