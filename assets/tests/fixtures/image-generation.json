@@ -1,14 +1,7 @@
 {
   "model": "__MODEL__",
-  "messages": [
-    {
-      "role": "user",
-      "content": "Generate a clean product-style illustration of a glass teacup on a plain background."
-    }
-  ],
-  "modalities": ["image", "text"],
-  "image_config": {
-    "size": "1024x1024"
-  },
-  "temperature": 0
+  "prompt": "Generate a clean product-style illustration of a glass teacup on a plain background.",
+  "aspect_ratio": "1:1",
+  "resolution": "1K",
+  "output_format": "png"
 }

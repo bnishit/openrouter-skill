@@ -74,6 +74,9 @@ type ProxyBody = {
   modalities?: string[];
   image_config?: unknown;
   response_format?: unknown;
+  reasoning?: unknown;
+  service_tier?: "flex" | "priority" | "auto";
+  session_id?: string;
   provider?: unknown;
   plugins?: unknown;
   tools?: unknown;
@@ -122,6 +125,9 @@ export async function POST(req: NextRequest) {
       ...(body.modalities?.length ? { modalities: body.modalities } : {}),
       ...(body.image_config ? { image_config: body.image_config } : {}),
       ...(body.response_format ? { response_format: body.response_format } : {}),
+      ...(body.reasoning ? { reasoning: body.reasoning } : {}),
+      ...(body.service_tier ? { service_tier: body.service_tier } : {}),
+      ...(body.session_id ? { session_id: body.session_id } : {}),
       ...(body.provider ? { provider: body.provider } : {}),
       ...(body.plugins ? { plugins: body.plugins } : {}),
       ...(body.tools ? { tools: body.tools } : {}),

@@ -12,7 +12,7 @@ Run:
 python3 scripts/check_openrouter_docs.py --quick
 ```
 
-This fetches a focused set of official pages plus `openrouter.ai/api/v1/openapi.json` and checks for high-signal assumptions such as:
+This fetches a focused set of official pages plus `openrouter.ai/openapi.json` and checks for high-signal assumptions such as:
 
 - required paths existing in the OpenAPI spec
 - preferred title header name
@@ -20,6 +20,7 @@ This fetches a focused set of official pages plus `openrouter.ai/api/v1/openapi.
 - streaming semantics
 - PDF behavior and engine defaults
 - provider-routing features
+- catalog, single-model, endpoint, image, generation, key, and credit paths
 - high-leverage feature pages such as response healing and message transforms
 
 ## When To Run It

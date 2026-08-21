@@ -6,7 +6,7 @@ import {
   type OpenRouterImageAsset,
   type OpenRouterImagePurpose,
 } from "./openrouter-generated-image-assets";
-import type { OpenRouterChatResponse } from "./parse-openrouter-response";
+import type { OpenRouterImageResponse } from "./parse-openrouter-response";
 
 export async function writeGeneratedImageAsset(
   asset: OpenRouterImageAsset,
@@ -29,17 +29,26 @@ export async function writeGeneratedImageAsset(
 }
 
 export async function persistGeneratedImages(
-  response: OpenRouterChatResponse,
+  response: OpenRouterImageResponse,
   {
     directory,
     purpose = "icon",
     fileStem = "generated-image",
+    requestedModel,
+    generationId,
   }: {
     directory: string;
     purpose?: OpenRouterImagePurpose;
     fileStem?: string;
+    requestedModel: string;
+    generationId?: string;
   }
 ) {
-  const assets = extractGeneratedImageAssets(response, { purpose, fileStem });
+  const assets = extractGeneratedImageAssets(response, {
+    purpose,
+    fileStem,
+    requestedModel,
+    generationId,
+  });
   return Promise.all(assets.map((asset) => writeGeneratedImageAsset(asset, directory)));
 }
