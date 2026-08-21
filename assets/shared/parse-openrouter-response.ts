@@ -44,6 +44,17 @@ export type OpenRouterChatResponse = {
   usage?: OpenRouterUsage;
 };
 
+export type OpenRouterImageResponse = {
+  id?: string;
+  model?: string;
+  created?: number;
+  data?: Array<{
+    b64_json?: string;
+    media_type?: string;
+  }>;
+  usage?: OpenRouterUsage;
+};
+
 export function flattenAssistantContent(content: unknown): string {
   if (content == null) return "";
   if (typeof content === "string") return content;
@@ -89,6 +100,15 @@ export function getGeneratedImages(response: OpenRouterChatResponse): OpenRouter
 export function getGeneratedImageUrls(response: OpenRouterChatResponse): string[] {
   return getGeneratedImages(response)
     .map((image) => image.image_url?.url || "")
+    .filter(Boolean);
+}
+
+export function getImageResponseDataUrls(response: OpenRouterImageResponse): string[] {
+  return (response.data || [])
+    .map((image) => {
+      if (!image.b64_json) return "";
+      return `data:${image.media_type || "image/png"};base64,${image.b64_json}`;
+    })
     .filter(Boolean);
 }
 

@@ -302,12 +302,12 @@
         <div class="cap-grid cap-grid--primary">
           <div class="cap-item cap-item--featured cap-item--clickable" data-modal="model-discovery">
             <h3>Model Discovery</h3>
-            <p>Search 300+ models by capability, price, or provider. Build a picker in minutes.</p>
+            <p>Search hundreds of models by capability, live price, discount, or provider.</p>
             <span class="cap-item-cta">See how &rarr;</span>
           </div>
           <div class="cap-item cap-item--featured cap-item--clickable" data-modal="image-generation">
             <h3>Image Generation</h3>
-            <p>Generate images via chat completions. Icons, OG images, social assets — with presets.</p>
+            <p>Generate through the dedicated Image API. Icons, OG images, social assets — with presets.</p>
             <span class="cap-item-cta">See how &rarr;</span>
           </div>
           <div class="cap-item cap-item--featured cap-item--clickable" data-modal="multimodal-chat">
@@ -335,8 +335,8 @@
         <!-- Secondary capability cards (clickable, open modals) -->
         <div class="cap-grid cap-grid--secondary">
           <div class="cap-item cap-item--clickable" data-modal="provider-free">
-            <h3>Provider &amp; Free Models</h3>
-            <p>Filter by provider. Find zero-cost models automatically.</p>
+            <h3>Provider, Free &amp; Discounted</h3>
+            <p>Find free models and live endpoint promotions without stale price lists.</p>
             <span class="cap-item-cta">See how &rarr;</span>
           </div>
           <div class="cap-item cap-item--clickable" data-modal="starter-templates">
@@ -663,21 +663,21 @@
         var modalContent = {
           'model-discovery': {
             title: 'Model Discovery',
-            situation: 'You need a model picker that stays current with 300+ models, filterable by capability, price, and provider — without hardcoding a stale list.',
-            action: 'The skill fetches the live OpenRouter catalog, filters by input/output modalities, and scaffolds a searchable picker component with provider and pricing metadata.',
+            situation: 'You need a model picker that stays current with hundreds of models, live endpoint promotions, and capability changes — without hardcoding a stale list.',
+            action: 'The skill uses server-side catalog filters and endpoint metadata, then scaffolds a searchable picker with provider, capability, price, and discount details.',
             code: 'const res = await fetch("/api/openrouter/models");\nconst models = await res.json();\n\n// Filter by capability\nconst imageModels = models.filter(m =>\n  m.architecture?.output_modalities?.includes("image")\n);\n\n// Filter free models\nconst freeModels = models.filter(m => {\n  const p = m.pricing ?? {};\n  return ["prompt","completion","request","image"]\n    .every(k => p[k] == null || p[k] === "0");\n});'
           },
           'image-generation': {
             title: 'Image Generation',
             situation: 'You need app icons, OG images, or social assets generated through OpenRouter — with presets for common sizes and metadata for storage.',
-            action: 'The skill provides image-generation presets for icons, OG images, and social assets. Generate via chat completions, preview the result, and persist with full metadata.',
-            code: 'const res = await fetch("/api/openrouter/chat", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({\n    model: "google/gemini-3.1-flash-image-preview",\n    messages: [{\n      role: "user",\n      content: "Generate a minimal app icon: white geometric shape on deep blue"\n    }],\n    modalities: ["image", "text"],\n    image_config: { size: "1024x1024" }\n  })\n});\n\nconst json = await res.json();\nconst imageUrl = json.choices[0].message.images[0].image_url.url;'
+            action: 'The skill provides dedicated Image API routes and presets for icons, OG images, and social assets. Preview base64 output, then persist it with cost metadata.',
+            code: 'const res = await fetch("/api/openrouter/images", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({\n    model: "google/gemini-3.1-flash-image",\n    prompt: "Generate a minimal app icon: white geometric shape on deep blue",\n    aspect_ratio: "1:1",\n    resolution: "1K",\n    output_format: "png"\n  })\n});\n\nconst json = await res.json();\nconst imageUrl = "data:image/png;base64," + json.data[0].b64_json;'
           },
           'multimodal-chat': {
             title: 'Multimodal Chat',
             situation: 'You need to extract data from PDF invoices — send the file, get structured JSON back, all through the same integration you use for text chat.',
             action: 'The skill handles text, image, and PDF inputs in the same conversation. Same auth, same routing, same cost tracking. Parse any response type with shared helpers.',
-            code: 'const res = await fetch("/api/openrouter/chat", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({\n    model: "google/gemini-2.5-flash",\n    messages: [{\n      role: "user",\n      content: [\n        { type: "text", text: "Extract invoice totals as JSON." },\n        { type: "file", file: {\n          filename: "invoice.pdf",\n          file_data: pdfDataUrl\n        }}\n      ]\n    }],\n    plugins: [{ id: "file-parser", pdf: { engine: "pdf-text" } }],\n    response_format: { type: "json_object" }\n  })\n});'
+            code: 'const res = await fetch("/api/openrouter/chat", {\n  method: "POST",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({\n    model: "google/gemini-2.5-flash",\n    messages: [{\n      role: "user",\n      content: [\n        { type: "text", text: "Extract invoice totals as JSON." },\n        { type: "file", file: {\n          filename: "invoice.pdf",\n          file_data: pdfDataUrl\n        }}\n      ]\n    }],\n    plugins: [{ id: "file-parser", pdf: { engine: "cloudflare-ai" } }],\n    response_format: { type: "json_object" }\n  })\n});'
           },
           'cost-tracking': {
             title: 'Cost Tracking',
@@ -698,22 +698,22 @@
             code: '// Tool calling with safety limits\nlet messages = [{ role: "user", content: query }];\nconst MAX_TOOL_ROUNDS = 5;\n\nfor (let round = 0; round < MAX_TOOL_ROUNDS; round++) {\n  const res = await callOpenRouter({\n    model: "openai/gpt-4o",\n    messages,\n    tools: toolDefinitions\n  });\n\n  const choice = res.choices[0];\n  if (choice.finish_reason !== "tool_calls") break;\n\n  messages.push(choice.message);\n  for (const call of choice.message.tool_calls) {\n    const result = await executeTool(call);\n    messages.push({\n      role: "tool",\n      tool_call_id: call.id,\n      content: JSON.stringify(result)\n    });\n  }\n}'
           },
           'provider-free': {
-            title: 'Provider & Free Models',
-            situation: 'You want to let users pick providers or automatically route to free models for low-stakes tasks.',
-            action: 'The skill filters the live catalog for zero-priced models and provides provider-aware routing so you can offer free tiers without a separate integration.',
+            title: 'Provider, Free & Discounted Models',
+            situation: 'You want to route low-stakes work to free models or use a temporary provider promotion without silently paying full price later.',
+            action: 'The skill filters free catalog entries, reads endpoint-level discount metadata, compares effective workload cost, and keeps a compatible fallback.',
             code: '// Filter free models from the catalog\nconst res = await fetch("/api/openrouter/models");\nconst models = await res.json();\n\nconst freeModels = models.filter(m => {\n  const p = m.pricing ?? {};\n  return ["prompt", "completion", "request", "image"]\n    .every(k => p[k] == null || p[k] === "0");\n});\n\n// Get providers list\nconst providers = await fetch("/api/openrouter/providers")\n  .then(r => r.json());'
           },
           'starter-templates': {
             title: 'Starter Templates',
             situation: 'You need API routes for OpenRouter but don\'t want to set up auth headers, proxy config, and streaming from scratch.',
-            action: 'The skill includes ready-to-copy Next.js and Express templates with model routes, chat proxy, image generation, cost lookup, and streaming — all pre-configured.',
+            action: 'The skill includes ready-to-copy Next.js and Express templates with filtered catalogs, discount endpoints, chat, the dedicated Image API, cost lookup, and streaming.',
             code: '# Install Next.js template\nscripts/install_template.sh --template nextjs\n\n# Or Express template\nscripts/install_template.sh --template express\n\n# You get:\n# - /api/openrouter/models     (model catalog)\n# - /api/openrouter/chat        (chat proxy)\n# - /api/openrouter/generation  (cost lookup)\n# - Streaming chat UI component\n# - Shared TypeScript helpers'
           },
           'asset-workflows': {
             title: 'Asset Workflows',
             situation: 'You need to generate app icons, OG images, and social banners — with the right sizes, metadata, and a preview-before-save flow.',
             action: 'The skill ships presets for common asset types (icon, OG, social, story, banner) with size configs, generation prompts, preview rendering, and disk persistence with metadata.',
-            code: '// Generate an OG image with preset\nimport { OG_IMAGE_PRESET } from "./openrouter-generated-image-assets";\n\nconst res = await fetch("/api/openrouter/chat", {\n  method: "POST",\n  body: JSON.stringify({\n    model: "google/gemini-3.1-flash-image-preview",\n    messages: [{ role: "user", content: OG_IMAGE_PRESET.prompt }],\n    modalities: ["image", "text"],\n    image_config: { size: OG_IMAGE_PRESET.size }\n  })\n});\n\n// Preview, then persist with metadata\nawait saveGeneratedAsset(image, { type: "og", generationId });'
+            code: '// Generate an OG image with preset\nimport { buildImageGenerationRequest } from "./openrouter-generated-image-assets";\n\nconst res = await fetch("/api/openrouter/images", {\n  method: "POST",\n  body: JSON.stringify(buildImageGenerationRequest({\n    model: "google/gemini-3.1-flash-image",\n    prompt: "A calm product launch illustration",\n    purpose: "og-image"\n  }))\n});\n\n// Preview, then persist with cost metadata\nawait saveGeneratedAsset(await res.json(), { type: "og" });'
           },
           'production-playbooks': {
             title: 'Production Playbooks',

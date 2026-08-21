@@ -9,10 +9,20 @@ Usage:
   smoke-catalogs.sh providers
   smoke-catalogs.sh free-models
   smoke-catalogs.sh image-models
+  smoke-catalogs.sh image-endpoints <model-id>
+  smoke-catalogs.sh low-cost-models
+  smoke-catalogs.sh model <model-id>
+  smoke-catalogs.sh model-count
+  smoke-catalogs.sh endpoints <model-id>
+  smoke-catalogs.sh discounts <model-id>
   smoke-catalogs.sh generation <generation-id>
+  smoke-catalogs.sh key
+  smoke-catalogs.sh credits
+  smoke-catalogs.sh activity [YYYY-MM-DD]
 
 Environment:
   OPENROUTER_API_KEY   Required
+  OPENROUTER_MANAGEMENT_KEY  Required only for account-wide credits
   OPENROUTER_SITE_URL  Optional, default http://localhost:3000
   OPENROUTER_APP_NAME  Optional, default OpenRouter Catalog Smoke Test
 USAGE
@@ -101,36 +111,91 @@ print(json.dumps({"data": free_models}, indent=2))
 PY
     ;;
   image-models)
-    json=$(curl_json "https://openrouter.ai/api/v1/models")
-    OPENROUTER_MODELS_JSON="$json" python3 - <<'PY'
+    curl_json "https://openrouter.ai/api/v1/images/models"
+    ;;
+  image-endpoints)
+    model_id=${1:-}
+    [[ "$model_id" == */* ]] || { echo "model id must use author/slug format" >&2; exit 1; }
+    curl_json "https://openrouter.ai/api/v1/images/models/$model_id/endpoints"
+    ;;
+  low-cost-models)
+    curl_json "https://openrouter.ai/api/v1/models?sort=pricing-low-to-high&output_modalities=text"
+    ;;
+  model)
+    model_id=${1:-}
+    [[ "$model_id" == */* ]] || { echo "model id must use author/slug format" >&2; exit 1; }
+    curl_json "https://openrouter.ai/api/v1/model/$model_id"
+    ;;
+  model-count)
+    curl_json "https://openrouter.ai/api/v1/models/count?output_modalities=text"
+    ;;
+  endpoints)
+    model_id=${1:-}
+    [[ "$model_id" == */* ]] || { echo "model id must use author/slug format" >&2; exit 1; }
+    curl_json "https://openrouter.ai/api/v1/models/$model_id/endpoints"
+    ;;
+  discounts)
+    model_id=${1:-}
+    [[ "$model_id" == */* ]] || { echo "model id must use author/slug format" >&2; exit 1; }
+    json=$(curl_json "https://openrouter.ai/api/v1/models/$model_id/endpoints")
+    OPENROUTER_ENDPOINTS_JSON="$json" python3 - <<'PY'
 import json
 import os
 
-payload = json.loads(os.environ["OPENROUTER_MODELS_JSON"])
-data = payload.get("data", [])
-image_models = []
+payload = json.loads(os.environ["OPENROUTER_ENDPOINTS_JSON"])
+model_id = (payload.get("data") or {}).get("id")
+discounted = []
 
-for item in data:
-    architecture = item.get("architecture") or {}
-    output_modalities = architecture.get("output_modalities") or []
-    if "image" not in output_modalities:
+for endpoint in (payload.get("data") or {}).get("endpoints", []):
+    pricing = endpoint.get("pricing") or {}
+    discount = pricing.get("discount")
+    if not isinstance(discount, (int, float)) or not 0 < discount < 1:
         continue
-    image_models.append(
+    discounted.append(
         {
-            "id": item.get("id"),
-            "name": item.get("name"),
-            "output_modalities": output_modalities,
-            "pricing": item.get("pricing") or {},
+            "model_id": model_id,
+            "provider": endpoint.get("provider_name"),
+            "tag": endpoint.get("tag"),
+            "discount": discount,
+            "effective_pricing": pricing,
         }
     )
 
-print(json.dumps({"data": image_models}, indent=2))
+print(json.dumps({"data": discounted}, indent=2))
 PY
     ;;
   generation)
     generation_id=${1:-}
     [[ -n "$generation_id" ]] || { echo "generation id is required" >&2; exit 1; }
     curl_json "https://openrouter.ai/api/v1/generation?id=$generation_id"
+    ;;
+  key)
+    curl_json "https://openrouter.ai/api/v1/key"
+    ;;
+  credits)
+    [[ -n "${OPENROUTER_MANAGEMENT_KEY:-}" ]] || {
+      echo "OPENROUTER_MANAGEMENT_KEY is required for account-wide credits" >&2
+      exit 1
+    }
+    original_key=$OPENROUTER_API_KEY
+    OPENROUTER_API_KEY=$OPENROUTER_MANAGEMENT_KEY
+    curl_json "https://openrouter.ai/api/v1/credits"
+    OPENROUTER_API_KEY=$original_key
+    ;;
+  activity)
+    [[ -n "${OPENROUTER_MANAGEMENT_KEY:-}" ]] || {
+      echo "OPENROUTER_MANAGEMENT_KEY is required for account activity" >&2
+      exit 1
+    }
+    date_filter=${1:-}
+    original_key=$OPENROUTER_API_KEY
+    OPENROUTER_API_KEY=$OPENROUTER_MANAGEMENT_KEY
+    if [[ -n "$date_filter" ]]; then
+      curl_json "https://openrouter.ai/api/v1/activity?date=$date_filter"
+    else
+      curl_json "https://openrouter.ai/api/v1/activity"
+    fi
+    OPENROUTER_API_KEY=$original_key
     ;;
   *)
     echo "Unknown test case: $CASE" >&2

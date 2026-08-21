@@ -11,7 +11,7 @@
 
 Stop rebuilding the same OpenRouter integration every project.
 
-A reusable skill that gives your AI coding agent ready-made patterns for model discovery, image generation, cost lookup, routing, and production playbooks — so the agent writes better OpenRouter code instead of starting from scratch.
+A reusable skill that gives your AI coding agent ready-made patterns for model discovery, live discount checks, image generation, cost controls, routing, and production playbooks — so the agent writes better OpenRouter code instead of starting from scratch.
 
 Landing page: [bnishit.github.io/openrouter-skill](https://bnishit.github.io/openrouter-skill/)
 
@@ -37,13 +37,13 @@ Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
 
 ## Capabilities
 
-- **Model Discovery** — search 300+ models by capability, price, or provider and build a picker in minutes
-- **Image Generation** — generate images via chat completions with presets for icons, OG images, and social assets
+- **Model Discovery** — search hundreds of models by capability, price, provider, or live endpoint discount and build a picker in minutes
+- **Image Generation** — use OpenRouter's dedicated Image API with presets for icons, OG images, and social assets
 - **Multimodal Chat** — send text, images, and PDFs in the same conversation and parse any response type
-- **Cost Tracking** — look up exact cost per generation with real billing data, not estimates
+- **Cost Controls** — compare effective prices, inspect key and account balances, and look up exact charged cost per generation
 - **Routing & Fallbacks** — route to cheapest provider and fall back automatically when one goes down
 - **Tool Calling** — agentic loops with safety limits and structured output with Zod validation
-- **Provider & Free Models** — filter by provider and find zero-cost models automatically
+- **Provider, Free & Discounted Models** — filter by provider and find zero-cost or temporarily discounted endpoints without double-discounting catalog prices
 - **Starter Templates** — Next.js and Express routes ready to copy, not configure
 - **Asset Workflows** — icons, OG images, banners — generate, preview, and persist with metadata
 - **Production Playbooks** — fallback rules, logging, audit trails — encoded, not remembered
@@ -81,9 +81,9 @@ Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
 
 ## Included Templates and Helpers
 
-- **Templates**: Next.js and Express starter routes for models, chat, image generation, and cost lookup — plus UI components like a model picker and image workbench
+- **Templates**: Next.js and Express starter routes for models, endpoint discounts, chat, the dedicated Image API, and cost lookup — plus UI components like a model picker and image workbench
 - **Shared helpers**: TypeScript utilities for streaming (SSE), response parsing, generated-image extraction, asset persistence, and structured output validation
-- **Tests**: Curl-based smoke tests and fixtures covering text, JSON, tools, image analysis, image generation, and PDFs
+- **Tests**: Curl-based smoke tests and fixtures covering catalogs, endpoint discounts, text, JSON, tools, image analysis, dedicated image generation, and PDFs
 
 The starter proxies default to `data:` URLs for uploaded assets and block arbitrary remote `http(s)` image/PDF URLs unless you set `OPENROUTER_ALLOWED_REMOTE_ASSET_HOSTS`.
 

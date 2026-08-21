@@ -38,7 +38,7 @@ export function OpenRouterModelPicker({
     async function load() {
       try {
         setLoading(true);
-        const res = await fetch("/api/openrouter/models?visionOnly=true");
+        const res = await fetch("/api/openrouter/models");
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || "Failed to load models");
         if (!cancelled) setModels(json.models || []);

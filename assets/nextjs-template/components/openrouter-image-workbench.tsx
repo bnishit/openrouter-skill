@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { getGeneratedImageUrls } from "../lib/openrouter/parse-openrouter-response";
+import { getImageResponseDataUrls } from "../lib/openrouter/parse-openrouter-response";
 import {
   buildImageGenerationRequest,
   type OpenRouterImagePurpose,
@@ -16,8 +16,8 @@ const PURPOSE_OPTIONS: Array<{ value: OpenRouterImagePurpose; label: string }> =
 ];
 
 export function OpenRouterImageWorkbench({
-  apiPath = "/api/openrouter/chat",
-  model = "google/gemini-3.1-flash-image-preview",
+  apiPath = "/api/openrouter/images",
+  model = "google/gemini-3.1-flash-image",
 }: {
   apiPath?: string;
   model?: string;
@@ -61,7 +61,7 @@ export function OpenRouterImageWorkbench({
         throw new Error(json?.error || `Request failed with ${response.status}`);
       }
 
-      const nextImageUrl = getGeneratedImageUrls(json)[0] || "";
+      const nextImageUrl = getImageResponseDataUrls(json)[0] || "";
       if (!nextImageUrl) {
         throw new Error("No generated image returned");
       }
@@ -87,7 +87,7 @@ export function OpenRouterImageWorkbench({
           </div>
           <h3 style={{ margin: 0, fontSize: 22 }}>Generate icons, OG images, and social assets</h3>
           <p style={{ margin: "8px 0 0", color: "#666" }}>
-            This starter uses the same OpenRouter chat-completions path for image output. Preview the returned data URL immediately, then persist it server-side or upload it to object storage in production.
+            This starter uses OpenRouter&apos;s dedicated Image API. Preview the returned data URL immediately, then persist it server-side or upload it to object storage in production.
           </p>
         </div>
 

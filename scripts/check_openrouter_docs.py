@@ -5,7 +5,7 @@ import sys
 import urllib.request
 from typing import Iterable
 
-OPENAPI_URL = "https://openrouter.ai/api/v1/openapi.json"
+OPENAPI_URL = "https://openrouter.ai/openapi.json"
 
 PAGES = {
     "overview": {
@@ -16,21 +16,21 @@ PAGES = {
         ],
     },
     "tool-calling": {
-        "url": "https://openrouter.ai/docs/features/tool-calling",
+        "url": "https://openrouter.ai/docs/guides/features/tool-calling",
         "checks": [
             ("tool", "Tools terminology present"),
             ("every request", "Loop requirement language present"),
         ],
     },
     "provider-routing": {
-        "url": "https://openrouter.ai/docs/features/provider-routing",
+        "url": "https://openrouter.ai/docs/guides/routing/provider-selection",
         "checks": [
             ("allow_fallbacks", "Provider fallback field present"),
             ("require_parameters", "Provider parameter requirement field present"),
         ],
     },
     "pdfs": {
-        "url": "https://openrouter.ai/docs/features/multimodal/pdfs",
+        "url": "https://openrouter.ai/docs/guides/overview/multimodal/pdfs",
         "checks": [
             ("file-parser", "PDF parser plugin mention"),
             ("mistral-ocr", "Mistral OCR engine mention"),
@@ -45,25 +45,72 @@ PAGES = {
         ],
     },
     "response-healing": {
-        "url": "https://openrouter.ai/docs/features/response-healing",
+        "url": "https://openrouter.ai/docs/guides/features/plugins/response-healing",
         "checks": [
             ("response healing", "Response healing feature page present"),
             ("plugin", "Response healing plugin mention"),
         ],
     },
     "message-transforms": {
-        "url": "https://openrouter.ai/docs/features/message-transforms",
+        "url": "https://openrouter.ai/docs/guides/features/message-transforms",
         "checks": [
             ("middle-out", "Middle-out transform mention"),
             ("transforms", "Transforms terminology present"),
         ],
     },
+    "models": {
+        "url": "https://openrouter.ai/docs/guides/overview/models",
+        "checks": [
+            ("models/count", "Model count endpoint mention"),
+            ("single model lookup", "Single-model lookup guidance present"),
+            ("pricing-low-to-high", "Server-side price sorting present"),
+        ],
+    },
+    "image-api": {
+        "url": "https://openrouter.ai/docs/guides/overview/multimodal/image-generation",
+        "checks": [
+            ("/api/v1/images", "Dedicated image endpoint mention"),
+            ("b64_json", "Base64 image response field present"),
+            ("images/models", "Image model catalog mention"),
+        ],
+    },
+    "reasoning": {
+        "url": "https://openrouter.ai/docs/guides/best-practices/reasoning-tokens",
+        "checks": [
+            ("reasoning_details", "Reasoning detail preservation field present"),
+            ("effort", "Reasoning effort control present"),
+        ],
+    },
+    "service-tiers": {
+        "url": "https://openrouter.ai/docs/guides/features/service-tiers",
+        "checks": [
+            ("service_tier", "Service tier request field present"),
+            ("flex", "Flex tier present"),
+            ("priority", "Priority tier present"),
+        ],
+    },
+    "batch": {
+        "url": "https://openrouter.ai/docs/batch-quickstart",
+        "checks": [
+            ("/api/beta/batches", "Batch endpoint mention"),
+            ("24-hour", "Batch completion window present"),
+        ],
+    },
 }
 
 REQUIRED_PATHS = [
-    "/api/v1/chat/completions",
-    "/api/v1/models",
-    "/api/v1/models/{author}/{slug}/endpoints",
+    "/chat/completions",
+    "/models",
+    "/models/count",
+    "/model/{author}/{slug}",
+    "/models/{author}/{slug}/endpoints",
+    "/images",
+    "/images/models",
+    "/images/models/{author}/{slug}/endpoints",
+    "/generation",
+    "/activity",
+    "/credits",
+    "/key",
 ]
 
 

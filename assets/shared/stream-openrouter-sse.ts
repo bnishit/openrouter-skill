@@ -1,13 +1,21 @@
-import type { OpenRouterChatResponse } from "./parse-openrouter-response";
+import type { OpenRouterChatResponse, OpenRouterUsage } from "./parse-openrouter-response";
 import { getAssistantText } from "./parse-openrouter-response";
 
-export type OpenRouterSseEvent = {
+export type OpenRouterImageSsePayload = {
+  type: "image_generation.partial" | "image_generation.completed";
+  b64_json?: string;
+  media_type?: string;
+  index?: number;
+  usage?: OpenRouterUsage;
+};
+
+export type OpenRouterSseEvent<T = OpenRouterChatResponse> = {
   type: "message" | "done";
-  data: OpenRouterChatResponse | null;
+  data: T | null;
   raw: string;
 };
 
-function parseSseFrame(frame: string): OpenRouterSseEvent | null {
+function parseSseFrame<T>(frame: string): OpenRouterSseEvent<T> | null {
   const lines = frame
     .split("\n")
     .map((line) => line.trimEnd())
@@ -27,12 +35,14 @@ function parseSseFrame(frame: string): OpenRouterSseEvent | null {
 
   return {
     type: "message",
-    data: JSON.parse(data) as OpenRouterChatResponse,
+    data: JSON.parse(data) as T,
     raw: frame,
   };
 }
 
-export async function* parseOpenRouterSse(response: Response): AsyncGenerator<OpenRouterSseEvent> {
+export async function* parseOpenRouterSse<T = OpenRouterChatResponse>(
+  response: Response
+): AsyncGenerator<OpenRouterSseEvent<T>> {
   if (!response.body) {
     throw new Error("Response body is missing");
   }
@@ -50,16 +60,38 @@ export async function* parseOpenRouterSse(response: Response): AsyncGenerator<Op
     buffer = frames.pop() || "";
 
     for (const frame of frames) {
-      const event = parseSseFrame(frame);
+      const event = parseSseFrame<T>(frame);
       if (event) yield event;
     }
   }
 
   buffer += decoder.decode();
   if (buffer.trim()) {
-    const event = parseSseFrame(buffer);
+    const event = parseSseFrame<T>(buffer);
     if (event) yield event;
   }
+}
+
+export async function collectImageStream(response: Response) {
+  const images = new Map<number, string>();
+  let usage: OpenRouterUsage | null = null;
+
+  for await (const event of parseOpenRouterSse<OpenRouterImageSsePayload>(response)) {
+    if (event.type !== "message" || !event.data) continue;
+    const index = event.data.index ?? 0;
+    if (event.data.b64_json) {
+      images.set(
+        index,
+        `data:${event.data.media_type || "image/png"};base64,${event.data.b64_json}`
+      );
+    }
+    if (event.data.usage) usage = event.data.usage;
+  }
+
+  return {
+    images: [...images.entries()].sort(([a], [b]) => a - b).map(([, value]) => value),
+    usage,
+  };
 }
 
 export async function collectStreamText(response: Response): Promise<string> {

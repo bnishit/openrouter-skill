@@ -33,6 +33,9 @@ This prevents the common mistake of selecting a cheap or popular model that cann
 - Use `provider.data_collection: "deny"` and `provider.zdr: true` when privacy requirements exist.
 - Use `provider.sort: "price"` only when cost is truly more important than latency or consistency.
 - Use `provider.sort: "throughput"` when response-time variance matters more than price.
+- For several fallback models, use `provider.sort: { by, partition: "none" }` only when global price or performance should outrank model order.
+- Treat `preferred_min_throughput` and `preferred_max_latency` as preferences, not guarantees. Use a hard maximum-price constraint when overspend must block the request.
+- Explicit provider order or sorting replaces OpenRouter's default uptime-filtered, price-weighted load balancing.
 - Expose provider controls as advanced configuration in the UI; keep the common path simple.
 
 ## Fallback Strategy Rules
@@ -48,6 +51,7 @@ This prevents the common mistake of selecting a cheap or popular model that cann
 - Derive free-model lists from the live catalog, not from stale lists copied into the app.
 - Treat all pricing fields as strings until you deliberately convert them.
 - Keep "Free" filters and "Low Cost" filters separate. A zero-price route is not the same thing as a cheap route.
+- Keep "Discounted" separate too. Promotions are endpoint-level and temporary; capability and privacy filters still come first.
 - For image-output workflows, check both `output_modalities` and image-related pricing fields.
 
 ## Production Defaults

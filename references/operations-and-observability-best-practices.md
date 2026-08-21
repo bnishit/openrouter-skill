@@ -21,6 +21,8 @@ If the workflow creates a durable artifact such as an extracted record or genera
 - Log both normalized token counts and native token counts when available.
 - Do not rely on catalog pricing math when you already have a real generation id.
 - Keep pricing dashboards separate from per-request debugging views.
+- Use `GET /api/v1/key` for current-key headroom, `GET /api/v1/credits` for account-wide balance, and management-key-only `GET /api/v1/activity` for the last 30 completed UTC days grouped by endpoint.
+- Alert before a background queue reaches either its daily dollar cap or the account's low-balance threshold.
 
 ## Logging Rules
 
@@ -28,6 +30,7 @@ If the workflow creates a durable artifact such as an extracted record or genera
 - Include enough metadata to explain routing and capability choices later.
 - Record whether the request used tools, streaming, files, image input, or image output.
 - Record whether a fallback occurred, and which model actually answered.
+- Record request id, session id, router, service tier, BYOK state, cache discount, and endpoint promotion when they affect cost or routing.
 - Keep secrets and raw private file payloads out of logs.
 
 ## Debugging Rules
@@ -55,6 +58,7 @@ If the workflow creates a durable artifact such as an extracted record or genera
 
 - top models by spend
 - top providers by spend
+- account activity that does not reconcile to application generation records
 - requests with fallbacks
 - requests with empty or invalid structured output
 - image generations by purpose such as icon, OG image, or social asset

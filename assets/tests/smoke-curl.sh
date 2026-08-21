@@ -32,6 +32,7 @@ FIXTURES_DIR="$SCRIPT_DIR/fixtures"
 CASE=$1
 shift || true
 MODEL=${1:-}
+endpoint=https://openrouter.ai/api/v1/chat/completions
 
 site_url=${OPENROUTER_SITE_URL:-http://localhost:3000}
 app_name=${OPENROUTER_APP_NAME:-OpenRouter Smoke Test}
@@ -109,8 +110,9 @@ case "$CASE" in
     payload=$(json_with_replacements "$FIXTURES_DIR/image-chat.template.json" "__MODEL__=$MODEL" "__IMAGE_DATA_URL__=$image_data_url")
     ;;
   image-generation)
-    MODEL=${MODEL:-google/gemini-3.1-flash-image-preview}
+    MODEL=${MODEL:-google/gemini-3.1-flash-image}
     payload=$(json_with_replacements "$FIXTURES_DIR/image-generation.json" "__MODEL__=$MODEL")
+    endpoint=https://openrouter.ai/api/v1/images
     ;;
   pdf)
     pdf_path=${1:-}
@@ -130,7 +132,7 @@ case "$CASE" in
     ;;
 esac
 
-curl -sS https://openrouter.ai/api/v1/chat/completions \
+curl -sS "$endpoint" \
   -H "Authorization: Bearer $OPENROUTER_API_KEY" \
   -H "Content-Type: application/json" \
   -H "HTTP-Referer: $site_url" \

@@ -1,8 +1,10 @@
 # Requests And Responses
 
-## Core Endpoint
+## Endpoint Map
 
-Use `POST https://openrouter.ai/api/v1/chat/completions`.
+- Text, vision input, audio/video input, and PDFs: `POST /api/v1/chat/completions`.
+- Image generation: `POST /api/v1/images`.
+- Image model discovery: `GET /api/v1/images/models`.
 
 OpenRouter uses an OpenAI-compatible chat schema with OpenRouter-specific extensions such as `plugins`, `models`, `provider`, `transforms`, and extra usage metadata.
 
@@ -58,25 +60,20 @@ Prefer server-generated `data:` URLs for uploads and any untrusted remote asset.
 
 ## Image Generation Request
 
-For image generation, keep using the chat completions endpoint but request image output explicitly with `modalities`. Many image-capable models also accept `image_config` for output settings such as size. Pick a current image-output model from the live catalog by checking `architecture.output_modalities` for `image`.
+For new image-generation work, use the dedicated Image API. Discover models through `GET /api/v1/images/models`, then inspect `GET /api/v1/images/models/:author/:slug/endpoints` because sizes, aspect ratios, streaming, and provider passthrough options differ.
 
 ```json
 {
-  "model": "google/gemini-3.1-flash-image-preview",
-  "messages": [
-    {
-      "role": "user",
-      "content": "Generate a clean product illustration of a glass teacup on a plain background."
-    }
-  ],
-  "modalities": ["image", "text"],
-  "image_config": {
-    "size": "1024x1024"
-  }
+  "model": "google/gemini-3.1-flash-image",
+  "prompt": "Generate a clean product illustration of a glass teacup on a plain background.",
+  "aspect_ratio": "1:1",
+  "resolution": "1K",
+  "output_format": "png",
+  "n": 1
 }
 ```
 
-Keep `messages` in the normal OpenAI-compatible format. The key difference is that image-output requests should advertise the desired output modality instead of assuming text-only output. As of March 4, 2026, `google/gemini-3.1-flash-image-preview` is a working catalog entry with `output_modalities` that include `image`.
+The buffered response returns `data[*].b64_json`; prepend the reported `media_type` (or `image/png`) to build a preview data URL. Streaming emits typed SSE events and ends with `[DONE]`. Chat-completions image output remains a legacy compatibility path, not the default for new integrations.
 
 ## PDF Request
 
@@ -103,7 +100,7 @@ For PDFs, use a `file` content part. Prefer a `data:` URL by default; allow remo
   "plugins": [
     {
       "id": "file-parser",
-      "pdf": { "engine": "pdf-text" }
+      "pdf": { "engine": "cloudflare-ai" }
     }
   ]
 }
@@ -121,7 +118,7 @@ If you accept remote PDF URLs, gate them behind a server-side allowlist and log 
 
 ## PDF Engine Guidance
 
-- `pdf-text`: prefer for clean digital PDFs with extractable text; free.
+- `cloudflare-ai`: prefer for clean digital PDFs with extractable text; free. The old `pdf-text` name is deprecated and redirects here.
 - `mistral-ocr`: prefer for scanned or image-heavy PDFs; paid.
 - `native`: use only when the chosen model supports file input natively.
 
@@ -197,6 +194,24 @@ Strict schema mode:
 
 Prefer `json_schema` when the model advertises `structured_outputs`. Fall back to `json_object` otherwise.
 
+## Reasoning And Service Tier
+
+Use the unified `reasoning` object rather than model-name suffixes:
+
+```json
+{
+  "reasoning": {
+    "effort": "low",
+    "exclude": false
+  },
+  "service_tier": "flex"
+}
+```
+
+Reasoning effort values and whether reasoning is mandatory vary by model; read the catalog's `reasoning` object. Preserve returned `reasoning_details` unchanged when sending tool results or continuing a reasoning turn. Reasoning tokens are billed as output.
+
+`service_tier: "flex"` trades latency and availability for price; `priority` does the reverse. Log the served tier instead of assuming the requested tier was used.
+
 ## Streaming Notes
 
 - OpenRouter streams via SSE.
@@ -234,7 +249,7 @@ Non-streaming responses are normalized around:
 
 Save the top-level `id` when the app needs later audit, billing, or support lookup. That id is what `/api/v1/generation` expects.
 
-For image-generation responses, the first assistant message may also include an `images` array. Expect image URLs on `choices[0].message.images[*].image_url.url` when the provider returns generated assets inline with the completion.
+Dedicated image-generation responses return base64 assets in `data[*].b64_json`, with optional `media_type`. Legacy chat image responses may instead include `choices[0].message.images[*].image_url.url`.
 
 ## Generation Lookup And Cost Audit
 
@@ -261,9 +276,9 @@ Typical fields worth logging when available:
 
 - Read `choices[0]` first, but do not assume only one choice exists.
 - For non-streaming responses, read `choices[0].message.content`.
-- For image generation, also inspect `choices[0].message.images` for generated assets.
+- For dedicated image generation, inspect `data[*].b64_json`; inspect `choices[0].message.images` only on the legacy chat path.
 - Some providers or SDK layers may return `message.content` as arrays of typed chunks; flatten them if needed.
-- For streaming responses, accumulate `choices[0].delta.content` across chunks and watch for `choices[0].delta.images` on image-capable models.
+- For chat streams, accumulate `choices[0].delta.content`. For dedicated Image API streams, consume `image_generation.partial` and `image_generation.completed` events by image index and retain final `usage`.
 - Ignore SSE comment frames when streaming.
 - Check `finish_reason` and `native_finish_reason` when diagnosing truncation or provider behavior.
 - Log `usage`, including `cost`, for observability.

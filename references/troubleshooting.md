@@ -84,7 +84,7 @@ Symptoms:
 - repeated requests re-parse the same file
 
 Checks:
-- Use `pdf-text` for clean digital PDFs.
+- Use `cloudflare-ai` for clean digital PDFs. The old `pdf-text` name is deprecated.
 - Use `mistral-ocr` for scanned or image-heavy PDFs.
 - Use `native` only when the chosen model supports file input natively.
 - Reuse assistant `annotations` on follow-up PDF requests to avoid reparsing.

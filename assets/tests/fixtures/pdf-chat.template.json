@@ -22,7 +22,7 @@
     {
       "id": "file-parser",
       "pdf": {
-        "engine": "pdf-text"
+        "engine": "cloudflare-ai"
       }
     }
   ],

@@ -13,22 +13,22 @@ Use OpenRouter image generation when the app needs a generated visual asset on t
 ## First-Principles Guidance
 
 - Do not treat image generation as a separate vendor path if the app already uses OpenRouter for model discovery and request routing.
-- Choose image-output models from the live model catalog by checking `architecture.output_modalities` for `image`.
-- Persist the top-level generation id every time. Later cost audit, support triage, or asset provenance work all depend on it.
+- Discover image models from the dedicated Image API catalog and inspect per-endpoint capabilities before exposing controls.
+- Persist a returned generation id when available, plus request id, model, provider, usage, and cost. The dedicated Image API does not guarantee a top-level generation id.
 - Keep the original prompt and the final stored asset record together. Without that, the generated file becomes operationally opaque.
 
 ## Recommended Workflow
 
-1. Discover current image-output models from `/api/v1/models`.
-2. Build the request on `POST /api/v1/chat/completions` with:
-   - normal `messages`
-   - `modalities` that include `image`
-   - `image_config` for output shape and quality-related settings supported by the model
-3. Read generated images from `choices[0].message.images`.
-4. Show the returned data URL immediately for preview or human approval.
-5. Persist the approved asset to durable storage.
-6. Save generation metadata alongside the stored asset.
-7. Use `GET /api/v1/generation?id=...` later when exact cost or provider attribution matters.
+1. Discover current image models from `GET /api/v1/images/models`.
+2. Inspect `GET /api/v1/images/models/:author/:slug/endpoints` for supported parameters, streaming support, and billable units.
+3. Build the request on `POST /api/v1/images` with a model, prompt, and only endpoint-supported controls.
+4. Read buffered images from `data[*].b64_json`. For streaming, replace each indexed preview when `image_generation.partial` or `image_generation.completed` arrives, then retain terminal usage.
+5. Show the returned data URL immediately for preview or human approval.
+6. Persist the approved asset to durable storage.
+7. Save generation metadata and returned `usage.cost` alongside the stored asset.
+8. Use `GET /api/v1/generation?id=...` later when a generation id is available and exact provider attribution matters.
+
+Chat-completions image output is a legacy compatibility path. Use it only when maintaining an existing integration that depends on a multimodal chat response shape.
 
 ## Purpose-Specific Prompting
 
@@ -62,6 +62,7 @@ For application storage:
 
 - Convert the data URL to bytes.
 - Save it to durable object storage or a media service in production.
+- Pass the requested model and request or generation id into the persistence helper because the dedicated Image API may omit them from its response.
 - Store a metadata row that includes:
   - `generation_id`
   - `model`
@@ -92,6 +93,8 @@ For application storage:
   - data URL parsing and generated asset extraction
 - `assets/shared/openrouter-generated-image-assets-node.ts`
   - Node helper for writing approved generated images to disk in local or server-backed flows
+- `assets/shared/stream-openrouter-sse.ts`
+  - collectors for both chat text streams and dedicated Image API preview/completion events
 - `assets/nextjs-template/components/openrouter-image-workbench.tsx`
   - starter UI for prompt, preview, generation id, and download
 - `assets/nextjs-template/app/openrouter-image-lab/page.tsx`

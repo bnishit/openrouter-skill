@@ -1,6 +1,6 @@
 import {
-  getGeneratedImageUrls,
-  type OpenRouterChatResponse,
+  getImageResponseDataUrls,
+  type OpenRouterImageResponse,
 } from "./parse-openrouter-response";
 
 export type OpenRouterImagePurpose =
@@ -71,7 +71,7 @@ export function buildImageGenerationPrompt(
 }
 
 export function buildImageGenerationRequest({
-  model = "google/gemini-3.1-flash-image-preview",
+  model = "google/gemini-3.1-flash-image",
   prompt,
   purpose = "icon",
   imageSize = "1K",
@@ -85,18 +85,11 @@ export function buildImageGenerationRequest({
 
   return {
     model,
-    messages: [
-      {
-        role: "user" as const,
-        content: buildImageGenerationPrompt(purpose, prompt),
-      },
-    ],
-    modalities: ["image", "text"],
-    image_config: {
-      aspect_ratio: preset.aspectRatio,
-      image_size: imageSize,
-    },
-    temperature: 0,
+    prompt: buildImageGenerationPrompt(purpose, prompt),
+    aspect_ratio: preset.aspectRatio,
+    resolution: imageSize,
+    output_format: "png" as const,
+    n: 1,
   };
 }
 
@@ -117,18 +110,22 @@ export function parseGeneratedImageDataUrl(dataUrl: string) {
 }
 
 export function extractGeneratedImageAssets(
-  response: OpenRouterChatResponse,
+  response: OpenRouterImageResponse,
   {
     purpose = "icon",
     fileStem = "generated-image",
+    requestedModel,
+    generationId: requestedGenerationId,
   }: {
     purpose?: OpenRouterImagePurpose;
     fileStem?: string;
+    requestedModel?: string;
+    generationId?: string;
   } = {}
 ): OpenRouterImageAsset[] {
-  const urls = getGeneratedImageUrls(response);
-  const generationId = response.id || null;
-  const model = response.model || null;
+  const urls = getImageResponseDataUrls(response);
+  const generationId = response.id || requestedGenerationId || null;
+  const model = response.model || requestedModel || null;
   const stem = slugify(fileStem) || "generated-image";
 
   return urls.map((dataUrl, index) => {
