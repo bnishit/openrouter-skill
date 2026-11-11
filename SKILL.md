@@ -1,195 +1,42 @@
 ---
 name: "openrouter-integration"
-description: "Connect apps to hundreds of AI models through OpenRouter — live model and discount discovery, batch and service-tier cost controls, multimodal chat, exact cost and credit diagnostics, provider routing, reasoning, tool calling, structured output validation, starter templates, production playbooks, and verification scripts. Use when an agent needs to add, compare, audit, or debug OpenRouter models, pricing, promotions, credits, routing, requests, or generated assets."
+description: "Connect apps to OpenRouter APIs — model/tool discovery, Responses and Messages, images/video/speech/transcription, embeddings/rerank, hosted and client tools, Agent SDK, routing, caching, budgets, privacy, observability, starter templates, and capability-drift checks. Use when adding, comparing, auditing, refreshing, or debugging OpenRouter capabilities, SDKs, models, costs, routing, requests, or assets."
 ---
 
 # OpenRouter Integration
 
 Use official OpenRouter docs as the source of truth for current endpoints, parameters, and capability metadata. Prefer `openrouter.ai/docs`, `openrouter.ai/openapi.json`, and the API reference pages under `openrouter.ai/docs/api-reference`.
 
-## Quick Snippets
+## Choose the API before copying a starter
 
-Use these for fast copy-paste before reaching for the fuller references or templates.
+| Need | API / format | Read |
+| - | - | - |
+| Text, vision, PDFs, client functions | Chat Completions: `/api/v1/chat/completions`, `messages` | `references/requests-and-responses.md` |
+| Responses clients, hosted shell, typed output items | `/api/v1/responses`, `input`; stateless | `references/requests-and-responses.md` |
+| Anthropic-compatible clients | `/api/v1/messages`, content blocks and `max_tokens` | `references/requests-and-responses.md` |
+| Images, video, speech, transcription | Dedicated media APIs; different response types | `references/multimodal-and-retrieval.md` |
+| Search vectors or rerank documents | `/api/v1/embeddings`, `/api/v1/rerank` | `references/multimodal-and-retrieval.md` |
+| Hosted tools, deferred tools, Agent SDK, MCP | Tool execution and state rules differ | `references/tools-and-function-calling.md` |
+| Routing, caching, budgets, org controls, developer tools | See the full capability map | `references/capability-map.md` |
 
-### Curl: list models
+The supplied Next.js/Express starters implement **Chat Completions and image generation only**, plus selected discovery and cost routes. Guidance for another API does not mean the starter implements it. Choose model ids from live discovery and check endpoint capabilities before choosing request parameters.
 
-```bash
-curl -s https://openrouter.ai/api/v1/models \
-  -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-  -H "Accept: application/json"
-```
-
-### Curl: list providers
-
-```bash
-curl -s https://openrouter.ai/api/v1/providers \
-  -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-  -H "Accept: application/json"
-```
-
-### Curl: fetch one generation and its cost
+### Discover current models and tools
 
 ```bash
-curl -s "https://openrouter.ai/api/v1/generation?id=$GENERATION_ID" \
-  -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-  -H "Accept: application/json"
+curl --fail-with-body -sS https://openrouter.ai/api/v1/models
+curl --fail-with-body -sS https://openrouter.ai/api/v1/tools \
+  -H "Authorization: Bearer $OPENROUTER_API_KEY"
 ```
 
-### Curl: inspect key and account credit headroom
-
-```bash
-curl -s https://openrouter.ai/api/v1/key \
-  -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-  -H "Accept: application/json"
-
-# Requires a management key. This is account-wide, unlike /api/v1/key.
-curl -s https://openrouter.ai/api/v1/credits \
-  -H "Authorization: Bearer $OPENROUTER_MANAGEMENT_KEY" \
-  -H "Accept: application/json"
-```
-
-### Fetch: free models from the catalog
-
-```ts
-const res = await fetch("https://openrouter.ai/api/v1/models", {
-  headers: {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    Accept: "application/json",
-  },
-});
-
-const json = await res.json();
-const freeModels = (json?.data ?? []).filter((model: any) => {
-  const pricing = model?.pricing ?? {};
-  return ["prompt", "completion", "request", "image"].every((key) => {
-    const value = pricing[key];
-    return value == null || value === "0";
-  });
-});
-```
-
-### Curl: text-only chat call
-
-```bash
-curl -s https://openrouter.ai/api/v1/chat/completions \
-  -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "HTTP-Referer: ${OPENROUTER_SITE_URL:-http://localhost:3000}" \
-  -H "X-OpenRouter-Title: ${OPENROUTER_APP_NAME:-My App}" \
-  -d '{
-    "model": "openai/gpt-4o-mini",
-    "messages": [
-      {"role": "user", "content": "Write a one-line summary of invoice OCR."}
-    ],
-    "temperature": 0
-  }'
-```
-
-### Fetch: image input
-
-```ts
-const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    "Content-Type": "application/json",
-    "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
-    "X-OpenRouter-Title": process.env.OPENROUTER_APP_NAME || "My App",
-  },
-  body: JSON.stringify({
-    model: "google/gemini-2.5-flash",
-    messages: [
-      {
-        role: "user",
-        content: [
-          { type: "text", text: "Extract all visible text from this image." },
-          {
-            type: "image_url",
-            image_url: { url: imageDataUrl },
-          },
-        ],
-      },
-    ],
-    temperature: 0,
-  }),
-});
-
-const json = await res.json();
-const content = json?.choices?.[0]?.message?.content;
-```
-
-### Fetch: image generation
-
-```ts
-const res = await fetch("https://openrouter.ai/api/v1/images", {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    "Content-Type": "application/json",
-    "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
-    "X-OpenRouter-Title": process.env.OPENROUTER_APP_NAME || "My App",
-  },
-  body: JSON.stringify({
-    model: "google/gemini-3.1-flash-image",
-    prompt: "Generate a clean product-style illustration of a glass teacup on a plain background.",
-    aspect_ratio: "1:1",
-    resolution: "1K",
-    output_format: "png",
-  }),
-});
-
-const json = await res.json();
-const imageUrl = json?.data?.[0]?.b64_json
-  ? `data:${json.data[0].media_type || "image/png"};base64,${json.data[0].b64_json}`
-  : null;
-```
-
-### Fetch: PDF input with file-parser
-
-```ts
-const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    "Content-Type": "application/json",
-    "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "http://localhost:3000",
-    "X-OpenRouter-Title": process.env.OPENROUTER_APP_NAME || "My App",
-  },
-  body: JSON.stringify({
-    model: "google/gemini-2.5-flash",
-    messages: [
-      {
-        role: "user",
-        content: [
-          { type: "text", text: "Extract the invoice totals as JSON." },
-          {
-            type: "file",
-            file: {
-              filename: "invoice.pdf",
-              file_data: pdfDataUrl,
-            },
-          },
-        ],
-      },
-    ],
-    plugins: [
-      {
-        id: "file-parser",
-        pdf: { engine: "cloudflare-ai" },
-      },
-    ],
-    response_format: { type: "json_object" },
-    temperature: 0,
-  }),
-});
-```
+The public model catalogs can be read without a key. The tools catalog requires authentication (an unauthenticated live check returned 401). Keep its bearer token and inference keys server-side. Use `HTTP-Referer` and `X-OpenRouter-Title` for attribution, not authentication.
 
 ## Workflow
 
 1. Check the docs before making non-trivial changes.
    - Run `scripts/check_openrouter_docs.py --quick` when accuracy matters or the integration seems stale.
-   - If the script flags warnings, read `references/docs-check-workflow.md` and browse only the flagged official pages.
-   - Reconcile templates, headers, and parameter usage with the current docs before coding.
+   - For a refresh or “what is new” request, read the full docs indexes, API changelog, and `references/capability-map.md`; run `--inventory --strict`. A passing quick check only verifies old assumptions and cannot discover the full feature set. Read each relevant feature contract, including limits and beta status, before updating guidance.
+   - Reconcile templates, headers, and parameter usage with current docs before coding. Distinguish newly launched features (dated release evidence) from existing features newly covered by this skill.
 
 2. Keep secrets server-side.
    - Do not expose `OPENROUTER_API_KEY` in browser code.
@@ -197,12 +44,15 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
    - Set `HTTP-Referer` and `X-OpenRouter-Title` headers when the app has a stable URL and title.
    - Do not forward arbitrary user-supplied `http(s)` asset URLs straight to OpenRouter. Fetch trusted assets server-side and convert them to `data:` URLs, or enforce an explicit host allowlist such as `OPENROUTER_ALLOWED_REMOTE_ASSET_HOSTS`.
 
-3. Install a starter instead of retyping boilerplate.
+3. For a supported chat/image app, install a starter instead of retyping boilerplate.
+   - For other APIs/SDKs, follow the owning feature reference; the installer does not add those routes.
    - Use `scripts/install_template.sh` with `--template nextjs` or `--template express`.
    - Override base path and env var names at install time when the target project already has conventions.
    - Copy shared helpers, streaming UI example, and test fixtures with the template.
 
 4. Decide what you are integrating.
+   - Start with `references/capability-map.md` for the current product surface, source links, migration notes, and coverage boundaries.
+   - Video, TTS/STT, multimodal audio/video, embeddings, rerank, and Files/Containers: read `references/multimodal-and-retrieval.md`.
    - Catalog, providers, free-model filters, key/credit diagnostics, or generation cost lookup: read `references/catalogs-and-costs.md`.
    - Promotions, discounted endpoints, workload cost comparisons, batch, or service tiers: read `references/discounts-and-cost-controls.md`.
    - Model catalog or picker: read `references/models-and-ui.md`.
@@ -241,7 +91,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
    - Use `POST /api/v1/batches` for non-interactive work; check the provider deadline and match results by `custom_id`. Do not assume a synchronous `:batch` model id is a drop-in replacement.
 
 7. Choose response handling deliberately.
-   - For plain prose, read `choices[0].message.content`.
+   - For Chat Completions prose, read `choices[0].message.content`; Responses uses typed `output` items; Messages uses `content` blocks. TTS returns bytes and video returns a job. Do not use one parser for all four.
    - For the Image API, read base64 assets from `data[*].b64_json` and preserve `media_type`; for legacy chat image output, read `choices[0].message.images`.
    - For structured data, prefer `response_format: { type: "json_schema", ... }` when the model supports `structured_outputs`.
    - Fall back to `response_format: { type: "json_object" }` when you need JSON but not full schema enforcement.
@@ -266,6 +116,9 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 
 ## Resources
 
+- Current capability coverage and official sources: `references/capability-map.md`
+- Media, retrieval, and file workflows: `references/multimodal-and-retrieval.md`
+
 - Docs-check script: `scripts/check_openrouter_docs.py`
 - Installer script: `scripts/install_template.sh`
 - Next.js starter: `assets/nextjs-template/`
@@ -273,7 +126,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - Shared TypeScript helpers: `assets/shared/`
 - Smoke tests and fixtures: `assets/tests/`
 - Catalog and cost helper: `assets/shared/openrouter-catalog-and-cost.ts`
-   - Image asset helper: `assets/shared/openrouter-generated-image-assets.ts`
+- Image asset helper: `assets/shared/openrouter-generated-image-assets.ts`
 - Node image persistence helper: `assets/shared/openrouter-generated-image-assets-node.ts`
 - Catalogs, providers, free-model filters, and generation cost lookup: `references/catalogs-and-costs.md`
 - Discounts, workload comparisons, batch, service tiers, and credit guardrails: `references/discounts-and-cost-controls.md`
@@ -291,22 +144,8 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 - Persist generation ids anywhere later cost inspection matters.
 - Prefer exact generation lookup over estimated UI-only price math when a completed request id exists.
 - Include the organization prefix in model ids such as `openai/gpt-4o-mini`.
-- Expect `choices` to always be an array.
+- Chat Completions uses a `choices` array; other APIs have different envelopes. Preserve unknown fields and nullable values; decode new enum values permissively.
 - For streaming, expect SSE comment lines and ignore them.
 - For PDFs, choose `cloudflare-ai` for clean text PDFs, `mistral-ocr` for scanned or image-heavy PDFs, and `native` only when the selected model supports file input natively. `pdf-text` is deprecated.
 - Do not assume every model supports `response_format`, `structured_outputs`, `tools`, or every OpenAI parameter; check `supported_parameters` first.
 - When a request depends on specific parameters such as tools or `response_format`, prefer `provider.require_parameters: true`.
-
-## References
-
-- Model discovery, caching, and picker UX: `references/models-and-ui.md`
-- Catalogs, providers, free-model filters, and generation cost lookup: `references/catalogs-and-costs.md`
-- Catalog and routing production rules: `references/catalog-routing-best-practices.md`
-- Image generation usage, preview, storage, icons, and OG workflows: `references/image-generation-best-practices.md`
-- Text, image analysis, image generation, and PDF request patterns plus response handling: `references/requests-and-responses.md`
-- Tool calling and agentic loops: `references/tools-and-function-calling.md`
-- Tool calling and structured-output production rules: `references/tool-calling-and-structured-output-best-practices.md`
-- Model routing, provider routing, and fallbacks: `references/routing-and-fallbacks.md`
-- Operations, logging, and generation audit rules: `references/operations-and-observability-best-practices.md`
-- Troubleshooting and failure diagnosis: `references/troubleshooting.md`
-- Docs-check workflow: `references/docs-check-workflow.md`

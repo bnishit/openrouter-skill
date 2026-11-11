@@ -7,7 +7,7 @@
 - Image generation: `POST /api/v1/images`.
 - Image model discovery: `GET /api/v1/images/models`.
 
-OpenRouter uses an OpenAI-compatible chat schema with OpenRouter-specific extensions such as `plugins`, `models`, `provider`, `transforms`, and extra usage metadata.
+OpenRouter uses an OpenAI-compatible chat schema with OpenRouter-specific extensions such as `plugins`, `models`, `provider`, and extra usage metadata.
 
 For Responses, send the full conversation history each turn. OpenRouter is stateless: `store: true` and non-null `previous_response_id` return `400`. Responses use `output` items and events such as `response.output_text.delta` and `response.completed`; do not feed them into chat text collectors that read `choices`. See the [official Responses guide](https://openrouter.ai/docs/api_reference/responses/overview).
 
@@ -217,10 +217,12 @@ Reasoning effort values and whether reasoning is mandatory vary by model; read t
 
 ## Streaming Notes
 
+These notes describe Chat Completions; Responses and Messages have their own events.
+
 - OpenRouter streams via SSE.
 - Ignore comment lines that start with `:`.
 - Expect a terminal `[DONE]` marker.
-- Expect the final chunk to include aggregated usage data exactly once when usage information is available.
+- Retain the final usage frame. Chat repeats the terminal finish reason on that accounting frame; do not treat it as a second answer. Error streams can close without `[DONE]`.
 - A stream can still represent an error case even if the initial HTTP status was `200`; parse the whole stream.
 
 ## Response Shape
@@ -297,3 +299,39 @@ Typical fields worth logging when available:
 - `models`: useful when you want model-level fallbacks.
 - `provider`: useful when you want provider-level ordering, privacy rules, or max-price constraints.
 - `plugins`: use for PDF parsing or response healing when those features materially help the workflow.
+
+## Responses And Messages Are First-Class Formats
+
+Use the native format of the existing client. Do not convert a whole app to Chat Completions just because the starter uses it.
+
+```ts
+const responseRequest = {
+  model: selectedModelId,
+  input: [{ role: "user", content: [{ type: "input_text", text: "Summarize the venue's parking directions." }] }],
+  text: { format: { type: "json_schema", name: "summary", strict: true, schema: {
+    type: "object", properties: { summary: { type: "string" } }, required: ["summary"], additionalProperties: false,
+  } } },
+};
+// POST /api/v1/responses. Read output message items / output_text content.
+```
+
+Responses function tools use their Responses shape; send `function_call_output` items with the matching call id. Replay reasoning and all required continuation items unchanged. In a stream, consume `response.output_text.delta`, and inspect `response.completed`, `response.incomplete`, `response.failed`, and `error`; a token-limited incomplete reply is not a completed structured answer. The generic SSE framing helper can decode events, but `collectStreamText` reads chat choices and is not a Responses collector.
+
+```ts
+const messageRequest = {
+  model: selectedModelId,
+  max_tokens: 256,
+  messages: [{ role: "user", content: [{ type: "text", text: "Summarize the venue's parking directions." }] }],
+};
+// POST /api/v1/messages. Read content blocks, stop_reason, usage.
+```
+
+Messages uses Anthropic content/tool blocks and its own streaming termination (`message_stop`), not chat choices or a universal `[DONE]`. A tool result is a `tool_result` content block, not Chat Completions' `role: "tool"` message. Include the headers required by the selected client/API reference. These formats are documented patterns; this skill has no Responses or Messages proxy route.
+
+Use `X-Generation-Id` for correlation across completion formats. Preserve unknown fields, reasoning, annotations, policy outcomes, and metadata rather than narrowing a response to text before the next turn.
+
+[Responses](https://openrouter.ai/docs/api_reference/responses/overview.md), [Responses tools](https://openrouter.ai/docs/api_reference/responses/tool-calling.md), [Messages](https://openrouter.ai/docs/api/api-reference/anthropic-messages/create-a-message.md), [streaming](https://openrouter.ai/docs/api_reference/streaming.md).
+
+## Context Compression
+
+Use `plugins: [{ id: "context-compression" }]` when losing middle-of-conversation detail is acceptable. The current documented control replaces the old top-level `transforms` recipe; the compression engine is still named `middle-out`. Disable with `enabled: false` when recall must be preserved. Compression removes/truncates messages to fit; it does not preserve every constraint or fact. Small-context endpoints can default to compression, and deferred-tool requests disable it. Inspect the returned metadata and test a long conversation before enabling it. [Message transforms](https://openrouter.ai/docs/guides/features/message-transforms.md).

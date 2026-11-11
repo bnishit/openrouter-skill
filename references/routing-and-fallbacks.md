@@ -34,20 +34,28 @@ Behavior from OpenRouter docs:
 - Fallbacks can trigger on downtime, rate limits, moderation refusal, or validation errors.
 - The response `model` field tells you which model ultimately served the request.
 
-## Auto Router
+## Choose A Router Deliberately
 
-Use `model: "openrouter/auto"` when you want OpenRouter to route across selected high-quality models for a prompt.
+Checked 2026-11-11. Routers select models; provider routing selects an endpoint for a model. A routing preference is not a hard dollar budget.
 
-```json
-{
-  "model": "openrouter/auto",
-  "messages": [
-    { "role": "user", "content": "Summarize the attached invoice." }
-  ]
-}
-```
+| Need | Model / feature | Main limit |
+| - | - | - |
+| General adaptive selection | `openrouter/auto` | Can change both model and reasoning effort per turn |
+| Coding-agent turns | `openrouter/auto-code` | Starts with a stronger/more costly coding policy; evaluate your workload |
+| Free available models | `openrouter/free` | Availability and rate limits vary; not a reliability guarantee |
+| Coding score floor | `openrouter/pareto-code` | `min_coding_score` is 0–1; benchmark rank is not your task's accuracy |
+| Multi-model research | `openrouter/fusion`, `openrouter/fusion-flash` | Panel/analyst/tool work adds cost; invocation can be discretionary |
+| Task-based selection with Jev | `typesafe/jev-router` | Cost tier is a policy preference, not a cap |
+| Choose among your own candidates | `nvidia/switchyard` | Up to three candidates; algorithm and judge add different latency/privacy costs |
+| Current model in a family | `~author/family-latest` | Moving alias; unsuitable for a fixed evaluation baseline |
 
-This is useful for general chat UX. It is less appropriate when you need strict determinism, audited benchmarking, or per-model UI reporting.
+For Auto, configure `plugins: [{ id: "auto-router", allowed_models: ["anthropic/*", "openai/*"], cost_tier: "low" }]`. `excluded_models` removes candidates after the allowlist. Low/medium/high policies trade cost for capability; pin explicit models for reproducible domain-specific extraction. Auto Beta uses its own slug/plugin id; configuration under the wrong plugin id can be accepted and silently ignored. Recheck the selected router's current schema instead of reusing configuration across routers.
+
+Switchyard supports `stage`, `capability`, `auto`, `composite`, `random`, and `passthrough`. Judge-backed algorithms send part of the prompt to another model. Use its docs to choose a policy and inspect its decisions; do not treat the candidate array as a normal fallback list when a routing plugin is active.
+
+Record `session_id`, requested model, actual response model, reasoning effort, cost, and fallback events. Session stickiness reduces cache churn but is not a promise of one fixed model forever.
+
+[Router overview](https://openrouter.ai/docs/guides/routing/routers/overview.md), [Auto](https://openrouter.ai/docs/guides/routing/routers/auto-router.md), [Auto Code](https://openrouter.ai/docs/guides/routing/routers/auto-code.md), [free](https://openrouter.ai/docs/guides/routing/routers/free-router.md), [Pareto](https://openrouter.ai/docs/guides/routing/routers/pareto-router.md), [Fusion](https://openrouter.ai/docs/guides/routing/routers/fusion-router.md), [Jev](https://openrouter.ai/docs/guides/routing/routers/jev-router.md), [Switchyard](https://openrouter.ai/docs/guides/routing/routers/switchyard-router.md).
 
 ## Provider Routing
 
@@ -81,16 +89,15 @@ Common fields from the docs:
 - `data_collection`: allow or deny providers that may store data.
 - `zdr`: require zero-data-retention endpoints when available.
 - `only` / `ignore`: explicit provider allow or deny lists.
-- `sort`: price or throughput based sorting.
+- `sort`: explicit price, latency, throughput, or supported quality sorting; read current options.
 - `max_price`: cap acceptable provider pricing.
 
 ## Practical Policies
 
 ### Lowest latency extraction
 
-- Use a cheap, fast model as `model`.
-- Add one stronger fallback in `models`.
-- Use `provider.sort: "throughput"` if the model has many providers.
+- Use a measured fast model as `model`, with a compatible fallback.
+- Use `provider.sort: "latency"` for response start time; throughput optimizes generation speed, a different metric.
 - Keep `temperature: 0`.
 
 ### Highest reliability OCR
@@ -117,3 +124,11 @@ Common fields from the docs:
 - If the UI presents model choices, make fallbacks an advanced section rather than the default surface.
 - When benchmarking models, disable model-level fallbacks or record fallback events explicitly so results remain interpretable.
 - When provider constraints block a request, surface the actual OpenRouter error to the user instead of collapsing it to a generic failure.
+
+## Auto Exacto And Regional Boundaries
+
+[Auto Exacto](https://openrouter.ai/docs/guides/routing/auto-exacto.md) automatically reorders providers for tool-calling requests using tool reliability, throughput, and benchmark signals. It can disrupt provider stickiness and prompt-cache hits. Explicit `provider.sort: "price"` or the `:floor` variant opts into price ordering instead. This does not validate or authorize tool execution in your app.
+
+[In-region routing](https://openrouter.ai/docs/guides/features/in-region-routing.md) uses `https://eu.openrouter.ai/api/v1` or `https://us.openrouter.ai/api/v1` on eligible Business/Enterprise accounts. A catalog region filter alone does not enforce request residency. Inference fails when no eligible endpoint exists; BYOK deployment region and private endpoints still require your own review.
+
+Recheck the feature matrix: Files/hosted containers, Batch, and multi-model routers are not generally available on regional domains. EU PDFs require native parsing; US supports native or Mistral OCR; Cloudflare parsing is global-only. US search currently permits Exa; EU has no supported search engine. Provider ZDR covers inference, not every tool vendor, trace export, uploaded file, or account record. See [server-tool privacy](https://openrouter.ai/docs/guides/features/server-tools.md#privacy-and-regional-availability) and [Sovereign AI boundaries](https://openrouter.ai/docs/guides/features/sovereign-ai.md).

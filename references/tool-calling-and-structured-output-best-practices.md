@@ -21,7 +21,7 @@ Use this playbook when the app needs reliable agent behavior, not just a success
 
 ## Structured Output Rules
 
-- Prefer `response_format: { type: "json_schema", ... }` when the model supports structured outputs.
+- For Chat Completions use `response_format.json_schema`; for Responses use `text.format`. Check schema support per endpoint.
 - Fall back to `json_object` only when schema enforcement is unavailable or unnecessary.
 - Validate the final parsed JSON with a real runtime schema such as `zod`.
 - Fail loudly when the model returns empty content instead of pretending the parse succeeded.
@@ -59,3 +59,11 @@ This is the pattern already supported by `assets/shared/validate-structured-outp
 - Treating invalid JSON as if it were a successful structured response.
 - Returning free-form prose from tools that should return machine-readable data.
 - Mixing side-effecting tools with exploratory tools without clear boundaries.
+
+## Current Structured Output And Policy Controls
+
+Responses schema format is `text.format: { type: "json_schema", name, strict, schema }`. Response Healing repairs malformed **non-streaming** JSON; it is not schema/business-rule validation. Keep runtime validation after healing. [Structured output](https://openrouter.ai/docs/guides/features/structured-outputs.md), [healing](https://openrouter.ai/docs/guides/features/plugins/response-healing.md).
+
+**Alignment** (beta since October 2026) checks assistant messages against per-request rules. `audit` reports; `enforce` can block/retry and fail when retries run out. It adds evaluator/retry cost and latency. Keep `alignment` results and handle its 403/stream error path. It evaluates output, so it does not replace input guardrails or deterministic business checks. Recheck its prerequisites and API compatibility before enabling. [Alignment](https://openrouter.ai/docs/guides/features/plugins/alignment.md).
+
+**Armor** (beta since October 2026) classifies tool calls against `hard_deny`, `soft_deny`, and `allow` rules. `audit` releases flagged calls; `enforce` blocks according to its output contract. On Messages in `claude_code_compatibility` mode, a flagged `tool_use` can remain in the response: **your client must inspect `safeguard_results` and refuse execution**. A client that ignores it can still execute the call. Preserve typed `openrouter:armor_blocked` history when using Responses custom items. Classifiers do not replace application authorization. [Armor](https://openrouter.ai/docs/guides/features/plugins/armor.md).
