@@ -1,24 +1,17 @@
 # OpenRouter Skill
 
-> **This skill has moved.** It now lives in [bnishit/skills](https://github.com/bnishit/skills)
-> alongside my other skills. Install from there:
->
-> ```bash
-> npx skills add bnishit/skills --skill openrouter-integration --global
-> ```
->
-> This repo stays up so existing installs keep working, but new work happens in the new one.
+> The canonical source is [bnishit/skills](https://github.com/bnishit/skills/tree/main/skills/openrouter-integration). This repository mirrors updates for existing installs.
 
 Stop rebuilding the same OpenRouter integration every project.
 
-A reusable skill that gives your AI coding agent ready-made patterns for model discovery, live discount checks, image generation, cost controls, routing, and production playbooks — so the agent writes better OpenRouter code instead of starting from scratch.
+A reusable skill that gives your AI coding agent ready-made patterns for model discovery, image generation, cost lookup, routing, and production playbooks — so the agent writes better OpenRouter code instead of starting from scratch.
 
 Landing page: [bnishit.github.io/openrouter-skill](https://bnishit.github.io/openrouter-skill/)
 
 ## Install
 
 ```bash
-npx skills add bnishit/openrouter-skill
+npx skills add bnishit/skills --skill openrouter-integration --global
 ```
 
 Works with any AI agent that supports the skills install flow.
@@ -30,20 +23,23 @@ After install, invoke it as `$openrouter-integration`.
 Direct git clone:
 
 ```bash
-git clone https://github.com/bnishit/openrouter-skill.git
+git clone https://github.com/bnishit/skills.git
 ```
 
-Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
+Install from `skills/skills/openrouter-integration`. Use `$openrouter-integration` in prompts.
 
 ## Capabilities
 
-- **Model Discovery** — search hundreds of models by capability, price, provider, or live endpoint discount and build a picker in minutes
-- **Image Generation** — use OpenRouter's dedicated Image API with presets for icons, OG images, and social assets
+- **Model Discovery** — search hundreds of models with live filters, sorting, pagination, aliases, and endpoint details
+- **Discount Discovery** — detect temporary provider promotions from endpoint metadata without double-discounting effective prices
+- **Image Generation** — use the dedicated Image API with live model capabilities and presets for icons, OG images, and social assets
 - **Multimodal Chat** — send text, images, and PDFs in the same conversation and parse any response type
-- **Cost Controls** — compare effective prices, inspect key and account balances, and look up exact charged cost per generation
+- **Cost Tracking** — look up exact cost per generation with real billing data, not estimates
+- **Spend Controls** — compare real workloads, inspect key and account headroom, and choose batch or service tiers deliberately
 - **Routing & Fallbacks** — route to cheapest provider and fall back automatically when one goes down
+- **Batch & Reasoning** — handle asynchronous batch work, provider deadlines, reasoning details, latest aliases, and served service tiers
 - **Tool Calling** — agentic loops with safety limits and structured output with Zod validation
-- **Provider, Free & Discounted Models** — filter by provider and find zero-cost or temporarily discounted endpoints without double-discounting catalog prices
+- **Provider & Free Models** — filter by provider and find zero-cost models automatically
 - **Starter Templates** — Next.js and Express routes ready to copy, not configure
 - **Asset Workflows** — icons, OG images, banners — generate, preview, and persist with metadata
 - **Production Playbooks** — fallback rules, logging, audit trails — encoded, not remembered
@@ -53,7 +49,8 @@ Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
 ## Example Prompts
 
 - `Use $openrouter-integration to add an OpenRouter model picker to this app.`
-- `Use $openrouter-integration to add image generation plus image and PDF chat support through an OpenRouter server route.`
+- `Use $openrouter-integration to compare discounted endpoints for this workload and add a safe fallback and spend cap.`
+- `Use $openrouter-integration to add dedicated Image API generation plus image and PDF understanding.`
 - `Use $openrouter-integration to make this OpenRouter workflow production-safe with the built-in best-practice playbooks for routing, tools, and observability.`
 
 ## Repository Layout
@@ -81,9 +78,9 @@ Install from `openrouter-skill`. Use `$openrouter-integration` in prompts.
 
 ## Included Templates and Helpers
 
-- **Templates**: Next.js and Express starter routes for models, endpoint discounts, chat, the dedicated Image API, and cost lookup — plus UI components like a model picker and image workbench
+- **Templates**: Next.js and Express starter routes for models, chat, image generation, and cost lookup — plus UI components like a model picker and image workbench
 - **Shared helpers**: TypeScript utilities for streaming (SSE), response parsing, generated-image extraction, asset persistence, and structured output validation
-- **Tests**: Curl-based smoke tests and fixtures covering catalogs, endpoint discounts, text, JSON, tools, image analysis, dedicated image generation, and PDFs
+- **Tests**: Curl-based smoke tests and fixtures covering text, JSON, tools, image analysis, image generation, and PDFs
 
 The starter proxies default to `data:` URLs for uploaded assets and block arbitrary remote `http(s)` image/PDF URLs unless you set `OPENROUTER_ALLOWED_REMOTE_ASSET_HOSTS`.
 
@@ -131,8 +128,14 @@ Treat official OpenRouter documentation as the source of truth for endpoints, pa
 Use:
 
 ```bash
-python3 scripts/check_openrouter_docs.py --quick
+python3 scripts/check_openrouter_docs.py --quick --strict
+python3 -m unittest discover -s scripts/tests -p "test_*.py"
+npx --yes tsx --test assets/tests/*.test.ts
 ```
+
+Run these commands from this skill directory. TypeScript tests use `tsx` to resolve the extensionless imports used by the templates. Installed tests point to the installed helpers. Live smoke calls require your own key and may spend credits.
+
+The installer checks all destination files before copying. It customizes only installed files; existing app files stay untouched, including with `--force`. Add your app’s authentication, access limits, and spend controls before exposing the proxy publicly.
 
 When the script flags drift, update the templates and examples against the relevant OpenRouter documentation.
 

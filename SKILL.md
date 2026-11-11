@@ -228,9 +228,9 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
    - Filter by `architecture.input_modalities` and `architecture.output_modalities` first; use name heuristics only as fallback.
 
 6. Build requests in OpenAI-compatible format.
-   - Send text-only prompts as normal chat `messages`.
+   - These starters use Chat Completions. For Responses API integrations, use `POST /api/v1/responses` with `input`; include full history each turn. OpenRouter rejects `store: true` and non-null `previous_response_id`. Do not pass Responses payloads to these chat routes.
+   - Send text-only chat prompts as normal `messages`.
    - Send images with `content` arrays containing a `text` part and one or more `image_url` parts.
-   - Generate images by sending normal chat `messages` plus `modalities` that include `image`; pass `image_config` when output settings matter.
    - Discover generation models and endpoint-specific controls through `GET /api/v1/images/models` and its per-model endpoint route.
    - Use `POST /api/v1/images` for new image integrations. Keep chat-completions image output only for legacy compatibility.
    - Send PDFs with a `file` content part and, when needed, the `file-parser` plugin.
@@ -238,7 +238,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
    - Keep `tools` in every tool-calling request, including follow-up calls that only send tool results.
    - Preserve `reasoning_details` unchanged across tool turns when a reasoning model returns it.
    - Use `service_tier: "flex"` only when lower price is worth higher latency and lower availability; record the served tier.
-   - Use the Batch API for non-interactive work that can finish within 24 hours. Do not assume a synchronous `:batch` model id is a drop-in replacement.
+   - Use `POST /api/v1/batches` for non-interactive work; check the provider deadline and match results by `custom_id`. Do not assume a synchronous `:batch` model id is a drop-in replacement.
 
 7. Choose response handling deliberately.
    - For plain prose, read `choices[0].message.content`.
@@ -255,6 +255,7 @@ const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
    - Preserve the original file message and append the annotated assistant message before the next user turn.
 
 9. Verify the integration.
+   - Run `python3 -m unittest discover -s scripts/tests -p "test_*.py"` and `npx --yes tsx --test assets/tests/*.test.ts` for offline regressions, including installation into an existing app.
    - Run `assets/tests/smoke-curl.sh` for text, structured JSON, tools, image analysis, image generation, and PDF cases.
    - Run `assets/tests/smoke-catalogs.sh` for catalogs, endpoint discounts, key/credit diagnostics, and generation cost lookup.
    - Check both successful responses and non-2xx OpenRouter errors.

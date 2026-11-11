@@ -132,7 +132,7 @@ case "$CASE" in
     ;;
 esac
 
-curl -sS "$endpoint" \
+curl --fail-with-body -sS "$endpoint" \
   -H "Authorization: Bearer $OPENROUTER_API_KEY" \
   -H "Content-Type: application/json" \
   -H "HTTP-Referer: $site_url" \

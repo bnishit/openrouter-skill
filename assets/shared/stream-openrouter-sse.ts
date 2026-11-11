@@ -33,9 +33,14 @@ function parseSseFrame<T>(frame: string): OpenRouterSseEvent<T> | null {
     return { type: "done", data: null, raw: frame };
   }
 
+  const payload = JSON.parse(data);
+  const error = payload.error || (payload.type === "response.failed" ? payload.response?.error : null);
+  if (error || payload.type === "error") {
+    throw new Error(typeof error === "string" ? error : error?.message || payload.message || "OpenRouter stream failed");
+  }
   return {
     type: "message",
-    data: JSON.parse(data) as T,
+    data: payload as T,
     raw: frame,
   };
 }
@@ -43,6 +48,10 @@ function parseSseFrame<T>(frame: string): OpenRouterSseEvent<T> | null {
 export async function* parseOpenRouterSse<T = OpenRouterChatResponse>(
   response: Response
 ): AsyncGenerator<OpenRouterSseEvent<T>> {
+  if (!response.ok) {
+    const json = await response.json().catch(() => null);
+    throw new Error(json?.error?.message || `OpenRouter request failed with status ${response.status}`);
+  }
   if (!response.body) {
     throw new Error("Response body is missing");
   }
@@ -51,24 +60,29 @@ export async function* parseOpenRouterSse<T = OpenRouterChatResponse>(
   const decoder = new TextDecoder();
   let buffer = "";
 
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const frames = buffer.split("\n\n");
-    buffer = frames.pop() || "";
-
-    for (const frame of frames) {
-      const event = parseSseFrame<T>(frame);
-      if (event) yield event;
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
+      // Accept LF and CRLF even when a network chunk splits a CRLF pair.
+      const frames = buffer.split(/\r?\n\r?\n/);
+      buffer = frames.pop() || "";
+      if (done && buffer.trim()) frames.push(buffer);
+      for (const frame of frames) {
+        const event = parseSseFrame<T>(frame);
+        if (event) {
+          yield event;
+          if (event.type === "done") return;
+        }
+      }
+      if (done) break;
     }
-  }
-
-  buffer += decoder.decode();
-  if (buffer.trim()) {
-    const event = parseSseFrame<T>(buffer);
-    if (event) yield event;
+  } finally {
+    try {
+      await reader.cancel();
+    } finally {
+      reader.releaseLock();
+    }
   }
 }
 

@@ -15,6 +15,14 @@ PAGES = {
             ("chat/completions", "Chat completions endpoint mention"),
         ],
     },
+    "responses": {
+        "url": "https://openrouter.ai/docs/api_reference/responses/overview.md",
+        "checks": [
+            ("/api/v1/responses", "Responses endpoint mention"),
+            ("stateless", "Stateless Responses guidance present"),
+            ("previous_response_id", "Responses history restriction present"),
+        ],
+    },
     "tool-calling": {
         "url": "https://openrouter.ai/docs/guides/features/tool-calling",
         "checks": [
@@ -92,14 +100,17 @@ PAGES = {
     "batch": {
         "url": "https://openrouter.ai/docs/batch-quickstart",
         "checks": [
-            ("/api/beta/batches", "Batch endpoint mention"),
-            ("24-hour", "Batch completion window present"),
+            ("/api/v1/batches", "Batch endpoint mention"),
+            ("completion_window", "Batch completion window present"),
         ],
     },
 }
 
 REQUIRED_PATHS = [
     "/chat/completions",
+    "/responses",
+    "/batches",
+    "/batches/{id}",
     "/models",
     "/models/count",
     "/model/{author}/{slug}",

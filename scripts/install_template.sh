@@ -63,119 +63,72 @@ require_cmd chmod
 mkdir -p -- "$TARGET"
 TARGET=$(cd -- "$TARGET" && pwd)
 
-copy_file() {
-  local src=$1
-  local dest=$2
-
-  if [[ -e "$dest" && $FORCE -ne 1 ]]; then
-    echo "Refusing to overwrite existing file: $dest" >&2
-    echo "Re-run with --force to overwrite." >&2
-    exit 1
-  fi
-
-  mkdir -p -- "$(dirname -- "$dest")"
-  cp -- "$src" "$dest"
-  echo "Copied $dest"
-}
-
-rewrite_tree() {
-  local dir=$1
-  local old=$2
-  local new=$3
-
-  python3 - "$dir" "$old" "$new" <<'PY'
-import pathlib
+python3 - "$SKILL_DIR" "$TARGET" "$TEMPLATE" "$BASE_PATH" "$API_KEY_VAR" "$SITE_URL_VAR" "$APP_NAME_VAR" "$FORCE" <<'PYINSTALL'
+from pathlib import Path
+import re
+import shutil
 import sys
 
-root = pathlib.Path(sys.argv[1])
-old = sys.argv[2]
-new = sys.argv[3]
+skill, target = map(Path, sys.argv[1:3])
+template, base, key, site, app, force = sys.argv[3:]
+if any(part in {".", ".."} for part in base.split("/")):
+    sys.exit("--base-path must not contain . or .. segments")
+if not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", value) for value in (key, site, app)):
+    sys.exit("Environment variable names must be valid identifiers")
 
-suffixes = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".md", ".example", ".env"}
-for path in root.rglob("*"):
-    if not path.is_file():
+src_layout = template == "nextjs" and (target / "src/app").is_dir()
+code_root = target / "src" if src_layout else target
+plan = []
+for source in sorted((skill / "assets" / f"{template}-template").rglob("*")):
+    if not source.is_file():
         continue
-    if path.name.startswith(".env") or path.suffix in suffixes:
-        text = path.read_text()
-        if old in text:
-            path.write_text(text.replace(old, new))
-PY
+    relative = source.relative_to(skill / "assets" / f"{template}-template")
+    if source.name == ".env.example":
+        destination = target / ".env.openrouter.example"
+    elif template == "express":
+        destination = target / "openrouter" / relative
+    elif relative.is_relative_to("app/api/openrouter"):
+        destination = code_root / "app" / base.lstrip("/") / relative.relative_to("app/api/openrouter")
+    else:
+        destination = code_root / relative
+    plan.append((source, destination))
+for folder, destination in (("shared", code_root / "lib/openrouter"), ("tests", target / "openrouter-tests")):
+    for source in sorted((skill / "assets" / folder).rglob("*")):
+        if source.is_file():
+            plan.append((source, destination / source.relative_to(skill / "assets" / folder)))
+
+# Check the whole install before writing, including helpers and fixtures.
+for _, destination in plan:
+    for path in (destination, *destination.parents):
+        if path == target:
+            break
+        if path.is_symlink():
+            sys.exit(f"Refusing to write through symlink: {path}")
+    if destination.is_dir() or (destination.exists() and force != "1"):
+        sys.exit(f"Refusing to overwrite existing file: {destination}. Use --force to replace installed files.")
+    if any(path.exists() and not path.is_dir() for path in destination.parents):
+        sys.exit(f"Destination parent is not a directory: {destination}")
+
+replacements = {
+    "/api/openrouter": base,
+    "OPENROUTER_API_KEY": key,
+    "OPENROUTER_SITE_URL": site,
+    "OPENROUTER_APP_NAME": app,
 }
-
-copy_shared_assets() {
-  local lib_root=$1
-  local tests_root=$2
-
-  mkdir -p -- "$lib_root" "$tests_root"
-  cp -R -- "$SKILL_DIR/assets/shared/." "$lib_root/"
-  cp -R -- "$SKILL_DIR/assets/tests/." "$tests_root/"
-  echo "Copied shared helpers to $lib_root"
-  echo "Copied test fixtures to $tests_root"
-}
-
-install_nextjs() {
-  local template_root="$SKILL_DIR/assets/nextjs-template"
-  local app_root components_root lib_root tests_root route_root
-
-  if [[ -d "$TARGET/src/app" ]]; then
-    app_root="$TARGET/src/app"
-    components_root="$TARGET/src/components"
-    lib_root="$TARGET/src/lib/openrouter"
-  else
-    app_root="$TARGET/app"
-    components_root="$TARGET/components"
-    lib_root="$TARGET/lib/openrouter"
-  fi
-
-  tests_root="$TARGET/openrouter-tests"
-  route_root="$app_root/${BASE_PATH#/}"
-
-  copy_file "$template_root/app/api/openrouter/models/route.ts" "$route_root/models/route.ts"
-  copy_file "$template_root/app/api/openrouter/providers/route.ts" "$route_root/providers/route.ts"
-  copy_file "$template_root/app/api/openrouter/free-models/route.ts" "$route_root/free-models/route.ts"
-  copy_file "$template_root/app/api/openrouter/generation/[id]/route.ts" "$route_root/generation/[id]/route.ts"
-  copy_file "$template_root/app/api/openrouter/model-endpoints/[author]/[slug]/route.ts" "$route_root/model-endpoints/[author]/[slug]/route.ts"
-  copy_file "$template_root/app/api/openrouter/image-models/route.ts" "$route_root/image-models/route.ts"
-  copy_file "$template_root/app/api/openrouter/image-model-endpoints/[author]/[slug]/route.ts" "$route_root/image-model-endpoints/[author]/[slug]/route.ts"
-  copy_file "$template_root/app/api/openrouter/images/route.ts" "$route_root/images/route.ts"
-  copy_file "$template_root/app/api/openrouter/chat/route.ts" "$route_root/chat/route.ts"
-  copy_file "$template_root/app/openrouter-image-lab/page.tsx" "$app_root/openrouter-image-lab/page.tsx"
-  copy_file "$template_root/components/openrouter-model-picker.tsx" "$components_root/openrouter-model-picker.tsx"
-  copy_file "$template_root/components/openrouter-image-workbench.tsx" "$components_root/openrouter-image-workbench.tsx"
-  copy_file "$template_root/components/openrouter-ops-console.tsx" "$components_root/openrouter-ops-console.tsx"
-  copy_file "$template_root/components/openrouter-streaming-chat.tsx" "$components_root/openrouter-streaming-chat.tsx"
-  copy_file "$template_root/.env.example" "$TARGET/.env.openrouter.example"
-
-  copy_shared_assets "$lib_root" "$tests_root"
-
-  rewrite_tree "$TARGET" "/api/openrouter" "$BASE_PATH"
-  rewrite_tree "$TARGET" "OPENROUTER_API_KEY" "$API_KEY_VAR"
-  rewrite_tree "$TARGET" "OPENROUTER_SITE_URL" "$SITE_URL_VAR"
-  rewrite_tree "$TARGET" "OPENROUTER_APP_NAME" "$APP_NAME_VAR"
-}
-
-install_express() {
-  local template_root="$SKILL_DIR/assets/express-template"
-  local api_root="$TARGET/openrouter"
-  local lib_root="$TARGET/lib/openrouter"
-  local tests_root="$TARGET/openrouter-tests"
-
-  copy_file "$template_root/openrouter-routes.mjs" "$api_root/openrouter-routes.mjs"
-  copy_file "$template_root/example-server.mjs" "$api_root/example-server.mjs"
-  copy_file "$template_root/.env.example" "$TARGET/.env.openrouter.example"
-
-  copy_shared_assets "$lib_root" "$tests_root"
-
-  rewrite_tree "$TARGET" "/api/openrouter" "$BASE_PATH"
-  rewrite_tree "$TARGET" "OPENROUTER_API_KEY" "$API_KEY_VAR"
-  rewrite_tree "$TARGET" "OPENROUTER_SITE_URL" "$SITE_URL_VAR"
-  rewrite_tree "$TARGET" "OPENROUTER_APP_NAME" "$APP_NAME_VAR"
-}
-
-case "$TEMPLATE" in
-  nextjs) install_nextjs ;;
-  express) install_express ;;
-esac
+pattern = re.compile("|".join(map(re.escape, replacements)))
+for source, destination in plan:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if source.suffix in {".ts", ".tsx", ".mjs", ".sh", ".md", ".example"}:
+        content = pattern.sub(lambda match: replacements[match[0]], source.read_text())
+        if destination.suffix == ".ts" and destination.parent == target / "openrouter-tests":
+            shared = "../src/lib/openrouter/" if src_layout else "../lib/openrouter/"
+            content = content.replace("../shared/", shared)
+        destination.write_text(content)
+        shutil.copymode(source, destination)
+    else:
+        shutil.copy2(source, destination)
+    print(f"Copied {destination}")
+PYINSTALL
 
 chmod +x "$TARGET/openrouter-tests/smoke-curl.sh" 2>/dev/null || true
 chmod +x "$TARGET/openrouter-tests/smoke-catalogs.sh" 2>/dev/null || true
