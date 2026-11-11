@@ -79,7 +79,7 @@ Record the tier actually served. Use `flex` for delay-tolerant work only; use or
 
 ### Response cache versus prompt cache
 
-[Response caching](https://openrouter.ai/docs/guides/features/response-caching.md) replays an identical successful request before inference. Enable explicitly with `X-OpenRouter-Cache: true`; set `X-OpenRouter-Cache-TTL` (1–86400 seconds, default 300). It applies to Chat Completions, Responses, Messages, and embeddings, including streams. Cache hits have zero billable counters and a new generation id; preserve the source id from `X-OpenRouter-Cache-Source-Id`.
+[Response caching](https://openrouter.ai/docs/guides/features/response-caching.md) replays an identical successful request before inference. Enable explicitly with `X-OpenRouter-Cache: true`; set `X-OpenRouter-Cache-TTL` (1–86400 seconds, default 300). It applies to Chat Completions, Responses, Messages, and embeddings, including streams. A cache MISS runs and bills the original generation normally; a later HIT replays it with zero billable counters and a new generation id. Report those as separate requests rather than calling the whole computation free. Preserve the source id from `X-OpenRouter-Cache-Source-Id`.
 
 The cache is scoped to the API key, endpoint, model, stream mode, and normalized request body; JSON property order still matters. Concurrent misses can both be billed. A preset opt-out overrides an enabling header. Account-level ZDR disables response caching; per-request `provider.zdr` is a distinct scope. Cache eviction can precede TTL.
 

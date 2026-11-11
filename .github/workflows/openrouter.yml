@@ -20,14 +20,20 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
-      - run: npx --yes tsx --test assets/tests/*.test.ts
+      - run: npx --yes tsx@4.23.15 --test assets/tests/*.test.ts examples/*.test.ts
+      - name: Type-check the worked samples
+        run: |
+          typecheck_root=$(mktemp -d)
+          npm install --prefix "$typecheck_root" --no-save --no-package-lock typescript@7.0.2 @types/node@22.20.5
+          "$typecheck_root/node_modules/.bin/tsc" --noEmit --strict --target ES2022 --moduleResolution bundler --module ESNext --lib ES2022,DOM --allowImportingTsExtensions --typeRoots "$typecheck_root/node_modules/@types" --types node examples/*.ts
+      - run: node --check docs/app.js
       - run: bash -n scripts/install_template.sh assets/tests/smoke-curl.sh assets/tests/smoke-catalogs.sh
       - name: Verify copied starters
         run: |
           install_root=$(mktemp -d)
           for template in nextjs express; do
             bash scripts/install_template.sh --template "$template" --target "$install_root/$template"
-            npx --yes tsx --test "$install_root/$template/openrouter-tests/"*.test.ts
+            npx --yes tsx@4.23.15 --test "$install_root/$template/openrouter-tests/"*.test.ts
           done
       - if: github.event_name == 'workflow_dispatch'
         run: python3 scripts/check_openrouter_docs.py --quick --inventory --strict

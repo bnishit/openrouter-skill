@@ -1,0 +1,417 @@
+{
+  "skill_name": "openrouter-integration",
+  "suite_version": 1,
+  "baseline_commit": "85c4233",
+  "candidate_start_commit": "615f6da",
+  "trials_per_case": 3,
+  "cases": [
+    {
+      "id": "speech-output",
+      "type": "representative",
+      "prompt": "We are adding a read-aloud button through OpenRouter. Our server currently calls response.json() for every model response. Show the smallest correct request/response flow for speech playback, and what must be checked before choosing a voice or format.",
+      "references": [
+        "multimodal-and-retrieval.md",
+        "requests-and-responses.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Uses the dedicated audio/speech endpoint for text-to-speech rather than a chat endpoint."
+        },
+        {
+          "id": "g2",
+          "criterion": "Decodes successful speech as raw audio bytes, not JSON or SSE text."
+        },
+        {
+          "id": "g3",
+          "criterion": "Checks HTTP failure before interpreting the body as audio."
+        },
+        {
+          "id": "g4",
+          "criterion": "Checks selected-model voice and output-format support rather than assuming one universal voice/format."
+        },
+        {
+          "id": "g5",
+          "criterion": "Keeps the provider bearer token on the server and captures generation correlation when available."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "async-video",
+      "type": "representative",
+      "prompt": "Add a Generate video button to a product app. A generation may take several minutes and the user might reload or click again. Describe the server flow, storage, UI states, and how the browser gets the final video without learning our API key.",
+      "references": [
+        "multimodal-and-retrieval.md",
+        "operations-and-observability-best-practices.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Uses videos submission followed by job polling or verified callbacks rather than treating 202 as a completed video."
+        },
+        {
+          "id": "g2",
+          "criterion": "Persists the job identifier so reloads/retries can resume instead of blindly creating another paid job."
+        },
+        {
+          "id": "g3",
+          "criterion": "Handles unfinished and failed terminal states explicitly."
+        },
+        {
+          "id": "g4",
+          "criterion": "Keeps bearer tokens server-side; serves an authenticated server proxy or supported expiring signed URL to the browser."
+        },
+        {
+          "id": "g5",
+          "criterion": "Checks model-specific duration/resolution controls and records generation/cost metadata when available."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "retrieval",
+      "type": "representative",
+      "prompt": "We have 500 help articles and want search results ranked for a question. We do not want an AI-written answer yet. Design the OpenRouter calls and the stored index fields. What happens if we later swap the embedding model?",
+      "references": [
+        "multimodal-and-retrieval.md",
+        "catalogs-and-costs.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Uses embeddings to support semantic retrieval rather than treating a chat answer as a search index."
+        },
+        {
+          "id": "g2",
+          "criterion": "Uses rerank as an optional reordering of retrieved document candidates and maps result indexes to the original candidates."
+        },
+        {
+          "id": "g3",
+          "criterion": "Stores the embedding model and vector dimension with the index."
+        },
+        {
+          "id": "g4",
+          "criterion": "Treats a model/dimension switch as a compatibility/reindex decision rather than freely mixing vectors."
+        },
+        {
+          "id": "g5",
+          "criterion": "Does not add an answer-generation step the user explicitly excluded."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "deferred-history",
+      "type": "failure",
+      "prompt": "Our OpenRouter agent has 250 function tools. A teammate wants to defer rare tools and compact old assistant messages after every turn. Give the approach you would ship and the continuation tests it needs.",
+      "references": [
+        "tools-and-function-calling.md",
+        "requests-and-responses.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Identifies tool search/deferred loading as a way to avoid sending all tool definitions as active context."
+        },
+        {
+          "id": "g2",
+          "criterion": "Preserves returned assistant history and encrypted reasoning/continuation state unchanged rather than endorsing arbitrary compaction."
+        },
+        {
+          "id": "g3",
+          "criterion": "Keeps the tool catalog/settings stable within the deferred conversation or starts a new one when changing them."
+        },
+        {
+          "id": "g4",
+          "criterion": "Keeps client-side function execution validated and distinguishes it from hosted tool execution."
+        },
+        {
+          "id": "g5",
+          "criterion": "Includes a resumed/interrupted or changed-history failure test, and does not claim the supplied simple chat starter already implements this protocol."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "shared-key-cap",
+      "type": "failure",
+      "prompt": "Our org has a daily per-member limit, but a shared workspace-owned key used by CI keeps spending. Design a cap for that key and its team. Provider BYOK traffic must count too. Do not change settings; explain the controls and verification.",
+      "references": [
+        "discounts-and-cost-controls.md",
+        "operations-and-observability-best-practices.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Explains why a creatorless workspace-owned key may not be covered by a human member limit."
+        },
+        {
+          "id": "g2",
+          "criterion": "Uses a pooled workspace budget and/or effective key-assigned budget policy plus an explicit per-key limit, not a member-only fix."
+        },
+        {
+          "id": "g3",
+          "criterion": "Explicitly includes BYOK spend in the relevant budget/key limit settings."
+        },
+        {
+          "id": "g4",
+          "criterion": "Checks effective budget/assignment and interval/UTC semantics instead of equating remaining key allowance with purchased account credits."
+        },
+        {
+          "id": "g5",
+          "criterion": "Does not claim to have changed account settings or tested a real charge."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "responses-shell",
+      "type": "representative",
+      "prompt": "Our app already uses the Responses format and wants a hosted shell for working on user-uploaded reports. A teammate proposes copying the chat starter and using store:true plus previous_response_id for continuations. Give the corrected design and its limits.",
+      "references": [
+        "requests-and-responses.md",
+        "tools-and-function-calling.md",
+        "multimodal-and-retrieval.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Keeps the integration on Responses (or an explicitly justified supported Messages format), not the incompatible Chat Completions shell path."
+        },
+        {
+          "id": "g2",
+          "criterion": "Rejects store:true and previous_response_id as the OpenRouter Responses continuation strategy; includes full required history/items instead."
+        },
+        {
+          "id": "g3",
+          "criterion": "Distinguishes hosted shell/container execution from a function command executed on the application host."
+        },
+        {
+          "id": "g4",
+          "criterion": "Explains that uploaded workspace files are not ordinary universally downloadable chat attachments and preserves needed container/file state."
+        },
+        {
+          "id": "g5",
+          "criterion": "Distinguishes guidance from supplied starter implementation and states global/regional or beta limits relevant to hosted shell."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "capability-refresh",
+      "type": "failure",
+      "prompt": "The OpenRouter docs check passed, but the skill has not been reviewed in months. Audit what capabilities are missing and update its guidance. In this environment you only have the supplied skill files, not live browsing. What can you establish, what would you inspect next, and what evidence would justify saying it is current?",
+      "references": [
+        "docs-check-workflow.md",
+        "capability-map.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Distinguishes checking old assumptions from discovering new capabilities."
+        },
+        {
+          "id": "g2",
+          "criterion": "Plans a broader inventory of official docs/API/SDK/developer-tool sections and API changelog instead of reading only warnings from the quick checker."
+        },
+        {
+          "id": "g3",
+          "criterion": "Compares new/removed API operations or indexed pages with a reviewed baseline, and does not automatically bless drift."
+        },
+        {
+          "id": "g4",
+          "criterion": "Distinguishes feature guidance from implemented starters and dated launches from older missing coverage."
+        },
+        {
+          "id": "g5",
+          "criterion": "Does not claim a live audit, deployment, or verification it cannot have performed in this environment."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "policy-layer",
+      "type": "failure",
+      "prompt": "We are trying OpenRouter Armor on the Messages API in claude_code_compatibility mode. A flagged tool_use still arrives in the response. Is it safe to execute every returned tool block? Explain what the client must do, and how audit mode differs.",
+      "references": [
+        "tool-calling-and-structured-output-best-practices.md",
+        "tools-and-function-calling.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Does not execute a flagged tool call merely because a tool_use block is present."
+        },
+        {
+          "id": "g2",
+          "criterion": "Inspects safeguard_results (or equivalent described verdicts) and makes the client refuse flagged execution in compatibility mode."
+        },
+        {
+          "id": "g3",
+          "criterion": "Distinguishes audit, which may release calls, from enforcement behavior."
+        },
+        {
+          "id": "g4",
+          "criterion": "Preserves normal application authorization/schema checks and acknowledges classifier/beta limitations."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "boundary-css",
+      "type": "boundary",
+      "prompt": "This task is only CSS: make the existing documentation page easier to read on small screens. There is no model call or OpenRouter product change. Should you load the OpenRouter integration skill, and what would you do?",
+      "references": [],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Does not make OpenRouter integration work a dependency of the CSS-only task."
+        },
+        {
+          "id": "g2",
+          "criterion": "Routes the work to ordinary frontend/layout inspection and responsive verification."
+        },
+        {
+          "id": "g3",
+          "criterion": "Does not introduce API keys, model calls, account settings, or other unrelated scope."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "boundary-stripe",
+      "type": "boundary",
+      "prompt": "Stripe checkout returns an expired-card error. There is no AI step in this payment flow. Someone suggested fixing it through OpenRouter because that skill is installed. What should we do?",
+      "references": [],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Does not route the payment-processing error through OpenRouter or add AI inference."
+        },
+        {
+          "id": "g2",
+          "criterion": "Keeps troubleshooting with Stripe/payment integration evidence and the user-visible payment recovery."
+        },
+        {
+          "id": "g3",
+          "criterion": "Does not request card details, retrieve secrets, or claim to have refunded/charged anyone."
+        }
+      ],
+      "holdout": false,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "holdout-residency",
+      "type": "holdout",
+      "prompt": "Our project must process request content only in the EU and enforce zero data retention. We want video generation, hosted shell and cheap repeated answers through response caching. Can we promise all three through OpenRouter? Explain the design decision and how to verify compatibility.",
+      "references": [
+        "multimodal-and-retrieval.md",
+        "routing-and-fallbacks.md",
+        "discounts-and-cost-controls.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Does not promise video generation under a ZDR requirement."
+        },
+        {
+          "id": "g2",
+          "criterion": "Does not promise global-only hosted shell on an EU regional endpoint."
+        },
+        {
+          "id": "g3",
+          "criterion": "Distinguishes account-level ZDR disabling response caching from per-request provider ZDR; does not assume the two scopes are interchangeable."
+        },
+        {
+          "id": "g4",
+          "criterion": "Does not silently route globally or weaken the user\u2019s retention/residency requirement to make the features work."
+        },
+        {
+          "id": "g5",
+          "criterion": "Names plan/account/feature compatibility checks and avoids claiming real account verification."
+        }
+      ],
+      "holdout": true,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "holdout-discount-metadata",
+      "type": "holdout",
+      "prompt": "We found a model endpoint with prompt price 0.000000375 and numeric discount 0.75. The response was a response-cache HIT and has no openrouter_metadata. A teammate proposes subtracting 75% again and logging the previous request\u2019s router metadata as this request\u2019s decision. Review both choices and say which evidence to save.",
+      "references": [
+        "discounts-and-cost-controls.md",
+        "operations-and-observability-best-practices.md",
+        "catalogs-and-costs.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Treats catalog/endpoint price as effective and rejects applying the advertised discount a second time."
+        },
+        {
+          "id": "g2",
+          "criterion": "Does not interpret a missing metadata field on a cache hit as proof of a routing failure."
+        },
+        {
+          "id": "g3",
+          "criterion": "Does not copy an earlier request\u2019s routing metadata and pretend it describes the cache hit."
+        },
+        {
+          "id": "g4",
+          "criterion": "Preserves current generation id, cache/source correlation and returned usage/cost instead of only estimated prices."
+        },
+        {
+          "id": "g5",
+          "criterion": "Distinguishes a cache hit\u2019s zero-billable response from the normally billed original cache-miss generation."
+        }
+      ],
+      "holdout": true,
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only."
+    },
+    {
+      "id": "holdout-files-storage",
+      "type": "holdout",
+      "holdout": true,
+      "prompt": "We want an OpenRouter document-extraction feature. A design says: upload the original PDF to the workspace Files API, use that file id in any chat request, let users download the original from OpenRouter later, and assume provider ZDR will expire all stored copies. Review this design and give the smallest valid flow. Do not upload or delete anything.",
+      "references": [
+        "multimodal-and-retrieval.md",
+        "requests-and-responses.md",
+        "routing-and-fallbacks.md"
+      ],
+      "gates": [
+        {
+          "id": "g1",
+          "criterion": "Rejects direct download of an uploaded original from workspace Files and keeps an application-controlled original if later downloads are needed."
+        },
+        {
+          "id": "g2",
+          "criterion": "Does not treat a workspace file id as a universal replacement for the supported chat/Responses PDF input format."
+        },
+        {
+          "id": "g3",
+          "criterion": "Distinguishes durable workspace-file storage from provider inference ZDR rather than assuming the ZDR flag deletes or expires stored files."
+        },
+        {
+          "id": "g4",
+          "criterion": "Proposes a supported PDF inference format with appropriate engine/model checks, without requiring a hosted sandbox for an ordinary extraction."
+        },
+        {
+          "id": "g5",
+          "criterion": "Does not claim to have uploaded, deleted, tested paid inference, or changed retention/account controls."
+        }
+      ],
+      "allowed_side_effects": "None. Read supplied reference context and produce a recommendation/code sketch only.",
+      "added_after": "Final execution-boundary and cache-accounting corrections; not previously run or graded."
+    }
+  ]
+}
