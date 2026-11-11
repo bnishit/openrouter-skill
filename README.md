@@ -30,21 +30,14 @@ Install from `skills/skills/openrouter-integration`. Use `$openrouter-integratio
 
 ## Capabilities
 
-- **Model Discovery** — search hundreds of models with live filters, sorting, pagination, aliases, and endpoint details
-- **Discount Discovery** — detect temporary provider promotions from endpoint metadata without double-discounting effective prices
-- **Image Generation** — use the dedicated Image API with live model capabilities and presets for icons, OG images, and social assets
-- **Multimodal Chat** — send text, images, and PDFs in the same conversation and parse any response type
-- **Cost Tracking** — look up exact cost per generation with real billing data, not estimates
-- **Spend Controls** — compare real workloads, inspect key and account headroom, and choose batch or service tiers deliberately
-- **Routing & Fallbacks** — route to cheapest provider and fall back automatically when one goes down
-- **Batch & Reasoning** — handle asynchronous batch work, provider deadlines, reasoning details, latest aliases, and served service tiers
-- **Tool Calling** — agentic loops with safety limits and structured output with Zod validation
-- **Provider & Free Models** — filter by provider and find zero-cost models automatically
-- **Starter Templates** — Next.js and Express routes ready to copy, not configure
-- **Asset Workflows** — icons, OG images, banners — generate, preview, and persist with metadata
-- **Production Playbooks** — fallback rules, logging, audit trails — encoded, not remembered
-- **Safer Defaults** — proxies block untrusted URLs unless you explicitly allowlist trusted hosts
-- **Verification** — smoke tests and doc-check scripts that detect when OpenRouter changes
+- **Choose the right API:** Chat Completions, stateless Responses, Anthropic Messages, dedicated images/video/speech/transcription, embeddings and rerank.
+- **Build tools and agents:** client versus hosted tools, tool discovery/search, continuation state, the Agent SDK package migration and MCP integrations.
+- **Control routing and cost:** model/provider discovery, promotions, Auto/Auto Code/Pareto/Fusion/Jev/Switchyard, response versus prompt caching, Batch, service tiers and spend caps.
+- **Use account controls deliberately:** workspace budgets, Guardrail Policies, Alignment/Armor beta limits, PKCE/workload identity, BYOK, presets, private endpoints and region/data-retention boundaries.
+- **Explain what happened:** exact generation costs, router metadata, Logs/Activity/analytics, Broadcast trace export and its privacy controls.
+- **Start and verify:** bounded Next.js/Express chat/image starters, reusable helpers, offline regressions, live docs checks, and added/removed docs/API inventory detection.
+
+See the [capability map](references/capability-map.md) for coverage, official sources, migrations and limits. The map covers guidance; the starters do not implement every listed API or administrative control. No account setting or consuming app is changed merely by installing this skill.
 
 ## Example Prompts
 
@@ -103,7 +96,7 @@ No. Works with any agent supporting skills install. Templates produce standard N
 
 ### How current is the model data?
 
-The skill fetches catalogs live from the OpenRouter API — it never ships hardcoded model lists. Run `check_openrouter_docs.py --quick` to detect API drift.
+The skill fetches catalogs live from the OpenRouter API — it never ships hardcoded model lists. Run `check_openrouter_docs.py --quick --inventory --strict` for focused assumptions and new/removed indexed pages/operations. Recheck feature semantics and account entitlements for the task.
 
 ### What about rate limits and API keys?
 
@@ -128,7 +121,7 @@ Treat official OpenRouter documentation as the source of truth for endpoints, pa
 Use:
 
 ```bash
-python3 scripts/check_openrouter_docs.py --quick --strict
+python3 scripts/check_openrouter_docs.py --quick --inventory --strict
 python3 -m unittest discover -s scripts/tests -p "test_*.py"
 npx --yes tsx --test assets/tests/*.test.ts
 ```
@@ -137,7 +130,7 @@ Run these commands from this skill directory. TypeScript tests use `tsx` to reso
 
 The installer checks all destination files before copying. It customizes only installed files; existing app files stay untouched, including with `--force`. Add your app’s authentication, access limits, and spend controls before exposing the proxy publicly.
 
-When the script flags drift, update the templates and examples against the relevant OpenRouter documentation.
+For a capability refresh, follow the full [documentation audit](references/docs-check-workflow.md), including all official indexes and the API changelog. A passing old-assumption check is not evidence that the skill covers new features. The reviewed inventory contains 552 indexed Markdown pages and 174 operations as of 2026-11-11; inventory drift is a review signal, not an automatic baseline update.
 
 ## License
 

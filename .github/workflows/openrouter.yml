@@ -30,4 +30,4 @@ jobs:
             npx --yes tsx --test "$install_root/$template/openrouter-tests/"*.test.ts
           done
       - if: github.event_name == 'workflow_dispatch'
-        run: python3 scripts/check_openrouter_docs.py --quick --strict
+        run: python3 scripts/check_openrouter_docs.py --quick --inventory --strict

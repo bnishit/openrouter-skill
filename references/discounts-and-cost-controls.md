@@ -65,18 +65,25 @@ Batch currently supports text workflows across Chat Completions, Responses, Anth
 
 Record the tier actually served. Use `flex` for delay-tolerant work only; use ordinary or priority service for user-blocking flows.
 
-## Key And Credit Diagnostics
+## Budgets, Caching, And Credit Diagnostics
 
-`GET /api/v1/key` reports the current API key's limit, remaining key allowance, daily/weekly/monthly usage, BYOK usage, and expiry.
+`GET /api/v1/key` reports the current key's limits, usage, `budgets`, and `effective_budget`. `GET /api/v1/credits` reports account-wide credits and needs a management key. A remaining key allowance is not account credit and is not the whole effective budget.
 
-`GET /api/v1/credits` reports account-wide purchased credits and usage and requires a management key.
+- Workspace budgets cap pooled spend over daily/weekly/monthly/lifetime intervals. Configured limits must decrease as intervals narrow: lifetime > monthly > weekly > daily. Limits reset in UTC. Decide whether BYOK spend counts.
+- Add a per-key limit for shared agent/CI keys, including BYOK when required. Workspace-owned keys have no human creator: a per-member policy alone does not cap them.
+- Budget policies, model/provider policies, and moderation policies are separate. Workspace-wide policies cannot be loosened by a member/key policy. Inspect effective assignments instead of inferring enforcement from one saved guardrail.
+- Legacy guardrails still work. Editing a migrated policy can transfer control away from its legacy guardrail for that policy type; check `managed_by` and `legacy_policy_types`. Do not manage the same setting through both APIs.
+- During a billing incident, check account credits, effective budgets/key caps, and exact generation costs before attributing the difference. Budget enforcement is a service control, not a substitute for your queue's own bounded work/retry policy.
 
-These scopes can disagree: a key may show remaining allowance while the account has no purchased credits left. During a billing incident:
+[Workspace budgets](https://openrouter.ai/docs/guides/features/workspaces/workspace-budgets.md), [shared keys](https://openrouter.ai/docs/guides/best-practices/capping-shared-agent-keys.md), [policies](https://openrouter.ai/docs/guides/features/guardrails/policies.md), [migration](https://openrouter.ai/docs/guides/features/guardrails/policies-migration.md).
 
-1. Check account credits.
-2. Check the key's cap and recent usage.
-3. Group stored generations by task, model, provider, request id, and session id.
-4. Reconcile exact generation costs before attributing any remaining gap.
+### Response cache versus prompt cache
+
+[Response caching](https://openrouter.ai/docs/guides/features/response-caching.md) replays an identical successful request before inference. Enable explicitly with `X-OpenRouter-Cache: true`; set `X-OpenRouter-Cache-TTL` (1–86400 seconds, default 300). It applies to Chat Completions, Responses, Messages, and embeddings, including streams. Cache hits have zero billable counters and a new generation id; preserve the source id from `X-OpenRouter-Cache-Source-Id`.
+
+The cache is scoped to the API key, endpoint, model, stream mode, and normalized request body; JSON property order still matters. Concurrent misses can both be billed. A preset opt-out overrides an enabling header. Account-level ZDR disables response caching; per-request `provider.zdr` is a distinct scope. Cache eviction can precede TTL.
+
+[Prompt caching](https://openrouter.ai/docs/guides/best-practices/prompt-caching.md) instead reuses a provider's input-prefix work while still running a model. Keep cache rates and hit counters separate. Avoid response-cache reuse when an answer must reflect fresh live data or a tool result could trigger a repeated action. A cached tool call still requires normal authorization and idempotency handling.
 
 ## Latest Aliases And Promotions
 
