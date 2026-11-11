@@ -1,0 +1,2259 @@
+{
+  "reviewed_on": "2026-11-11",
+  "case_count": 10,
+  "total_suite_cases": 13,
+  "trials_per_case": 3,
+  "model": "claude-opus-5-5",
+  "variants": {
+    "previous": {
+      "passed_gates": 98,
+      "total_gates": 135,
+      "failed_gates": 37,
+      "unverified_gates": 0,
+      "fully_passed_trials": 10,
+      "trials": 30,
+      "mean_input_tokens": 9309,
+      "median_wall_seconds": 22.69,
+      "reported_runner_list_cost_usd": 2.0855
+    },
+    "no_skill": {
+      "passed_gates": 97,
+      "total_gates": 135,
+      "failed_gates": 38,
+      "unverified_gates": 0,
+      "fully_passed_trials": 10,
+      "trials": 30,
+      "mean_input_tokens": 782,
+      "median_wall_seconds": 20.38,
+      "reported_runner_list_cost_usd": 1.1594
+    },
+    "candidate": {
+      "passed_gates": 135,
+      "total_gates": 135,
+      "failed_gates": 0,
+      "unverified_gates": 0,
+      "fully_passed_trials": 30,
+      "trials": 30,
+      "mean_input_tokens": 11168,
+      "median_wall_seconds": 19.84,
+      "reported_runner_list_cost_usd": 2.3313
+    }
+  },
+  "offline_tests": 35,
+  "live_docs_checks": 113,
+  "cli_versions": {
+    "claude": "2.1.296",
+    "codex": "0.163.0"
+  },
+  "baselines": {
+    "previous_commit": "85c4233",
+    "pre_evaluation_expanded_commit": "615f6da",
+    "final_skill_sha256": "a74e48cee45b1e29e2f6dca89f75176f96d04916118d504e02248e9714900eab"
+  },
+  "cohorts": {
+    "core": {
+      "stage": "Core expanded-skill snapshot, after execution-ownership clarification; before final cache/parser/beta refinements",
+      "model": "claude-opus-5-5",
+      "case_count": 10,
+      "trials_per_case": 3,
+      "variants": {
+        "previous": {
+          "passed_gates": 98,
+          "total_gates": 135,
+          "failed_gates": 37,
+          "unverified_gates": 0,
+          "fully_passed_trials": 10,
+          "trials": 30,
+          "mean_input_tokens": 9309,
+          "median_wall_seconds": 22.69,
+          "reported_runner_list_cost_usd": 2.0855
+        },
+        "no_skill": {
+          "passed_gates": 97,
+          "total_gates": 135,
+          "failed_gates": 38,
+          "unverified_gates": 0,
+          "fully_passed_trials": 10,
+          "trials": 30,
+          "mean_input_tokens": 782,
+          "median_wall_seconds": 20.38,
+          "reported_runner_list_cost_usd": 1.1594
+        },
+        "candidate": {
+          "passed_gates": 135,
+          "total_gates": 135,
+          "failed_gates": 0,
+          "unverified_gates": 0,
+          "fully_passed_trials": 30,
+          "trials": 30,
+          "mean_input_tokens": 11168,
+          "median_wall_seconds": 19.84,
+          "reported_runner_list_cost_usd": 2.3313
+        }
+      },
+      "cases": [
+        {
+          "case_id": "speech-output",
+          "type": "representative",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "Dedicated speech endpoint** (if available on your account/models)... If you end up on the chat path instead, keep the same route.",
+                    "reason": "The endpoint is a placeholder and is presented as possibly unavailable. The answer endorses chat completions as an alternative, so it does not commit to the dedicated endpoint."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "fetch(\"https://openrouter.ai/api/v1/chat/completions\"",
+                    "reason": "The main request goes to chat completions. The answer only says a dedicated speech endpoint 'may also exist'."
+                  },
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "const a = evt.choices?.[0]?.delta?.audio?.data;",
+                    "reason": "The main path reads SSE text, parses it as JSON events and decodes base64 from them. Raw-byte handling is only a fallback branch."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "fetch(\"https://openrouter.ai/api/v1/chat/completions\"",
+                    "reason": "The sketch uses the chat endpoint. It only mentions a dedicated speech endpoint as a possibility."
+                  },
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "SSE: accumulate base64 audio chunks",
+                    "reason": "The main path decodes audio from SSE/JSON text. Raw bytes are only an incidental branch."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "fetch(SPEECH_URL /* confirm in OpenRouter docs */",
+                    "reason": "The answer never names the /audio/speech endpoint. It also offers chat completions as an equally valid alternative ('Shape B'), so it does not commit to the dedicated speech endpoint."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`",
+                    "reason": "The key stays on the server, but the answer never captures a generation ID or any other correlation value."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 2,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "const r = await fetch(\"https://openrouter.ai/api/v1/chat/completions\"",
+                    "reason": "It uses chat completions. The dedicated endpoint appears only as an optional adaptation."
+                  },
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "// Parse SSE: collect base64 audio deltas",
+                    "reason": "The main path parses SSE text, not raw audio bytes."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,",
+                    "reason": "The key stays on the server, but nothing captures generation correlation such as an id or X-Generation-Id."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Sketch (Node, server-side; key never sent to the browser)",
+                    "reason": "Keeps the key on the server, but never mentions capturing a generation ID."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "async-video",
+          "type": "representative",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Persist the generation id, model, and cost for each job.",
+                    "reason": "Records metadata but never checks model-specific duration or resolution controls. Settings are just passed through."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Persist the generation id, requested and resolved model, provider, usage/cost",
+                    "reason": "Records cost metadata but never checks the model-specific duration or resolution controls."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "requested_model, resolved_model, provider | audit",
+                    "reason": "It records model, cost and generation ID, but never checks duration or resolution controls per model."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "provider_job_id text, storage_key text, error text,",
+                    "reason": "Never checks model duration or resolution controls, and the schema has no generation or cost metadata."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "POST /api/videos with `{productId, prompt, idempotencyKey}`",
+                    "reason": "Does not validate duration or resolution per model and does not record generation or cost metadata."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "I don't know which video provider you're using.",
+                    "reason": "It does not check duration or resolution controls per model, and it does not record generation or cost metadata."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "retrieval",
+          "type": "representative",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "An LLM reranker is possible later, but it isn't needed now.",
+                    "reason": "It does not design rerank as a reordering of candidates and does not map result indexes back to them."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "A rerank model could reorder the top 20 results. Treat this as unverified on OpenRouter.",
+                    "reason": "Rerank is only mentioned as optional. The answer never designs it and never maps result indexes back to the original candidates."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "Confirm ... any rerank support in the current docs",
+                    "reason": "It has no rerank step and no mapping of result indexes to candidates."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "I'm not certain OpenRouter offers a dedicated rerank endpoint... Start without it.",
+                    "reason": "The answer doubts that a rerank endpoint exists and never says how rerank result indexes map back to the original candidates."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "add a reranker over the top ~30 results. I'm not certain OpenRouter offers a rerank endpoint",
+                    "reason": "Rerank is a vague, optional suggestion. There is no design for it and no mapping of indexes back to candidates."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "OpenRouter may not offer a dedicated rerank endpoint. If you want reranking without generated answers, a cross-encoder reranker (hosted elsewhere or local) is the usual next step.",
+                    "reason": "It doesn't design a rerank step over the retrieved candidates or map result indexes back to them."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "deferred-history",
+          "type": "failure",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 1,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "Compact only closed turns, meaning everything before the latest user message.",
+                    "reason": "It endorses compacting returned history within the same conversation. Reasoning is kept only for the current turn."
+                  },
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "When the model selects a rare tool, add it to the session's loaded set.",
+                    "reason": "The tools array grows during the conversation. There is no frozen catalog and no new conversation when the catalog changes."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Keep `provider.require_parameters: true`",
+                    "reason": "It does not mention an allowlist or argument validation for client-side function calls. It also does not distinguish hosted execution from client-side execution."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "crossing the threshold during a multi-step tool loop does not modify messages after the last user message",
+                    "reason": "It has no test where interrupted, resumed, or changed history is expected to fail. Its compaction tests assume that rewriting history is acceptable."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 1,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "Replace older units with a single summary message that records loaded tool names and key results.",
+                    "reason": "It recommends summarizing old assistant history within the same conversation. Keeping reasoning_details only on retained messages does not keep returned history unchanged."
+                  },
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "The tool set only grows within a conversation.",
+                    "reason": "The tools array changes mid-conversation. A stable catalog or a new conversation on change is never required."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "return a structured tool error such as `{\"error\":\"tool_not_loaded\"...}`",
+                    "reason": "It has no argument validation for client execution and no distinction between client-side and hosted tool execution."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Pair integrity: after compaction, every `tool_call_id` still has its assistant call",
+                    "reason": "The tests check that compaction succeeds. None checks interrupted/resumed state or detects a failure caused by changed history."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 1,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "Replace an old span with one summary message, and keep the original turns in your own store for audit.",
+                    "reason": "B still compacts history inside the live conversation instead of replaying it unchanged."
+                  },
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "Once a tool is loaded, keep it in `tools` for the rest of the session.",
+                    "reason": "The tool set grows inside the conversation, and B has no rollover to a new conversation when settings change."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "The model's call validates against the schema.",
+                    "reason": "B mentions validation, but it never separates client-side function execution from hosted or server tool execution."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "No mid-loop compaction: force the token threshold while `tool_calls` are pending. The history must stay unchanged.",
+                    "reason": "B has no test where history is changed and a failure is expected, and no interrupted-or-resumed test."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 1,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "What to compact:** the oldest span is replaced with one summary message",
+                    "reason": "It rejects per-turn compaction but still rewrites returned history inside the same conversation. It keeps reasoning only on retained messages instead of keeping the history unchanged."
+                  },
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "on later requests, loaded tools are appended after the core set",
+                    "reason": "The tool list changes during the session. The answer does not freeze the catalog or start a new conversation when the catalog changes."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "return a structured tool error such as \"call search_tools first.\"",
+                    "reason": "It has no allowlist or argument validation for client-side function execution. It also never separates hosted tool execution from client-side execution."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Compaction fires mid-loop. The next request is accepted with no signature or `reasoning_details` errors.",
+                    "reason": "Its tests expect changed history to be accepted. None checks that changed history fails, and none covers resuming after an interruption."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 1,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "Replace the oldest N complete turns with one summary message",
+                    "reason": "It endorses compacting returned assistant history within the conversation. It only preserves reasoning_details on kept messages."
+                  },
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "Matched tools are added to `tools` on the next request and never removed during that conversation.",
+                    "reason": "The catalog changes within the conversation. No freeze is required and no new conversation is started."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "return dispatch(call)",
+                    "reason": "The call is dispatched without validating arguments, and client execution is never distinguished from hosted execution."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Compaction then continuation. After summarizing, the model still knows earlier facts",
+                    "reason": "The tests assume changed history succeeds. None detects a changed-history failure or covers interrupted/resumed state."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 1,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "Replace the old prefix with one summary message, and keep the last K turns verbatim.",
+                    "reason": "A endorses rewriting history inside the live conversation. It preserves reasoning_details only on the messages it keeps, so the returned history is not replayed unchanged."
+                  },
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "add those definitions to the session's loaded set... keeps the `tools` array append-only",
+                    "reason": "The tools array changes inside the same conversation, and A never starts a new conversation when the catalog changes."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "`find_tools` returns matches, add those definitions to the session's loaded set",
+                    "reason": "A does not validate arguments or use an allowlist when the client executes functions. It also does not separate client execution from hosted tool execution."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Compaction mid-session: force the threshold, then confirm the next turn succeeds",
+                    "reason": "Every test expects success after history changes. There is no failure test for changed or interrupted history, and no resume test."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "shared-key-cap",
+          "type": "failure",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Which UTC boundary do daily resets use?",
+                    "reason": "Leaves UTC semantics as an open question and never checks that the guardrail is actually assigned to the key or what the key's effective budget is."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "I'm not certain OpenRouter offers a native workspace or team budget... If not, enforce the team cap in two ways",
+                    "reason": "It sets a per-key cap, but a pooled budget only appears as a conditional. The main team plan is to add up per-key limits and run a script, with no committed pooled budget or key-assigned budget policy."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Compare against `/api/v1/credits` and `/api/v1/activity`... The key can show headroom while the account is low",
+                    "reason": "Covers daily/UTC reset and separates key headroom from account credits, but never checks the effective budget or policy assignment."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "After the UTC day boundary, confirm usage returns to zero.",
+                    "reason": "Covers UTC reset, but never checks the effective budget or which budget is assigned to the key. It also never separates key allowance from account credits."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "The next day (UTC; confirm the reset timezone), verify `limit_remaining` has restored.",
+                    "reason": "Mentions the UTC reset, but never reads the key's effective budget or policy assignment, and never separates key allowance from account credits."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "The next day, confirm daily usage dropped back to 0",
+                    "reason": "Never checks the effective budget or key assignment, gives no UTC reset semantics, and never separates key headroom from account credits."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "responses-shell",
+          "type": "representative",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 2,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "The portable design is a **function tool that you execute in your own sandbox**",
+                    "reason": "It replaces the requested hosted shell with an app-controlled function command. It does not keep hosted container execution separate from app-side execution."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Uploaded reports are read server-side and sent as `data:` URLs (`input_file` or `input_image`)",
+                    "reason": "Treats uploaded reports as ordinary chat attachments and keeps no hosted container or file state."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "The Responses API is beta",
+                    "reason": "It separates the starter from the docs, but gives no global/regional or beta limits for the hosted shell itself."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "If the model needs to read a file directly, pass it as a `data:` URL/base64 `input_file`.",
+                    "reason": "It treats uploads as ordinary chat attachments and never covers workspace/container file semantics or that uploaded files can't be downloaded."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Responses support on OpenRouter is beta.",
+                    "reason": "It notes the starter only covers chat, but it gives no hosted-shell beta or global/regional limit. It treats the hosted shell as unsupported."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 2,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "Treat \"hosted shell\" as **your** sandbox, exposed as a function tool.",
+                    "reason": "Replaces the hosted shell with a function tool run in the app's own sandbox. It conflates the two models instead of distinguishing them."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "mount them read-only into a per-session sandbox",
+                    "reason": "Has no concept of hosted workspace files or how they differ from chat attachments."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Responses API field names and supported features may change.",
+                    "reason": "Notes the starter's scope and that Responses is in beta, but gives no global/regional or beta limits for hosted shell."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 2,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "Non-ZDR: use `previous_response_id` (or the Conversations API for durable threads) with `store: true`.",
+                    "reason": "Endorses store/previous_response_id as the continuation strategy."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Treat the container as scratch space.",
+                    "reason": "It keeps container state, but never explains that workspace files are not ordinary downloadable attachments."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "No reference docs came with this request",
+                    "reason": "Does not tell supplied starter apart from guidance and gives no global/regional or beta limits."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Download any files the shell produces into your own storage after each turn.",
+                    "reason": "It never says that uploaded workspace files aren't ordinary downloadable attachments. It assumes container files can be downloaded."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "No reference docs were attached",
+                    "reason": "It doesn't separate the guidance from the starter, and it states no beta or global/regional limits."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 2,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g2",
+                    "status": "failed",
+                    "evidence": "Stateful (simpler): `store:true` + `previous_response_id`. Only use this if the retention policy allows it.",
+                    "reason": "Offers store/previous_response_id as a valid option. It only hedges about OpenRouter being stateless instead of rejecting this approach."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Upload reports through the Files API and get file IDs. Attach them to the container when you create it.",
+                    "reason": "Never says that workspace files are different from ordinary chat attachments or that they can't be downloaded back."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "No reference documents came with this request, so this answer relies on my understanding",
+                    "reason": "Doesn't separate the guidance from the supplied starter, and gives no global/regional or beta limits for hosted shell."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "capability-refresh",
+          "type": "failure",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Treat these as hypotheses until checked against the spec.",
+                    "reason": "Does not separate guidance from implemented starters or templates, or dated launches from older missing coverage."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "The unseen references and templates, checking whether they agree with `SKILL.md`.",
+                    "reason": "It does not clearly separate guidance from implemented starters, or dated recent launches from older missing coverage."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Examples run: the skill's code examples ran successfully against the live API",
+                    "reason": "Never separates feature guidance from implemented starters or templates, and never separates dated launches from older missing coverage."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Each area below should be marked as covered, missing, or stale.",
+                    "reason": "Does not separate feature guidance from implemented starters, or dated launches from older missing coverage."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "The official OpenAPI spec, if published, to diff parameters mechanically.",
+                    "reason": "It has no reviewed baseline of operations or pages to compare against. It also says nothing about not automatically accepting drift."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Every changelog entry since the last review is either covered or explicitly marked out of scope.",
+                    "reason": "It does not separate feature guidance from implemented starters, or new dated launches from older missing coverage."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "policy-layer",
+          "type": "failure",
+          "gate_count": 4,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "boundary-css",
+          "type": "boundary",
+          "gate_count": 3,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "boundary-stripe",
+          "type": "boundary",
+          "gate_count": 3,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 3,
+                "misses": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "initial_holdout": {
+      "stage": "First fully completed held-out cohort; prior misses retained",
+      "model": "gpt-6.1-sol",
+      "case_count": 2,
+      "trials_per_case": 3,
+      "variants": {
+        "previous": {
+          "passed_gates": 23,
+          "total_gates": 30,
+          "failed_gates": 7,
+          "unverified_gates": 0,
+          "fully_passed_trials": 0,
+          "trials": 6,
+          "mean_input_tokens": 29624,
+          "median_wall_seconds": 27.76,
+          "reported_runner_list_cost_usd": null
+        },
+        "no_skill": {
+          "passed_gates": 17,
+          "total_gates": 30,
+          "failed_gates": 13,
+          "unverified_gates": 0,
+          "fully_passed_trials": 0,
+          "trials": 6,
+          "mean_input_tokens": 23396,
+          "median_wall_seconds": 29.38,
+          "reported_runner_list_cost_usd": null
+        },
+        "candidate": {
+          "passed_gates": 27,
+          "total_gates": 30,
+          "failed_gates": 3,
+          "unverified_gates": 0,
+          "fully_passed_trials": 3,
+          "trials": 6,
+          "mean_input_tokens": 31234,
+          "median_wall_seconds": 27.58,
+          "reported_runner_list_cost_usd": null
+        }
+      },
+      "cases": [
+        {
+          "case_id": "holdout-residency",
+          "type": "holdout",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "Response caching | Disable for request-derived content",
+                    "reason": "Does not distinguish account-level ZDR disabling response caching from per-request provider ZDR. Its caching discussion addresses a different distinction."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "Disable for request content under strict ZDR.",
+                    "reason": "Does not identify that account-level ZDR disables response caching or distinguish that scope from per-request provider ZDR."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Confirm current capabilities",
+                    "reason": "Proposes feature and endpoint checks and disclaims execution, but omits plan/account eligibility checks."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "`provider.zdr: true` and `data_collection: \"deny\"` constrain eligible inference providers.",
+                    "reason": "Explains provider controls but never states that account-level ZDR disables response caching or distinguishes the two ZDR scopes."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "Do not enable persistent response caching under strict ZDR.",
+                    "reason": "Does not identify account-level ZDR as disabling response caching or distinguish it from per-request provider ZDR. Distinguishing prompt caching does not satisfy this gate."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "Disable response caching by default.",
+                    "reason": "Omits account-level ZDR disabling response caching and its distinction from per-request provider ZDR."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Current documentation for the specific video model, shell service, and cache mechanism",
+                    "reason": "Names feature checks without claiming execution, but omits plan/account eligibility checks."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "Disable it unless your policy explicitly permits such storage.",
+                    "reason": "Does not explain that account-level ZDR disables response caching or distinguish that setting from per-request provider ZDR."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Confirm OpenRouter\u2019s own handling and the underlying provider\u2019s handling.",
+                    "reason": "Includes feature and endpoint checks and disclaims verification, but omits plan eligibility and effective account settings."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "holdout-discount-metadata",
+          "type": "holdout",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "A HIT alone therefore cannot establish zero cost",
+                    "reason": "Does not establish the required zero-billable hit versus normally billed original generation distinction."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "A HIT alone does **not** establish the current charge or zero cost.",
+                    "reason": "Does not identify the response-cache HIT as zero billable or distinguish it from the normally billed original miss."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "does not establish this cache HIT\u2019s actual charge",
+                    "reason": "Does not state that the HIT is zero billable or distinguish it from the normally billed original cache miss."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 2,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "Confirm the pricing contract before deriving another price.",
+                    "reason": "Rejects another discount but leaves undecided whether the endpoint price is already effective."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Keep this request\u2019s ID and timestamp",
+                    "reason": "Preserves request evidence and usage/cost, but does not require the current generation ID or cache-source correlation."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "actual billing still needs usage and billing evidence.",
+                    "reason": "Does not distinguish the zero-billable cache hit from the normally billed original generation."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 2,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "It could describe a discount already included, or have another documented meaning.",
+                    "reason": "Rejects an immediate second reduction but leaves the endpoint price\u2019s effective, already-discounted status unresolved."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Current request/response IDs, timestamp, and cache-hit indicator",
+                    "reason": "Preserves identifiers and returned usage/cost, but does not require saving cache-source correlation; mentioning a possible verified link does not preserve it."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "I cannot confirm the discount semantics or cache billing rules from the supplied fields.",
+                    "reason": "Omits the required distinction between a zero-billable cache replay and the normally billed original cache miss."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Current request ID and cache HIT indicator",
+                    "reason": "Preserves request identity, provenance, and returned billing evidence, but does not require the current generation ID."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "keep the actual charge unknown",
+                    "reason": "Does not identify the HIT as zero billable or distinguish its billing from the normally billed original cache miss."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Response-cache hits have zero billable counters under the supplied contract.",
+                    "reason": "States the hit\u2019s zero billing but omits that the original cache-miss generation is normally billed."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "it has zero billable counters and a **new generation ID**",
+                    "reason": "Identifies the replay as zero billable but never states that the original cache-miss generation is normally billed."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "a response-cache HIT has zero billable counters and a new generation ID",
+                    "reason": "Establishes zero billing for the HIT but omits that the original cache-miss generation remains normally billed."
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "targeted_refinement": {
+      "stage": "Targeted cache/parser refinements; policy beta-status omission remained",
+      "model": "gpt-6.1-sol",
+      "case_count": 2,
+      "trials_per_case": 3,
+      "variants": {
+        "previous": {
+          "passed_gates": 21,
+          "total_gates": 27,
+          "failed_gates": 6,
+          "unverified_gates": 0,
+          "fully_passed_trials": 0,
+          "trials": 6,
+          "mean_input_tokens": 29509,
+          "median_wall_seconds": 26.12,
+          "reported_runner_list_cost_usd": null
+        },
+        "no_skill": {
+          "passed_gates": 17,
+          "total_gates": 27,
+          "failed_gates": 10,
+          "unverified_gates": 0,
+          "fully_passed_trials": 0,
+          "trials": 6,
+          "mean_input_tokens": 23398,
+          "median_wall_seconds": 25.42,
+          "reported_runner_list_cost_usd": null
+        },
+        "candidate": {
+          "passed_gates": 24,
+          "total_gates": 27,
+          "failed_gates": 3,
+          "unverified_gates": 0,
+          "fully_passed_trials": 3,
+          "trials": 6,
+          "mean_input_tokens": 30206,
+          "median_wall_seconds": 24.64,
+          "reported_runner_list_cost_usd": null
+        }
+      },
+      "cases": [
+        {
+          "case_id": "policy-layer",
+          "type": "failure",
+          "gate_count": 4,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Even an unflagged call needs an allowed tool name, validated inputs, and permission for the requested action.",
+                    "reason": "Preserves ordinary application checks but does not acknowledge classifier fallibility or beta limitations."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "check the tool allowlist, validate arguments, and enforce the current user\u2019s permissions.",
+                    "reason": "Preserves authorization and schema checks but omits classifier fallibility and beta limitations."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "\u201ccheck the tool allowlist, validate its input schema, and enforce the signed-in user\u2019s permissions.\u201d",
+                    "reason": "Preserves authorization and schema checks, but omits classifier fallibility and beta limitations. Contract uncertainty is a separate concern."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Armor also does not replace normal checks on tool names, arguments, user permissions, or approval for sensitive actions.",
+                    "reason": "Preserves application checks but does not acknowledge classifier fallibility or beta limitations."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Your normal tool permissions and argument checks still apply.",
+                    "reason": "Preserves application checks but does not acknowledge classifier fallibility or beta limitations. Uncertainty about response fields does not satisfy that requirement."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "\u201cEven an Armor-approved call must pass your tool allowlist, argument checks, and any required user approval.\u201d",
+                    "reason": "Preserves application checks, but does not acknowledge classifier fallibility or beta limitations. Unconfirmed verdict fields do not satisfy that requirement."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Also allowlist the tool, validate its arguments, and check the current user\u2019s permission.",
+                    "reason": "Preserves authorization and schema checks but omits classifier fallibility and beta limitations."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Even an Armor-approved call needs an allowlisted tool, valid arguments, and permission for that user and action.",
+                    "reason": "Preserves normal application checks, but saying classification does not replace authorization does not acknowledge classifier fallibility or beta limitations."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "\u201cOnly dispatch allowlisted tools, validate arguments, and enforce the user\u2019s permissions and business rules.\u201d",
+                    "reason": "Preserves application checks, but does not acknowledge classifier fallibility or beta limitations. Uncertainty about the response schema does not satisfy that requirement."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "case_id": "holdout-discount-metadata",
+          "type": "holdout",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "A HIT alone therefore cannot establish zero cost, a new generation",
+                    "reason": "Leaves the required billing distinction unresolved and suggests returned identity or cost may belong to the original generation."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "A HIT alone does **not** establish the current charge or zero cost.",
+                    "reason": "Rejects the required zero-billable cache-hit behavior and does not distinguish it from the normally billed original miss."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "does not establish this cache HIT\u2019s actual charge",
+                    "reason": "Never states that the cache hit has zero billable counters or distinguishes that from the normally billed original cache miss."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Keep this request\u2019s ID and timestamp",
+                    "reason": "Preserves usage and cost, but does not require the current generation ID or a cache-source correlation in the saved evidence."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "actual billing still needs usage and billing evidence",
+                    "reason": "Does not distinguish the zero-billable HIT from the normally billed original generation."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 2,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "It could describe a discount already included, or have another documented meaning.",
+                    "reason": "Rejects an immediate second discount but leaves effective endpoint pricing unresolved instead of recognizing that the discount is already included."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Current request/response IDs, timestamp, and cache-hit indicator",
+                    "reason": "Preserves IDs and returned billing evidence, but omits saving cache-source correlation; discussing a possible verified link does not require retaining it."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "I cannot confirm the discount semantics or cache billing rules from the supplied fields.",
+                    "reason": "Omits the required distinction between a zero-billable hit and the normally billed original miss."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Current request ID and cache HIT indicator",
+                    "reason": "Includes source correlation and returned billing evidence, but never requires preserving the current generation ID."
+                  },
+                  {
+                    "id": "g5",
+                    "status": "failed",
+                    "evidence": "Without billing evidence, keep the actual charge unknown.",
+                    "reason": "Omits the required distinction between a zero-billable cache hit and the normally billed original cache-miss generation."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "final_beta_regression": {
+      "stage": "Final targeted beta-status clarification",
+      "model": "gpt-6.1-sol",
+      "case_count": 1,
+      "trials_per_case": 3,
+      "variants": {
+        "previous": {
+          "passed_gates": 9,
+          "total_gates": 12,
+          "failed_gates": 3,
+          "unverified_gates": 0,
+          "fully_passed_trials": 0,
+          "trials": 3,
+          "mean_input_tokens": 28795,
+          "median_wall_seconds": 31.78,
+          "reported_runner_list_cost_usd": null
+        },
+        "no_skill": {
+          "passed_gates": 9,
+          "total_gates": 12,
+          "failed_gates": 3,
+          "unverified_gates": 0,
+          "fully_passed_trials": 0,
+          "trials": 3,
+          "mean_input_tokens": 23389,
+          "median_wall_seconds": 26.42,
+          "reported_runner_list_cost_usd": null
+        },
+        "candidate": {
+          "passed_gates": 12,
+          "total_gates": 12,
+          "failed_gates": 0,
+          "unverified_gates": 0,
+          "fully_passed_trials": 3,
+          "trials": 3,
+          "mean_input_tokens": 29522,
+          "median_wall_seconds": 25.3,
+          "reported_runner_list_cost_usd": null
+        }
+      },
+      "cases": [
+        {
+          "case_id": "policy-layer",
+          "type": "failure",
+          "gate_count": 4,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Even an unflagged call needs an allowed tool name, validated inputs, and permission for the requested action.",
+                    "reason": "Preserves application checks but omits classifier or beta limitations. Missing wire documentation is a separate uncertainty."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "check the tool allowlist, validate arguments, and enforce the current user\u2019s permissions.",
+                    "reason": "Preserves normal application controls, but omits classifier fallibility and beta limitations. Its schema caveat concerns documentation uncertainty."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Also check the tool allowlist, validate its input schema, and enforce the signed-in user\u2019s permissions.",
+                    "reason": "Preserves application checks, but does not acknowledge classifier or beta limitations. Uncertainty about response fields does not supply that missing property."
+                  }
+                ]
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Armor also does not replace normal checks on tool names, arguments, user permissions, or approval for sensitive actions.",
+                    "reason": "Preserves application checks but does not acknowledge classifier or beta limitations. Uncertainty about field names does not supply that limitation."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Your normal tool permissions and argument checks still apply.",
+                    "reason": "Preserves application checks, but does not acknowledge classifier fallibility or beta limitations. Uncertainty about field names does not satisfy that requirement."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 3,
+                "total_gates": 4,
+                "misses": [
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "Even an Armor-approved call must pass your tool allowlist, argument checks, and any required user approval.",
+                    "reason": "Preserves application checks, but omits classifier or beta limitations. Uncertainty about verdict fields alone does not satisfy that requirement."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 4,
+                "misses": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "fresh_holdout": {
+      "stage": "Fresh file-storage holdout frozen after cache/parser refinements; before final beta-only clarification",
+      "model": "gpt-6.1-sol",
+      "case_count": 1,
+      "trials_per_case": 3,
+      "variants": {
+        "previous": {
+          "passed_gates": 12,
+          "total_gates": 15,
+          "failed_gates": 3,
+          "unverified_gates": 0,
+          "fully_passed_trials": 1,
+          "trials": 3,
+          "mean_input_tokens": 30457,
+          "median_wall_seconds": 26.63,
+          "reported_runner_list_cost_usd": null
+        },
+        "no_skill": {
+          "passed_gates": 10,
+          "total_gates": 15,
+          "failed_gates": 5,
+          "unverified_gates": 0,
+          "fully_passed_trials": 0,
+          "trials": 3,
+          "mean_input_tokens": 23408,
+          "median_wall_seconds": 32.73,
+          "reported_runner_list_cost_usd": null
+        },
+        "candidate": {
+          "passed_gates": 15,
+          "total_gates": 15,
+          "failed_gates": 0,
+          "unverified_gates": 0,
+          "fully_passed_trials": 3,
+          "trials": 3,
+          "mean_input_tokens": 33213,
+          "median_wall_seconds": 24.03,
+          "reported_runner_list_cost_usd": null
+        }
+      },
+      "cases": [
+        {
+          "case_id": "holdout-files-storage",
+          "type": "holdout",
+          "gate_count": 5,
+          "variants": {
+            "previous": [
+              {
+                "trial": 1,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "Not established. Serve originals from storage your app controls.",
+                    "reason": "Provides application-controlled downloads but treats direct workspace-original download as unknown rather than rejecting the unsupported capability."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "Not established by these references. Serve original downloads from storage you control.",
+                    "reason": "Provides app-controlled downloads but leaves workspace original-download support unresolved instead of rejecting it."
+                  },
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "It is not a lifecycle policy for workspace files",
+                    "reason": "Separates ZDR from storage lifecycle policy but explicitly leaves Files retention rules unresolved, omitting durable storage without automatic expiry."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ],
+            "no_skill": [
+              {
+                "trial": 1,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "Keep the original in your own storage and serve downloads from there. Do not treat OpenRouter as your document archive.",
+                    "reason": "Preserves an app-controlled original but never states that direct download of workspace-uploaded originals is unsupported; leaves that capability as needing proof."
+                  },
+                  {
+                    "id": "g4",
+                    "status": "failed",
+                    "evidence": "pdf: { engine: \"pdf-text\" }",
+                    "reason": "The proposed engine is unsupported. The otherwise valid PDF content format does not make this extraction request valid."
+                  }
+                ]
+              },
+              {
+                "trial": 2,
+                "passed_gates": 3,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g1",
+                    "status": "failed",
+                    "evidence": "Do not depend on OpenRouter as an original-file download service.",
+                    "reason": "Keeps an app-controlled original, but does not state that directly downloading uploaded originals from workspace Files is unsupported."
+                  },
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "It does not establish deletion of your storage, OpenRouter storage, parser output, or caches.",
+                    "reason": "Correctly limits ZDR, but omits the required distinction that workspace files persist durably without automatic expiry."
+                  }
+                ]
+              },
+              {
+                "trial": 3,
+                "passed_gates": 4,
+                "total_gates": 5,
+                "misses": [
+                  {
+                    "id": "g3",
+                    "status": "failed",
+                    "evidence": "\u201cIt is not a deletion timer or a guarantee covering your storage, OpenRouter, and any document parser. Check each separately.\u201d",
+                    "reason": "Rejects the broad ZDR assumption but never establishes that workspace files remain durably stored without automatic expiry."
+                  }
+                ]
+              }
+            ],
+            "candidate": [
+              {
+                "trial": 1,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 2,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              },
+              {
+                "trial": 3,
+                "passed_gates": 5,
+                "total_gates": 5,
+                "misses": []
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "method": {
+    "artifact": "Bounded integration recommendation/code sketch, not a built application.",
+    "runner_context": "Task plus preloaded SKILL.md and task-named available references; same task across variants; gates hidden.",
+    "isolation": "Fresh CLI context, auto-discovery/customizations disabled, no tools/network/account writes. Codex tool events checked; host skill discovery disabled using an under-development feature flag.",
+    "grading": "Separate clean context, shuffled A/B/C answers, variant labels hidden; same model family grades each cohort. Gate status passed/failed/unverified with evidence.",
+    "holdout_switch": "Claude session quota interrupted the original holdout attempt. All original holdout cases were rerun across all variants using a separate Codex cohort; cohort totals are not pooled in the headline bars.",
+    "review": "Author reviewed the execution-ownership ambiguity, policy-parser sketch, targeted misses, and selected grader evidence. No independent human or production certification. The core score covers the frozen outcome gates only; selected core answers also made speculative claims beyond those gates (such as inferring an unreviewed period from the newest changelog entry date). The headline score is not a factual-accuracy score for every sentence.",
+    "cost": "Reported Claude list-price estimates cover the retained runner calls in each cohort, not an invoice or full development/grading cost. Codex monetary cost is unavailable. Input tokens include cache-read/creation tokens where reported; wall time is per call.",
+    "reuse": "Unchanged core baseline/no-skill answers and unaffected candidate answers were reused in the second round. Affected candidate cases were rerun; targeted policy baselines were rerun on Codex to match that cohort."
+  },
+  "development_record": [
+    {
+      "finding": "The generic deferred-tool loop lacked an explicit local-dispatch ownership boundary. This was a recommendation clarity issue, not proof of a deployed runtime incident.",
+      "change": "Run only allowlisted application functions locally; keep hosted output records separate. Add a tested dispatcher sample.",
+      "status": "Retained; affected core reruns passed."
+    },
+    {
+      "finding": "The first complete held-out cohort missed original cache-MISS billing in 3/3 candidate discount/metadata trials.",
+      "change": "Explain normally billed original computation separately from a zero-billable replay.",
+      "status": "Retained; targeted cache accounting reruns passed. Original 27/30 held-out result remains published."
+    },
+    {
+      "finding": "Author review found a guessed Armor parser in a core recommendation sketch.",
+      "change": "Require a verified schema or safe pseudocode; missing/unavailable/unknown required approval is not approval.",
+      "status": "Retained; local dispatch fixtures and targeted review cover the app-side boundary."
+    },
+    {
+      "finding": "The first targeted policy refinement omitted classifier/beta limitations in 3/3 Codex trials despite retaining app checks.",
+      "change": "State beta/alpha status and contract instability when recommending those features.",
+      "status": "Retained; final policy cohort reported separately."
+    },
+    {
+      "finding": "Some early grader outputs omitted labels; later Claude calls hit quota.",
+      "change": "Reject incomplete grading records, constrain labels and preserve errors; do not score quota messages.",
+      "status": "Infrastructure failures excluded from model-quality scores, not hidden as passes."
+    },
+    {
+      "finding": "The old landing page claimed smoke coverage for every endpoint and showed illustrative checker output as if it were schema verification.",
+      "change": "Replace these claims with measured checks, actual samples and explicit unverified paid inference.",
+      "status": "Unsupported marketing claims removed."
+    }
+  ],
+  "release_decision": "Release with explicit evidence limits; no world-class/universal reliability or paid-inference claim.",
+  "unverified": [
+    "Automatic skill activation and autonomous reference retrieval",
+    "Production end-to-end application behavior",
+    "Paid OpenRouter speech/video/inference and billing",
+    "Account entitlements, administrative controls and real tenant isolation",
+    "Broad reliability across models/agents beyond these cohorts"
+  ]
+}

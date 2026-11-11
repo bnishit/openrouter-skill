@@ -43,7 +43,7 @@ From this skill directory:
 
 ```bash
 python3 -m unittest discover -s scripts/tests -p 'test_*.py'
-npx --yes tsx --test assets/tests/*.test.ts
+npx --yes tsx --test assets/tests/*.test.ts examples/*.test.ts
 bash -n scripts/install_template.sh assets/tests/smoke-curl.sh assets/tests/smoke-catalogs.sh
 ```
 

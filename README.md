@@ -1,12 +1,12 @@
-# OpenRouter Skill
+# OpenRouter Integration Skill
 
 > The canonical source is [bnishit/skills](https://github.com/bnishit/skills/tree/main/skills/openrouter-integration). This repository mirrors updates for existing installs.
 
-Stop rebuilding the same OpenRouter integration every project.
+Give your coding agent a reusable map of OpenRouter: choose the right API, start from a small sample, and show what the evidence proves.
 
-A reusable skill that gives your AI coding agent ready-made patterns for model discovery, image generation, cost lookup, routing, and production playbooks — so the agent writes better OpenRouter code instead of starting from scratch.
+[Landing page](https://bnishit.github.io/openrouter-skill/) · [Capability map](references/capability-map.md) · [Worked samples](examples/README.md) · [Evaluation cases](evals/evals.json)
 
-Landing page: [bnishit.github.io/openrouter-skill](https://bnishit.github.io/openrouter-skill/)
+Community-maintained by Nishit Bhatt. Independent of OpenRouter. MIT licensed.
 
 ## Install
 
@@ -14,124 +14,88 @@ Landing page: [bnishit.github.io/openrouter-skill](https://bnishit.github.io/ope
 npx skills add bnishit/skills --skill openrouter-integration --global
 ```
 
-Works with any AI agent that supports the skills install flow.
+Then ask your agent:
 
-After install, invoke it as `$openrouter-integration`.
+> Use $openrouter-integration to add a resumable video flow. Start with the dry-run sample and show what still needs live verification.
 
-## Alternative Install
+The canonical source is `bnishit/skills`, under `skills/openrouter-integration`. The older `bnishit/openrouter-skill` repository mirrors releases for existing installs and hosts the landing page. Manual installs should point the agent's skill directory at this folder, including its references and assets.
 
-Direct git clone:
+## What ships
+
+| Layer | Included | Boundary |
+| - | - | - |
+| API and capability guidance | 30 areas: Chat Completions, Responses, Messages, media, retrieval, tools/agents, routing, cost controls, identity, privacy, observability and developer tooling | Guidance is not an implementation of every feature |
+| Worked code | Streaming, speech bytes, resumable video, embeddings, rerank, and allowlisted client-tool dispatch | Server/CLI samples, dry-run by default |
+| Starter templates | Selected Next.js and Express chat/image routes, discovery/cost routes and UI components | Add your app's authentication, quotas and tenant isolation before exposing a proxy |
+| Verification | Unit regressions, focused live docs checks, indexed-page/API-operation drift checks and behavioral eval cases | Each has a different claim; see evidence below |
+
+Client SDKs provide typed API calls. The Agent SDK adds loop/state/tool orchestration. This skill helps choose and apply them; it does not replace either or grant permission to change an account.
+
+## Try a worked sample
+
+From this skill directory, with Node 22+:
 
 ```bash
-git clone https://github.com/bnishit/skills.git
+npx --yes tsx examples/run.ts stream --model MODEL_ID --text "Explain a response cache in one sentence."
+npx --yes tsx examples/run.ts speech --model SPEECH_MODEL_ID --voice SUPPORTED_VOICE --text "Your export is ready." --out reply.mp3
+npx --yes tsx examples/run.ts video --model VIDEO_MODEL_ID --text "A paper boat on a pond." --state video-job.json
+npx --yes tsx examples/run.ts video-status --state video-job.json --out clip.mp4
+npx --yes tsx examples/run.ts embeddings --model EMBEDDING_MODEL_ID --file examples/articles.json
+npx --yes tsx examples/run.ts rerank --model RERANK_MODEL_ID --text "Where is CSV export?" --file examples/articles.json
 ```
 
-Install from `skills/skills/openrouter-integration`. Use `$openrouter-integration` in prompts.
+These commands are **dry-runs**: no model call, key output, or generated-asset claim. Choose actual model ids and supported controls from the live catalog. Add `--live` only for a real request using your own server-held `OPENROUTER_API_KEY`; paid-capable calls are then your responsibility. The samples never bundle credentials.
 
-## Capabilities
+The video sample saves a job id and checks that same job later. It does not silently submit another paid generation after a reload. Speech reads audio bytes rather than JSON. Retrieval keeps vector model/dimensions and maps rerank indexes to the original articles. The [client-tool dispatcher](examples/client-tools.ts) refuses hosted/unknown tool records before local execution.
 
-- **Choose the right API:** Chat Completions, stateless Responses, Anthropic Messages, dedicated images/video/speech/transcription, embeddings and rerank.
-- **Build tools and agents:** client versus hosted tools, tool discovery/search, continuation state, the Agent SDK package migration and MCP integrations.
-- **Control routing and cost:** model/provider discovery, promotions, Auto/Auto Code/Pareto/Fusion/Jev/Switchyard, response versus prompt caching, Batch, service tiers and spend caps.
-- **Use account controls deliberately:** workspace budgets, Guardrail Policies, Alignment/Armor beta limits, PKCE/workload identity, BYOK, presets, private endpoints and region/data-retention boundaries.
-- **Explain what happened:** exact generation costs, router metadata, Logs/Activity/analytics, Broadcast trace export and its privacy controls.
-- **Start and verify:** bounded Next.js/Express chat/image starters, reusable helpers, offline regressions, live docs checks, and added/removed docs/API inventory detection.
+[Sample setup, flows and limits](examples/README.md) includes exact commands and the distinction between fixture checks and paid inference.
 
-See the [capability map](references/capability-map.md) for coverage, official sources, migrations and limits. The map covers guidance; the starters do not implement every listed API or administrative control. No account setting or consuming app is changed merely by installing this skill.
+## Verification evidence
 
-## Example Prompts
+| Evidence | Observed result | Limit |
+| - | - | - |
+| Offline code regressions | **35 passed**: 10 Python, 12 existing helper tests, 13 worked-sample tests | Synthetic fixtures exercising actual code |
+| TypeScript and browser code | New samples pass strict type checking; page script parses | Not a production app build |
+| Current official docs/inventory | **113 checks passed**, no warnings, on 2026-11-11 | Selected contracts plus page/operation drift, not every schema change |
+| Core behavior cohort | Expanded skill **135/135 gates**, previous release **98/135**, no skill **97/135**; 10 cases × 3 trials per variant | Claude Opus 5.5; bounded recommendations, not autonomous execution; snapshot before final targeted refinements |
+| First completed held-out cohort | Candidate **27/30 gates**; the missing original cache-MISS billing explanation remains recorded | Separate Codex cohort; not pooled into the core score |
+| Final targeted checks | Cache billing **15/15**, policy/beta **12/12**; fresh file-storage holdout **15/15** | Narrow follow-up cohorts; earlier misses are not overwritten |
+| Paid OpenRouter inference | **Not tested** | No generated speech/video or real billing claim |
 
-- `Use $openrouter-integration to add an OpenRouter model picker to this app.`
-- `Use $openrouter-integration to compare discounted endpoints for this workload and add a safe fallback and spend cap.`
-- `Use $openrouter-integration to add dedicated Image API generation plus image and PDF understanding.`
-- `Use $openrouter-integration to make this OpenRouter workflow production-safe with the built-in best-practice playbooks for routing, tools, and observability.`
+[Full results, trial-level misses, token/time costs and methodology](docs/evaluation-summary.json). Core model calls used 11,168 mean input tokens and 19.84 seconds median wall time for the expanded skill. More context had a measurable cost; the report includes baseline costs too. These scores are a bounded quality signal, not universal reliability or independent human certification.
 
-## Repository Layout
+Run the local checks:
 
-```text
-.
-├── SKILL.md
-├── agents/openai.yaml
-├── references/
-├── scripts/
-├── assets/
-└── docs/
+```bash
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+npx --yes tsx@4.23.15 --test assets/tests/*.test.ts examples/*.test.ts
+node --check docs/app.js
+bash -n scripts/install_template.sh assets/tests/smoke-curl.sh assets/tests/smoke-catalogs.sh
 ```
 
-- `SKILL.md`: trigger metadata plus the core OpenRouter workflow
-- `agents/openai.yaml`: UI-facing metadata for supported agent skill systems
-- `references/`: targeted reference material for image generation, requests, routing, troubleshooting, and docs checks
-- `references/catalog-routing-best-practices.md`: production rules for model catalogs, provider filters, and fallbacks
-- `references/image-generation-best-practices.md`: concrete icon, OG image, social asset, preview, and storage rules
-- `references/tool-calling-and-structured-output-best-practices.md`: production rules for tools, schemas, and validation loops
-- `references/operations-and-observability-best-practices.md`: logging, generation id, cost audit, and artifact-traceability rules
-- `scripts/`: helper scripts for documentation checks and starter installation
-- `assets/`: reusable templates, shared helpers, and smoke-test fixtures
-- `docs/`: static landing page and search-facing metadata for GitHub Pages
-
-## Included Templates and Helpers
-
-- **Templates**: Next.js and Express starter routes for models, chat, image generation, and cost lookup — plus UI components like a model picker and image workbench
-- **Shared helpers**: TypeScript utilities for streaming (SSE), response parsing, generated-image extraction, asset persistence, and structured output validation
-- **Tests**: Curl-based smoke tests and fixtures covering text, JSON, tools, image analysis, image generation, and PDFs
-
-The starter proxies default to `data:` URLs for uploaded assets and block arbitrary remote `http(s)` image/PDF URLs unless you set `OPENROUTER_ALLOWED_REMOTE_ASSET_HOSTS`.
-
-## Best-Practice Playbooks
-
-- `catalog-routing-best-practices.md`: how to build searchable model pickers, provider-aware routing, and sane fallback behavior without stale hardcoded assumptions
-- `image-generation-best-practices.md`: how to generate icons, OG images, and social assets with preview plus storage-ready metadata
-- `tool-calling-and-structured-output-best-practices.md`: how to keep tool loops and JSON extraction reliable instead of fragile
-- `operations-and-observability-best-practices.md`: how to persist generation ids, log the right fields, and answer later cost/debug questions cleanly
-
-## FAQ
-
-### I already use the OpenRouter SDK. Why do I need this too?
-
-The SDK is the transport layer — HTTP calls and auth. This skill is the decision layer — which model to pick, how to route, what to do on failure, how to audit costs. They complement each other.
-
-### Does this lock me into a specific agent or framework?
-
-No. Works with any agent supporting skills install. Templates produce standard Next.js/Express code. Stop using the skill, keep all generated code.
-
-### How current is the model data?
-
-The skill fetches catalogs live from the OpenRouter API — it never ships hardcoded model lists. Run `check_openrouter_docs.py --quick --inventory --strict` for focused assumptions and new/removed indexed pages/operations. Recheck feature semantics and account entitlements for the task.
-
-### What about rate limits and API keys?
-
-The skill enforces server-side key management. Proxy route templates handle auth headers plus OpenRouter attribution headers. Keys never touch the browser.
-
-### Can I use only parts of this?
-
-Yes. Every capability is modular. Use just image generation, or just cost tracking, or just routing playbooks. Pick what you need.
-
-### How do I know the production playbooks are actually good?
-
-They encode specific patterns: tool-call loop limits, Zod schema validation, generation-ID persistence, provider fallback ordering, remote-asset URL allowlisting. Extracted from real production incidents, not theoretical best practices.
-
-### Why not just read OpenRouter's docs?
-
-You can, and you should for reference. The skill exists because reading docs doesn't prevent you from rebuilding the same integration scaffolding every project. It encodes the patterns that worked — model filtering, provider fallbacks, cost lookup, streaming setup, multimodal request shapes — so your agent applies them directly instead of translating docs into code from scratch each time.
-
-## Maintenance
-
-Treat official OpenRouter documentation as the source of truth for endpoints, parameters, and capability metadata.
-
-Use:
+Check the current official docs without a key:
 
 ```bash
 python3 scripts/check_openrouter_docs.py --quick --inventory --strict
-python3 -m unittest discover -s scripts/tests -p "test_*.py"
-npx --yes tsx --test assets/tests/*.test.ts
 ```
 
-Run these commands from this skill directory. TypeScript tests use `tsx` to resolve the extensionless imports used by the templates. Installed tests point to the installed helpers. Live smoke calls require your own key and may spend credits.
+The inventory baseline contains 552 indexed Markdown pages and 174 API operations as reviewed on 2026-11-11. It detects additions/removals, not every semantic change to an existing page or schema. New warnings need review, not an automatic baseline update. Use the [full maintenance workflow](references/docs-check-workflow.md) for a capability refresh.
 
-The installer checks all destination files before copying. It customizes only installed files; existing app files stay untouched, including with `--force`. Add your app’s authentication, access limits, and spend controls before exposing the proxy publicly.
+## Behavioral evaluation
 
-For a capability refresh, follow the full [documentation audit](references/docs-check-workflow.md), including all official indexes and the API changelog. A passing old-assumption check is not evidence that the skill covers new features. The reviewed inventory contains 552 indexed Markdown pages and 174 operations as of 2026-11-11; inventory drift is a review signal, not an automatic baseline update.
+The suite contains representative tasks, failure cases, near-neighbor scope boundaries, and held-out tasks. Each has observable outcome gates. Runs use clean contexts, identical task prompts, three trials per case, and no account/tool side effects. The runner does not see the gates. A separate grader receives shuffled answers without variant labels; human review checks reported failures and evidence.
 
-## License
+These evaluations measure bounded integration recommendations with supplied reference context. They do not test automatic skill discovery, a full app build, production deployment, or paid OpenRouter inference. A perfect score on this suite would still not establish universal reliability.
 
-MIT
+See [the eval procedure](evals/README.md), [public cases and gates](evals/evals.json), and [published results](docs/evaluation-summary.json). Previously held-out cases become regressions after publication; future improvement rounds need fresh holdouts.
+
+## Use the right reference
+
+- API formats, schemas and streaming: [requests and responses](references/requests-and-responses.md).
+- Speech, video, embeddings/rerank and files: [media and retrieval](references/multimodal-and-retrieval.md).
+- Hosted versus client tools, deferred state and SDKs: [tools](references/tools-and-function-calling.md).
+- Routers, provider policy and regional limits: [routing](references/routing-and-fallbacks.md).
+- Discounts, response/prompt caching and effective caps: [cost controls](references/discounts-and-cost-controls.md).
+- Generation audit, metadata, Broadcast, identity and private inference: [operations](references/operations-and-observability-best-practices.md).
+
+Use the smallest relevant piece. Keep secrets server-side, preserve required state, validate outputs and tool arguments, and distinguish local checks from live evidence. Nothing is activated merely by installing this skill.

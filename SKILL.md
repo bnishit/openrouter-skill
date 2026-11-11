@@ -44,7 +44,8 @@ The public model catalogs can be read without a key. The tools catalog requires 
    - Set `HTTP-Referer` and `X-OpenRouter-Title` headers when the app has a stable URL and title.
    - Do not forward arbitrary user-supplied `http(s)` asset URLs straight to OpenRouter. Fetch trusted assets server-side and convert them to `data:` URLs, or enforce an explicit host allowlist such as `OPENROUTER_ALLOWED_REMOTE_ASSET_HOSTS`.
 
-3. For a supported chat/image app, install a starter instead of retyping boilerplate.
+3. Start with the smallest relevant worked sample or supported starter.
+   - Use `examples/README.md` for runnable streaming, speech, resumable video, embeddings/rerank, and client-tool dispatch samples. Commands default to dry-run; network execution needs explicit `--live`.
    - For other APIs/SDKs, follow the owning feature reference; the installer does not add those routes.
    - Use `scripts/install_template.sh` with `--template nextjs` or `--template express`.
    - Override base path and env var names at install time when the target project already has conventions.
@@ -137,8 +138,11 @@ The public model catalogs can be read without a key. The tools catalog requires 
 
 ## Quality Rules
 
+- When recommending a beta or alpha feature, state its status and contract instability; do not present it as a stable guarantee.
+
 - Prefer a server proxy with caching for model lists.
 - Keep model picker UIs searchable; plain `<select>` breaks down on large catalogs.
+- Dispatch only allowlisted application functions locally; hosted tool records must not become application-host commands.
 - Use `architecture.input_modalities` and `architecture.output_modalities` as the primary capability signals.
 - Treat pricing fields as strings from the API; convert explicitly if you need numeric math.
 - Persist generation ids anywhere later cost inspection matters.

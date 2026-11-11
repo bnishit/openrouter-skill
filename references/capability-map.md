@@ -6,7 +6,7 @@ Use this map for “what is new” and capability selection. Before means covera
 
 Inventoried the main docs, API reference, Client SDK/Agent SDK, and cookbook indexes: **552 distinct Markdown pages**, all fetched successfully, plus the complete live OpenAPI operation inventory. Reviewed the relevant feature contracts, migration notes, and limits for the gaps below. Fetching all pages is an inventory/corpus check, not manual review of every SDK method/example or execution of every API. Current models, plan entitlements, beta status, and prices must still be discovered for the account and request.
 
-The API changelog’s newest dated entry in this audit is **October 29, 2026**. Dated examples: workspace budgets September 10; public tools catalog September 29; external-users rename October 21; private providers October 29. Alignment and Armor explicitly say beta since October 2026. Media, retrieval, and other rows without a dated launch source are **newly covered here**, not asserted as new launches.
+The API changelog’s newest dated entry in this audit is **October 29, 2026**. Dated examples: workspace budgets September 10; tools catalog September 29; external-users rename October 21; private providers October 29. Alignment and Armor explicitly say beta since October 2026. Media, retrieval, and other rows without a dated launch source are **newly covered here**, not asserted as new launches.
 
 ## Coverage and where to act
 
