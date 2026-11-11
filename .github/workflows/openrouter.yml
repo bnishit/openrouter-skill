@@ -1,0 +1,33 @@
+name: OpenRouter skill checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+      - run: npx --yes tsx --test assets/tests/*.test.ts
+      - run: bash -n scripts/install_template.sh assets/tests/smoke-curl.sh assets/tests/smoke-catalogs.sh
+      - name: Verify copied starters
+        run: |
+          install_root=$(mktemp -d)
+          for template in nextjs express; do
+            bash scripts/install_template.sh --template "$template" --target "$install_root/$template"
+            npx --yes tsx --test "$install_root/$template/openrouter-tests/"*.test.ts
+          done
+      - if: github.event_name == 'workflow_dispatch'
+        run: python3 scripts/check_openrouter_docs.py --quick --strict

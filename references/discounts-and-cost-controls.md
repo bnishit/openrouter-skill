@@ -45,14 +45,14 @@ estimated cost =
 
 ## Batch Versus Synchronous Work
 
-OpenRouter's Batch API is for non-interactive work that can complete within 24 hours:
+OpenRouter's Batch API is for non-interactive work. `completion_window` accepts only `24h`; actual provider deadlines vary (Google AI Studio: 48 hours; Google Vertex: 96 hours):
 
-- Submit with `POST /api/beta/batches`.
-- Poll `GET /api/beta/batches/:id`.
-- Results are available after terminal completion and are retained for 30 days.
+- Submit with `POST /api/v1/batches`.
+- Poll `GET /api/v1/batches/:id`.
+- Wait for a terminal status; for `completed`, also wait until `results` is non-null. Requests and results expire 30 days after submission.
 - Batch commonly reduces token prices by 50%; web search stays at its normal price and caching varies.
-- Keep endpoint and model keys before the inline `requests` array in the submission body.
-- Treat `validating` as queued, not complete.
+- Keep all batch metadata (`endpoint`, `model`, `provider`, `completion_window`, `callback_url`) before the inline `requests` array. Each request needs a unique `custom_id`; match results by that id, never array position.
+- Treat `validating`, `in_progress`, and `finalizing` as unfinished. A `202` confirms storage, not successful validation. A completed batch can still have failed requests.
 
 Batch currently supports text workflows across Chat Completions, Responses, Anthropic Messages, and embeddings. Do not assume a catalog `:batch` variant behaves like a normal synchronous model call.
 

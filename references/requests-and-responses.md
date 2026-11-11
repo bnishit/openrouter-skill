@@ -2,11 +2,14 @@
 
 ## Endpoint Map
 
-- Text, vision input, audio/video input, and PDFs: `POST /api/v1/chat/completions`.
+- Responses API: `POST /api/v1/responses` with `input` (text, tools, reasoning, and PDFs).
+- These starter routes use Chat Completions; text, vision input, audio/video input, and PDFs: `POST /api/v1/chat/completions`.
 - Image generation: `POST /api/v1/images`.
 - Image model discovery: `GET /api/v1/images/models`.
 
 OpenRouter uses an OpenAI-compatible chat schema with OpenRouter-specific extensions such as `plugins`, `models`, `provider`, `transforms`, and extra usage metadata.
+
+For Responses, send the full conversation history each turn. OpenRouter is stateless: `store: true` and non-null `previous_response_id` return `400`. Responses use `output` items and events such as `response.output_text.delta` and `response.completed`; do not feed them into chat text collectors that read `choices`. See the [official Responses guide](https://openrouter.ai/docs/api_reference/responses/overview).
 
 ## Common Headers
 

@@ -63,10 +63,6 @@ export function OpenRouterStreamingChat({
         if (event.type === "done") break;
         if (!event.data) continue;
 
-        if ((event.data as { error?: { message?: string } }).error?.message) {
-          throw new Error((event.data as { error: { message?: string } }).error.message || "Streaming error");
-        }
-
         assistantText += getAssistantText(event.data);
         if (getToolCalls(event.data).length > 0) {
           sawToolCall = true;
