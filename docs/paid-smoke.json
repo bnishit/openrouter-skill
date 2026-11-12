@@ -1,0 +1,82 @@
+{
+  "checked_at": "2026-11-12T04:52:59.420Z",
+  "scope": "Seven live sample flows; eight paid inference requests. Synthetic generic inputs; actual API outputs. Sample functions and image helpers imported directly; client dispatch tested through a two-request model conversation.",
+  "samples": [
+    {
+      "flow": "stream",
+      "passed": true,
+      "model": "openai/gpt-4o-mini",
+      "cost_usd": 1.47e-05
+    },
+    {
+      "flow": "speech",
+      "passed": true,
+      "model": "hexgrad/kokoro-82m",
+      "cost_usd": 4.712e-05
+    },
+    {
+      "flow": "embeddings",
+      "passed": true,
+      "model": "openai/text-embedding-3-small",
+      "cost_usd": 6.4e-07
+    },
+    {
+      "flow": "rerank",
+      "passed": true,
+      "model": "cohere/rerank-v3.5",
+      "cost_usd": 0.002
+    },
+    {
+      "flow": "video",
+      "passed": true,
+      "model": "x-ai/grok-imagine-video-1.5-lite",
+      "cost_usd": 0.16
+    },
+    {
+      "flow": "client-tools",
+      "passed": true,
+      "model": "openai/gpt-4o-mini",
+      "cost_usd": 3.18e-05
+    },
+    {
+      "flow": "image",
+      "passed": true,
+      "model": "google/gemini-3.1-flash-image",
+      "cost_usd": 0.067224
+    }
+  ],
+  "total_cost_usd": 0.22931826,
+  "billing_evidence": "Exact generation lookup for seven requests; image usage.cost for one image request. Not an account-balance delta.",
+  "observed_outputs": {
+    "stream": "To export a CSV, navigate to the app's Settings and select the Data export option.",
+    "speech": "Playable 5.499-second MP3, Kokoro af_heart; codec checked, transcript not independently verified.",
+    "embeddings": "Three vectors, 1536 dimensions each.",
+    "rerank": [
+      {
+        "document": "Exports are available as CSV from Settings, then Data export.",
+        "originalIndex": 0,
+        "score": 0.5510187
+      },
+      {
+        "document": "Download invoices from Billing, then Invoices.",
+        "originalIndex": 2,
+        "score": 0.03900808
+      },
+      {
+        "document": "To change your theme, open Settings and choose Appearance.",
+        "originalIndex": 1,
+        "score": 0.018196153
+      }
+    ],
+    "client_tools": "You can find the CSV export option by going to Settings and then selecting Data export.",
+    "image": "One 1024 x 1024 PNG, inspected.",
+    "video": "Completed job downloaded; 8.042-second 848 x 480 H.264/AAC video, inspected frame."
+  },
+  "limits": [
+    "One selected model per flow; not all providers, voices, or models.",
+    "No production app, authorization, tenant isolation, account management, or hosted tools tested.",
+    "Successful generation is not a benchmark of output quality.",
+    "Behavioral skill eval cohorts remain separate and unchanged.",
+    "Raw outputs and request ids kept outside the skill package; credentials never copied into artifacts."
+  ]
+}
