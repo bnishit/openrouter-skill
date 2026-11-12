@@ -60,7 +60,7 @@ The video sample saves a job id and checks that same job later. It does not sile
 | Core behavior cohort | Expanded skill **135/135 gates**, previous release **98/135**, no skill **97/135**; 10 cases × 3 trials per variant | Claude Opus 5.5; bounded recommendations, not autonomous execution; snapshot before final targeted refinements |
 | First completed held-out cohort | Candidate **27/30 gates**; the missing original cache-MISS billing explanation remains recorded | Separate Codex cohort; not pooled into the core score |
 | Final targeted checks | Cache billing **15/15**, policy/beta **12/12**; fresh file-storage holdout **15/15** | Narrow follow-up cohorts; earlier misses are not overwritten |
-| Paid OpenRouter inference | **Not tested** | No generated speech/video or real billing claim |
+| Paid OpenRouter inference | **7 flows passed**, 8 requests, **$0.22931826** on 2026-11-12: streaming, MP3 speech, video, embeddings, rerank, client tools, image | One selected model per flow; [redacted results and billing evidence](docs/paid-smoke.json). Not production or all-provider verification |
 
 [Full results, trial-level misses, token/time costs and methodology](docs/evaluation-summary.json). Core model calls used 11,168 mean input tokens and 19.84 seconds median wall time for the expanded skill. More context had a measurable cost; the report includes baseline costs too. These scores are a bounded quality signal, not universal reliability or independent human certification.
 

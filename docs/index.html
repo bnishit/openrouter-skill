@@ -253,8 +253,8 @@
                 Choose a model and voice that support MP3.
               </p>
               <p class="sample-limit" id="sample-limit">
-                Not every voice supports every format. No paid audio was
-                generated for these tests.
+                Not every voice supports every format. A live Kokoro MP3
+                sample passed on 12 Nov 2026.
               </p>
               <a
                 id="sample-source"
@@ -331,10 +331,12 @@
             <div class="evidence-row">
               <strong>Paid OpenRouter inference</strong>
               <p>
-                Not tested in this release. No speech, video, or other paid
-                generation is implied by the fixture results.
+                Seven live flows passed: streaming, MP3 speech, completed video,
+                embeddings, rerank, client tools, and image. Eight inference
+                requests cost $0.22931826. One selected model per flow.
+                <a href="paid-smoke.json">Read the redacted results and billing evidence ↗</a>
               </p>
-              <span class="evidence-label neutral">Unverified</span>
+              <span class="evidence-label">Actual paid requests · 12 Nov 2026</span>
             </div>
           </div>
           <div class="eval-card">

@@ -6,7 +6,7 @@ const samples = {
     description:
       "Use the speech endpoint, check its status, and save audio bytes. Choose a model and voice that support MP3.",
     limit:
-      "Not every voice supports every format. No paid audio was generated for these tests.",
+      "Not every voice supports every format. A live Kokoro MP3 sample passed on 12 Nov 2026.",
     command:
       'npx --yes tsx examples/run.ts speech \\\n  --model SPEECH_MODEL_ID --voice SUPPORTED_VOICE \\\n  --text "Your export is ready." --out reply.mp3',
     trace:
